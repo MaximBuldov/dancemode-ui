@@ -1,0 +1,8 @@
+export const PROFILE = '/profile';
+export const CLASSES = '/classes';
+export const VIDEO = '/video';
+export const PAYMENTS = '/payments';
+export const LOGIN = '/login';
+export const SIGN_UP = '/sign-up';
+export const FORGOT_PASSWORD = '/forgot-password';
+export const CART = '/cart';

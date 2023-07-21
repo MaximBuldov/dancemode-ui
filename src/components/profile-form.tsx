@@ -1,0 +1,159 @@
+import { InstagramOutlined, LockOutlined, MailOutlined, PhoneOutlined, UserOutlined } from '@ant-design/icons';
+import { Button, Form, Input, Typography } from 'antd';
+import { ISignupForm, IUser } from 'models';
+import React from 'react';
+
+interface ProfileFormProps {
+  title: string;
+  onSubmit: (data: ISignupForm) => void;
+  isLoading: boolean;
+  isLabels: boolean;
+  submitButton: string;
+  initialValues: IUser | null;
+  isRequired: boolean;
+}
+
+const { useForm, Item } = Form;
+
+const labelsConfig = {
+  firstName: 'First name',
+  lastName: 'Last name',
+  email: 'Email',
+  phone: 'Phone',
+  instagram: 'Instagram',
+  password: 'Password',
+  confirmPassword: 'Confirm Password'
+};
+
+export const ProfileForm = ({ title, onSubmit, isLoading, isLabels, submitButton, initialValues, isRequired }: ProfileFormProps) => {
+  const [form] = useForm();
+
+  const label = (text: string) => {
+    return isLabels ? text : '';
+  };
+
+  const placeholder = (text: string) => {
+    return !isLabels ? text : '';
+  };
+
+  const { firstName, lastName, email, phone, instagram, password, confirmPassword } = labelsConfig;
+
+  return (
+    <>
+      <Typography.Title level={4}>{title}</Typography.Title>
+      <Form
+        form={form}
+        name="signup"
+        onFinish={onSubmit}
+        layout="vertical"
+        initialValues={initialValues || undefined}
+      >
+        <Item
+          name="first_name"
+          rules={[{ required: isRequired, message: 'Please input your first name!' }]}
+        >
+          <Input
+            addonBefore={label(firstName)}
+            prefix={<UserOutlined />}
+            placeholder={placeholder(firstName)}
+          />
+        </Item>
+        <Item
+          name="last_name"
+          rules={[{ required: isRequired, message: 'Please input your last name!' }]}
+        >
+          <Input
+            addonBefore={label(lastName)}
+            prefix={<UserOutlined />}
+            placeholder={placeholder(lastName)}
+          />
+        </Item>
+        <Item
+          name="email"
+          rules={[
+            { required: isRequired, message: 'Please input your email!' },
+            { type: 'email', message: 'The input is not valid E-mail!' }
+          ]}
+        >
+          <Input
+            addonBefore={label(email)}
+            prefix={<MailOutlined />}
+            placeholder={placeholder(email)}
+          />
+        </Item>
+        <Item
+          name="billing_phone"
+          rules={[{ required: isRequired, message: 'Please input your phone!' }]}
+        >
+          <Input
+            addonBefore={label(phone)}
+            prefix={<PhoneOutlined />}
+            placeholder={placeholder(phone)}
+          />
+        </Item>
+        <Item
+          name="instagram"
+        >
+          <Input
+            addonBefore={label(instagram)}
+            prefix={<InstagramOutlined />}
+            placeholder={`${placeholder(instagram)} @dancemode`}
+          />
+        </Item>
+        <Item
+          name="password"
+          hasFeedback
+          rules={[
+            {
+              required: isRequired,
+              message: 'Please input your password!'
+            },
+            {
+              min: 6,
+              message: 'Minimum password length is 6 characters'
+            }
+          ]}
+        >
+          <Input.Password
+            addonBefore={label(password)}
+            prefix={<LockOutlined />}
+            placeholder={placeholder(password)}
+          />
+        </Item>
+        <Form.Item
+          name="confirm"
+          dependencies={['password']}
+          hasFeedback
+          rules={[
+            {
+              required: isRequired,
+              message: 'Please confirm your password!'
+            },
+            ({ getFieldValue }) => ({
+              validator(_, value) {
+                if (!value || getFieldValue('password') === value) {
+                  return Promise.resolve();
+                }
+                return Promise.reject(new Error('The new password that you entered do not match!'));
+              }
+            })
+          ]}
+        >
+          <Input.Password
+            addonBefore={label(confirmPassword)}
+            placeholder={placeholder(confirmPassword)}
+            prefix={<LockOutlined />}
+          />
+        </Form.Item>
+        <Button
+          type="primary"
+          htmlType="submit"
+          block
+          loading={isLoading}
+        >
+          {submitButton}
+        </Button>
+      </Form>
+    </>
+  );
+};

@@ -1,0 +1,35 @@
+.container {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  left: 0;
+  padding: 10px 15px;
+  box-shadow: 0px -3px 20px 0px #2222221c;
+  background-color: #fff;
+
+  .list {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+
+    .item {
+      text-align: center;
+      width: 100%;
+
+      a {
+        color: #222;
+      }
+
+      .icon {
+        font-size: 25px;
+      }
+
+      .label {
+        font-size: 10px;
+      }
+    }
+  }
+}

@@ -1,26 +1,31 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { observer } from 'mobx-react-lite';
+import { RouterProvider, createBrowserRouter } from 'react-router-dom';
+import { userStore } from 'stores';
+import { ErrorPage, Home } from 'pages';
 
-function App() {
+import { publicRoutes, userRoutes } from './routes';
+import { Template } from './components';
+
+const App = observer(() => {
+  const routes = userStore.data ? userRoutes : publicRoutes;
+  const router = createBrowserRouter([
+    {
+      path: '/',
+      element: <Template />,
+      errorElement: <ErrorPage />,
+      children: [
+        {
+          path: '/',
+          element: <Home />
+        },
+        ...routes
+      ]
+    }
+  ]);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <RouterProvider router={router} />
   );
-}
+});
 
 export default App;
