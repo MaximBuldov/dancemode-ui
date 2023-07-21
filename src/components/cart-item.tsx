@@ -1,5 +1,6 @@
 import { DeleteOutlined } from '@ant-design/icons';
-import { Button, Col, Row, Typography } from 'antd';
+import { Button, Col, Row } from 'antd';
+import { Price } from 'components';
 import dayjs from 'dayjs';
 import { ICartProduct } from 'models';
 import React from 'react';
@@ -16,18 +17,7 @@ export const CartItem = ({ item }: CartItemProps) => {
         <b>{item.name}:</b> {dayjs(item.day).format('MMMM DD')}
       </Col>
       <Col span={6}>
-        <Typography.Link
-          strong={!item?.total}
-          delete={!!item?.total}
-          disabled={!!item?.total}
-        >
-          ${item.price}
-        </Typography.Link>
-        {!!item.total && (
-          <Typography.Link strong style={{ marginLeft: 10 }}>
-            ${item.total}
-          </Typography.Link>
-        )}
+        <Price total={item.total || item.price} subtotal={item.price} />
       </Col>
       <Col span={4} style={{ textAlign: 'right' }}>
         <Button

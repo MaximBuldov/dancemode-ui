@@ -51,7 +51,7 @@ export const PaidClass = observer(({ data, isExpired, day, status }: PaidClassPr
         <Col>
           <Space>
             <Checkbox disabled />
-            <Typography>{data.name}: {classTime.format('ha')} {items.length}</Typography>
+            <Typography>{data.name}: {classTime.format('ha')}</Typography>
             <div>
               {!isRescheduled && <Tag icon={<DollarOutlined />} color="processing">Payed</Tag>}
               {isRescheduled && <Tag icon={<ClockCircleOutlined />} color="warning">Rescheduled</Tag>}

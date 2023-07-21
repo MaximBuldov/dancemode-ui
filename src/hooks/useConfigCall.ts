@@ -1,16 +1,16 @@
 import { useQuery } from '@tanstack/react-query';
-import { makeupService, productService } from 'services';
+import { makeupService, orderService, productService } from 'services';
 import { makeupStore, productStore, userStore } from 'stores';
 import { IKeys } from 'models';
 import dayjs from 'dayjs';
 
 import { useError } from './useError';
 
-export const useConfigCall = () => {
+export const useConfigCall = (month: number) => {
   const { onErrorFn, contextHolder } = useError();
   const today = dayjs().format('YYYYMMDD');
 
-  const { isFetching: productsLoading } = useQuery({
+  const products = useQuery({
     queryKey: [IKeys.PRODUCTS],
     queryFn: productService.getAll,
     enabled: !productStore.data && userStore.isAuth,
@@ -18,7 +18,7 @@ export const useConfigCall = () => {
     onError: onErrorFn
   });
 
-  const { isFetching: makeupsLoading, data: makeups } = useQuery({
+  const makeups = useQuery({
     queryKey: [IKeys.MAKEUPS, { today }],
     queryFn: () => makeupService.getCurrent(userStore.data!.id, today),
     onSuccess: (data) => makeupStore.setMakeups(data),
@@ -27,6 +27,13 @@ export const useConfigCall = () => {
     staleTime: 1000 * 60
   });
 
-  const loading = productsLoading || makeupsLoading;
-  return { loading, contextHolder, makeups };
+  const orders = useQuery({
+    queryKey: [IKeys.ORDERS, { month: month }],
+    queryFn: () => orderService.getByMonth(month),
+    onError: onErrorFn,
+    staleTime: 1000 * 30
+  });
+
+  const loading = products.isFetching || makeups.isFetching || orders.isFetching;
+  return { loading, contextHolder, orders: orders.data };
 };

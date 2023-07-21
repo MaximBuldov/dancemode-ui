@@ -48,6 +48,23 @@ class OrderService {
     }
   }
 
+  async getAll(page: number) {
+    try {
+      const res = await $wc.get('/wc/v3/orders', {
+        params: {
+          _fields: 'id,status,date_created,total,customer_id,line_items',
+          customer: userStore.data?.id,
+          per_page: 10,
+          dp: 0,
+          page
+        }
+      });
+      return res;
+    } catch (error) {
+      throw error;
+    }
+  }
+
   async update({ data, order, item }: IUpdate) {
     try {
       const res = await $api.post(`/custom/v2/order/${order}/${item}`, data);

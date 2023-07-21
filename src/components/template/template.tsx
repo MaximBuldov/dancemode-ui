@@ -1,16 +1,14 @@
-import { Avatar, Badge, Layout, Spin } from 'antd';
+import { Avatar, Badge, Layout } from 'antd';
 import { Outlet } from 'react-router-dom';
 import { Menu } from 'components';
 import { observer } from 'mobx-react-lite';
 import { makeupStore, userStore } from 'stores';
-import { useConfigCall } from 'hooks';
 
 import styles from './template.module.scss';
 
 const { Header, Content } = Layout;
 
 export const Template = observer(() => {
-  const { loading, contextHolder } = useConfigCall();
   return (
     <Layout>
       <Header className={styles.header}>
@@ -22,12 +20,9 @@ export const Template = observer(() => {
         )}
       </Header>
       <Layout className={styles.layout}>
-        <Spin spinning={loading}>
-          <Content>
-            <Outlet />
-            {contextHolder}
-          </Content>
-        </Spin>
+        <Content>
+          <Outlet />
+        </Content>
       </Layout>
       <Menu />
     </Layout>

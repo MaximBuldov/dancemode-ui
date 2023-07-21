@@ -43,8 +43,7 @@ class CartStore {
   }
 
   get total() {
-    const res = this.calculateTotal(this.data, 'total');
-    return isNaN(res) ? this.subtotal : res;
+    return this.calculateTotal(this.data, 'total');
   }
 
   get subtotal() {
@@ -106,7 +105,8 @@ class CartStore {
 
   private calculateTotal(arr: ICartProduct[], prop: keyof ICartProduct) {
     return arr.reduce((acc, el) => {
-      return acc + Number(el[prop]);
+      const price = el[prop] ? Number(el[prop]) : +el.price;
+      return acc + price;
     }, 0);
   }
 

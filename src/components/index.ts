@@ -4,3 +4,5 @@ export * from './day-card';
 export * from './single-class';
 export * from './profile-form';
 export * from './cart-item';
+export * from './payments-products';
+export * from './ui';

@@ -1,15 +1,13 @@
 import { ShoppingCartOutlined } from '@ant-design/icons';
-import { useQuery } from '@tanstack/react-query';
 import { FloatButton, Space, Spin } from 'antd';
 import { DayCard } from 'components';
 import { MonthStepper } from 'components/month-stepper';
 import dayjs from 'dayjs';
-import { useError } from 'hooks';
+import { useConfigCall } from 'hooks';
 import { observer } from 'mobx-react-lite';
-import { IKeys, IROrderProduct, IROrder } from 'models';
+import { IROrderProduct, IROrder } from 'models';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { orderService } from 'services';
 import { cartStore } from 'stores';
 import { getAllMondaysOfMonth } from 'utils';
 
@@ -17,17 +15,11 @@ export const Classes = observer(() => {
   const [month, setMonth] = useState(dayjs().month());
   const mondays = getAllMondaysOfMonth(month);
   const navigate = useNavigate();
-  const { onErrorFn, contextHolder } = useError();
 
-  const { isLoading, data: orders, isFetching: isOrderFetching } = useQuery({
-    queryKey: [IKeys.ORDERS, { month: month }],
-    queryFn: () => orderService.getByMonth(month),
-    onError: onErrorFn,
-    staleTime: 1000 * 30
-  });
+  const { loading, contextHolder, orders } = useConfigCall(month);
 
   return (
-    <Spin spinning={isLoading || isOrderFetching}>
+    <Spin spinning={loading}>
       <Space direction="vertical" size={12} style={{ width: '100%' }}>
         <MonthStepper month={month} setMonth={setMonth} />
         {mondays.map((el) => {
