@@ -1,14 +1,17 @@
 import { IMakeUp } from 'models/makeup.model';
+import { userStore } from 'stores';
+import dayjs from 'dayjs';
 
 import { $api } from '../http';
 
 class MakeUpService {
-  async getCurrent(author: string, today: string) {
+  async getCurrent() {
     try {
       const res = await $api.get<IMakeUp[]>('/wp/v2/makeups', {
         params: {
           _fields: 'id,author,acf',
-          author, today
+          author: userStore.data?.id,
+          today: dayjs().format('YYYYMMDD')
         }
       });
       return res.data;

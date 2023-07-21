@@ -18,7 +18,10 @@ const columns: ColumnsType<IROrderProduct> = [
       return dayjs(date).format('MMM D');
     }
   },
-  { title: 'Price', dataIndex: 'name', key: 'name', render: (_, el) => <Price total={el.total} subtotal={el.subtotal} /> }
+  {
+    title: 'Price', dataIndex: 'name', key: 'name',
+    render: (_, el) => el.total !== '0' ? <Price total={el.total} subtotal={el.subtotal} /> : '$0'
+  }
 ];
 
 export const PaymentsProducts = ({ data }: PaymentsProductsProps) => {

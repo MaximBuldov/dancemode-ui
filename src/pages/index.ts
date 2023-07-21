@@ -8,3 +8,4 @@ export * from './video';
 export * from './forgot-password';
 export * from './error-page';
 export * from './cart';
+export * from './makeups';

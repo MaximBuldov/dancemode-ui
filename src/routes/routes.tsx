@@ -1,6 +1,6 @@
-import { Cart, Classes, ForgotPassword, Home, Login, Payments, Profile, Registration, Video } from 'pages';
+import { Cart, Classes, ForgotPassword, Home, Login, Makeups, Payments, Profile, Registration, Video } from 'pages';
 
-import { CART, CLASSES, FORGOT_PASSWORD, LOGIN, PAYMENTS, PROFILE, SIGN_UP, VIDEO } from './consts';
+import { CART, CLASSES, FORGOT_PASSWORD, LOGIN, MAKEUPS, PAYMENTS, PROFILE, SIGN_UP, VIDEO } from './consts';
 
 interface IRoute {
   path: string;
@@ -34,6 +34,10 @@ export const userRoutes: IRoute[] = [
   {
     path: CART,
     element: <Cart />
+  },
+  {
+    path: MAKEUPS,
+    element: <Makeups />
   }
 ];
 

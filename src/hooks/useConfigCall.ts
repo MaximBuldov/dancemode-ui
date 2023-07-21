@@ -20,7 +20,7 @@ export const useConfigCall = (month: number) => {
 
   const makeups = useQuery({
     queryKey: [IKeys.MAKEUPS, { today }],
-    queryFn: () => makeupService.getCurrent(userStore.data!.id, today),
+    queryFn: makeupService.getCurrent,
     onSuccess: (data) => makeupStore.setMakeups(data),
     onError: onErrorFn,
     enabled: !!userStore.data?.id,

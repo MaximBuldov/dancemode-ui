@@ -6,3 +6,4 @@ export const LOGIN = '/login';
 export const SIGN_UP = '/sign-up';
 export const FORGOT_PASSWORD = '/forgot-password';
 export const CART = '/cart';
+export const MAKEUPS = '/makeups';

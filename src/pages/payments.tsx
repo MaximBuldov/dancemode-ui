@@ -39,8 +39,7 @@ export const Payments = () => {
       rowKey={(line) => line.id}
       size="small"
       expandable={{
-        expandedRowRender: (record) => <PaymentsProducts data={record.line_items} />,
-        rowExpandable: (record) => record.total !== '0'
+        expandedRowRender: (record) => <PaymentsProducts data={record.line_items} />
       }}
       pagination={{
         current: page,

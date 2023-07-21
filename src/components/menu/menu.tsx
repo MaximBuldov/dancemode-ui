@@ -10,6 +10,10 @@ const userItems = [
     icon: '🗓️'
   },
   {
+    label: 'makeups',
+    icon: '👯‍♀️'
+  },
+  {
     label: 'payments',
     icon: '💵'
   },
