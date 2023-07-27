@@ -30,6 +30,7 @@ export const PaymentsProducts = ({ data }: PaymentsProductsProps) => {
       dataSource={data}
       columns={columns}
       pagination={false}
+      rowKey={(line) => line.id}
     />
   );
 };

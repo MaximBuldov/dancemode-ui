@@ -1,6 +1,7 @@
-import { ILoginForm, ISignupForm, IUpdateUser, IUserResponse } from 'models';
+import { ILoginForm, IRUser, ISignupForm, IUser, IUserResponse } from 'models';
+import { userStore } from 'stores';
 
-import { $api, $auth } from '../http';
+import { $api, $auth, $wc } from '../http';
 
 class UserService {
   async login(data: ILoginForm) {
@@ -21,10 +22,19 @@ class UserService {
     }
   }
 
-  async update({ data, id }: { data: IUpdateUser, id: string }) {
+  async update(data: ISignupForm) {
     try {
-      const res = await $api.post(`/wp/v2/users/${id}`, data);
+      const res = await $api.post(`/wp/v2/users/${userStore.data?.id}`, data);
       return res.data as IUserResponse;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async getCustomers() {
+    try {
+      const res = await $wc.get('/wc/v3/customers');
+      return res.data as IRUser[];
     } catch (error) {
       throw error;
     }

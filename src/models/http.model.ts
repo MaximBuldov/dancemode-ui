@@ -9,5 +9,6 @@ export interface IResponseError {
 export enum IKeys {
   PRODUCTS = 'products',
   ORDERS = 'orders',
-  MAKEUPS = 'makeups'
+  MAKEUPS = 'makeups',
+  CUSTOMERS = 'customers'
 }

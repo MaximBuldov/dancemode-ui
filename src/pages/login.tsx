@@ -1,6 +1,5 @@
 import { Button, Form, Input, Typography } from 'antd';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
-import { ILoginForm } from 'models';
 import { useMutation } from '@tanstack/react-query';
 import { userService } from 'services';
 import { userStore } from 'stores';
@@ -24,17 +23,13 @@ export const Login = observer(() => {
     onError: onErrorFn
   });
 
-  const onFinish = (data: ILoginForm) => {
-    mutate(data);
-  };
-
   return (
     <div>
       <Typography.Title level={4}>Hey, please login 👋</Typography.Title>
       <Form
         form={form}
         name="login"
-        onFinish={onFinish}
+        onFinish={(data) => mutate(data)}
       >
         <Item
           name="username"

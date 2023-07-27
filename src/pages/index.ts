@@ -9,3 +9,5 @@ export * from './forgot-password';
 export * from './error-page';
 export * from './cart';
 export * from './makeups';
+export * from './orders';
+export * from './students';

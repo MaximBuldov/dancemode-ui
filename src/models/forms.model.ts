@@ -6,10 +6,3 @@ export interface ILoginForm {
 }
 
 export type ISignupForm = IUser & ILoginForm & { confirm: string };
-
-export interface IUpdateUser extends ISignupForm {
-  acf: {
-    instagram: string;
-    billing_phone: string;
-  }
-}

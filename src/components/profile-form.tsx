@@ -1,5 +1,6 @@
 import { InstagramOutlined, LockOutlined, MailOutlined, PhoneOutlined, UserOutlined } from '@ant-design/icons';
-import { Button, Form, Input, Typography } from 'antd';
+import { Button, DatePicker, Form, Input, Typography } from 'antd';
+import dayjs from 'dayjs';
 import { ISignupForm, IUser } from 'models';
 import React from 'react';
 
@@ -22,7 +23,8 @@ const labelsConfig = {
   phone: 'Phone',
   instagram: 'Instagram',
   password: 'Password',
-  confirmPassword: 'Confirm Password'
+  confirmPassword: 'Confirm Password',
+  dob: 'Date of Birthday'
 };
 
 export const ProfileForm = ({ title, onSubmit, isLoading, isLabels, submitButton, initialValues, isRequired }: ProfileFormProps) => {
@@ -36,7 +38,7 @@ export const ProfileForm = ({ title, onSubmit, isLoading, isLabels, submitButton
     return !isLabels ? text : '';
   };
 
-  const { firstName, lastName, email, phone, instagram, password, confirmPassword } = labelsConfig;
+  const { firstName, lastName, email, phone, instagram, password, confirmPassword, dob } = labelsConfig;
 
   return (
     <>
@@ -46,7 +48,10 @@ export const ProfileForm = ({ title, onSubmit, isLoading, isLabels, submitButton
         name="signup"
         onFinish={onSubmit}
         layout="vertical"
-        initialValues={initialValues || undefined}
+        initialValues={initialValues ?
+          { ...initialValues, acf: { ...initialValues.acf, dob: dayjs(initialValues.acf.dob) } } :
+          undefined
+        }
       >
         <Item
           name="first_name"
@@ -68,6 +73,13 @@ export const ProfileForm = ({ title, onSubmit, isLoading, isLabels, submitButton
             placeholder={placeholder(lastName)}
           />
         </Item>
+        <Item name={['acf', 'dob']}>
+          <DatePicker
+            format="MM/DD/YYYY"
+            placeholder={dob}
+            style={{ width: '100%' }}
+          />
+        </Item>
         <Item
           name="email"
           rules={[
@@ -82,7 +94,7 @@ export const ProfileForm = ({ title, onSubmit, isLoading, isLabels, submitButton
           />
         </Item>
         <Item
-          name="billing_phone"
+          name={['acf', 'billing_phone']}
           rules={[{ required: isRequired, message: 'Please input your phone!' }]}
         >
           <Input
@@ -91,9 +103,7 @@ export const ProfileForm = ({ title, onSubmit, isLoading, isLabels, submitButton
             placeholder={placeholder(phone)}
           />
         </Item>
-        <Item
-          name="instagram"
-        >
+        <Item name={['acf', 'instagram']}>
           <Input
             addonBefore={label(instagram)}
             prefix={<InstagramOutlined />}

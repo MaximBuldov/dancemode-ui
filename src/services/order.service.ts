@@ -23,6 +23,12 @@ interface IUpdateResponse {
   makeup_id: number
 }
 
+interface IFilters {
+  page?: number,
+  per_page?: number,
+  customer_id?: number
+}
+
 class OrderService {
   async create(data: IOrder) {
     try {
@@ -48,7 +54,7 @@ class OrderService {
     }
   }
 
-  async getAll(page: number) {
+  async getMyAll(page: number) {
     try {
       const res = await $wc.get('/wc/v3/orders', {
         params: {
@@ -57,6 +63,21 @@ class OrderService {
           per_page: 10,
           dp: 0,
           page
+        }
+      });
+      return res;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async getAll(values: IFilters) {
+    try {
+      const res = await $wc.get('/wc/v3/orders', {
+        params: {
+          _fields: 'id,status,date_created,total,customer_id,line_items,customer_name',
+          dp: 0,
+          ...values
         }
       });
       return res;

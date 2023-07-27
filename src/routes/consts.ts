@@ -7,3 +7,5 @@ export const SIGN_UP = '/sign-up';
 export const FORGOT_PASSWORD = '/forgot-password';
 export const CART = '/cart';
 export const MAKEUPS = '/makeups';
+export const STUDENTS = '/students';
+export const ORDERS = '/orders';

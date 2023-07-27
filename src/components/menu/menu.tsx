@@ -27,6 +27,25 @@ const userItems = [
   }
 ];
 
+const adminItems = [
+  {
+    label: 'classes',
+    icon: '🗓️'
+  },
+  {
+    label: 'students',
+    icon: '👯‍♀️'
+  },
+  {
+    label: 'orders',
+    icon: '💵'
+  },
+  {
+    label: 'profile',
+    icon: '💃'
+  }
+];
+
 const publicItems = [
   {
     label: 'login',
@@ -43,7 +62,9 @@ const publicItems = [
 ];
 
 export const Menu = () => {
-  const items = userStore.data ? userItems : publicItems;
+  const items = userStore.isAuth ?
+    userStore.isAdmin ? adminItems : userItems :
+    publicItems;
   return (
     <div className={styles.container}>
       <ul className={styles.list}>

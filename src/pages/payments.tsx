@@ -26,7 +26,7 @@ const columns: ColumnsType<IROrder> = [
 export const Payments = () => {
   const [page, setPage] = useState(1);
   const { data, isLoading } = useQuery({
-    queryFn: () => orderService.getAll(page),
+    queryFn: () => orderService.getMyAll(page),
     queryKey: [IKeys.ORDERS, { page }],
     staleTime: 1000 * 60
   });

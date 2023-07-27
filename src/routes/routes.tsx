@@ -1,6 +1,6 @@
-import { Cart, Classes, ForgotPassword, Home, Login, Makeups, Payments, Profile, Registration, Video } from 'pages';
+import { Cart, Classes, ForgotPassword, Login, Makeups, Orders, Payments, Profile, Registration, Students, Video } from 'pages';
 
-import { CART, CLASSES, FORGOT_PASSWORD, LOGIN, MAKEUPS, PAYMENTS, PROFILE, SIGN_UP, VIDEO } from './consts';
+import { CART, CLASSES, FORGOT_PASSWORD, LOGIN, MAKEUPS, ORDERS, PAYMENTS, PROFILE, SIGN_UP, STUDENTS, VIDEO } from './consts';
 
 interface IRoute {
   path: string;
@@ -9,8 +9,16 @@ interface IRoute {
 
 export const adminRoutes: IRoute[] = [
   {
-    path: '/admin',
-    element: <Home />
+    path: ORDERS,
+    element: <Orders />
+  },
+  {
+    path: PROFILE,
+    element: <Profile />
+  },
+  {
+    path: STUDENTS,
+    element: <Students />
   }
 ];
 

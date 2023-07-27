@@ -1,10 +1,10 @@
 import { makeAutoObservable } from 'mobx';
 import { makePersistable } from 'mobx-persist-store';
-import { IUser, IUserResponse, IUserRoles } from 'models';
+import { IRUser, IUser, IUserResponse, IUserRoles } from 'models';
 import { secureLs } from 'utils';
 
 class User {
-  data: IUser | null = null;
+  data: IRUser | null = null;
 
   constructor() {
     makeAutoObservable(this);
@@ -17,7 +17,7 @@ class User {
   }
 
   updateUser(data: IUser) {
-    this.data = data;
+    this.data = { id: this.data!.id, role: this.data!.role, ...data };
   }
 
   logout() {
