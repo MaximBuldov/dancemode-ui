@@ -46,7 +46,7 @@ export const Orders = () => {
     queryFn: userService.getCustomers,
     queryKey: [IKeys.CUSTOMERS],
     onSuccess: (data) => {
-      const res = data.map(el => ({ value: el.id, label: `${el.first_name} ${el.last_name}` }));
+      const res = data.data.map(el => ({ value: el.id, label: `${el.first_name} ${el.last_name}` }));
       setCustomers(res);
     },
     enabled: customers.length === 0
@@ -70,11 +70,11 @@ export const Orders = () => {
         loading={orders.isFetching}
         rowKey={(line) => line.id}
         size="small"
-        expandable={{ expandedRowRender: (record) => <PaymentsProducts data={record.line_items} /> }}
+        expandable={{ expandedRowRender: (record) => record && <PaymentsProducts data={record.line_items} /> }}
         pagination={{
           current: page,
           pageSize: per_page,
-          total: orders.isSuccess && orders.data?.headers['x-wp-total'],
+          total: orders.isSuccess && orders.data?.headers['X-Wp-Total'],
           onChange: (number) => setPage(number)
         }}
       />

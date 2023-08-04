@@ -1,4 +1,4 @@
-import { ILoginForm, IRUser, ISignupForm, IUser, IUserResponse } from 'models';
+import { ILoginForm, IRUser, ISignupForm, IUserResponse } from 'models';
 import { userStore } from 'stores';
 
 import { $api, $auth, $wc } from '../http';
@@ -31,10 +31,10 @@ class UserService {
     }
   }
 
-  async getCustomers() {
+  async getCustomers(params?: any) {
     try {
-      const res = await $wc.get('/wc/v3/customers');
-      return res.data as IRUser[];
+      const res = await $wc.get<IRUser[]>('/wc/v3/customers', { params });
+      return res;
     } catch (error) {
       throw error;
     }
