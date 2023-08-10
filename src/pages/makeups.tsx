@@ -8,7 +8,7 @@ import dayjs from 'dayjs';
 const columns: ColumnsType<IMakeUp> = [
   {
     title: 'Class', key: 'class',
-    render: (_, record) => `${record.acf.class_name}: ${dayjs(record.acf.origin).format('MMM D')}`
+    render: (_, record) => `${record.acf.product_name}: ${dayjs(record.acf.origin).format('MMM D')}`
   },
   { title: 'Deadline', dataIndex: ['acf', 'deadline'], key: 'deadline', render: (el) => dayjs(el).format('MMM D') }
 ];
@@ -16,8 +16,7 @@ const columns: ColumnsType<IMakeUp> = [
 export const Makeups = () => {
   const { data, isFetching } = useQuery({
     queryFn: makeupService.getCurrent,
-    queryKey: [IKeys.MAKEUPS],
-    staleTime: 1000 * 60
+    queryKey: [IKeys.MAKEUPS]
   });
 
   return (

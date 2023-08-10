@@ -1,18 +1,25 @@
-import dayjs from 'dayjs';
 import { observer } from 'mobx-react-lite';
-import { IROrderProduct, IProduct } from 'models';
+import { IMetaData, IProduct } from 'models';
 
 import { PaidClass } from './paid-class';
 import { UnpaidClass } from './unpaid-class';
 
 interface SingleClassProps {
-  data: IProduct;
+  product: IProduct;
   isExpired: boolean;
-  day: dayjs.Dayjs;
-  status?: IROrderProduct;
+  order?: number;
+  meta_data?: IMetaData[];
+  item_id?: number;
 }
 
 export const SingleClass = observer((props: SingleClassProps) => {
-  const { status, ...rest } = props;
-  return status ? <PaidClass {...rest} status={status} /> : <UnpaidClass {...rest} />;
+  const { order, meta_data, item_id, ...rest } = props;
+  return (order && meta_data && item_id) ?
+    <PaidClass
+      {...rest}
+      order={order}
+      meta_data={meta_data}
+      item_id={item_id}
+    /> :
+    <UnpaidClass {...rest} />;
 });

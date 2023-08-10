@@ -1,7 +1,7 @@
 export interface IOrder {
   customer_id: number;
   line_items: IOrderProduct[];
-  meta_data: IMetaData[];
+  meta_data?: IMetaData[];
 }
 
 export interface IROrder extends IOrder {
@@ -16,13 +16,14 @@ export interface IOrderProduct {
   product_id: number;
   subtotal: string;
   total: string;
-  meta_data: IMetaData[];
+  meta_data?: IMetaData[];
 }
 
 export interface IROrderProduct extends IOrderProduct {
   id: number;
   name: string;
   order: number;
+  date_time: string;
 }
 
 export interface IMetaData {

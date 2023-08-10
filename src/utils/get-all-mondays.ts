@@ -20,3 +20,19 @@ export function getAllMondaysOfMonth(month: number) {
 
   return mondays;
 }
+
+export function getAllMondaysInRange(range: number[]) {
+  const [startMonth, endMonth] = range;
+  const mondaysInRange = [];
+
+  if (startMonth === endMonth) {
+    mondaysInRange.push(...getAllMondaysOfMonth(startMonth));
+  } else {
+    for (let month = startMonth; month <= endMonth; month++) {
+      const mondaysInMonth = getAllMondaysOfMonth(month);
+      mondaysInRange.push(...mondaysInMonth);
+    }
+  }
+
+  return mondaysInRange;
+}

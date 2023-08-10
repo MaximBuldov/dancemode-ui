@@ -1,8 +1,9 @@
-import { ICartProduct, IMetaData, IOrder, IStatus } from 'models';
+import dayjs from 'dayjs';
+import { IMetaData, IOrder, IProduct, IStatus } from 'models';
 import { userStore } from 'stores';
 
-export const prepareOrder = (products: ICartProduct[], meta: IMetaData[] = [], isReschedule = false): IOrder => {
-  const months = Array.from(new Set(products.map(obj => obj.month))).join('');
+export const prepareOrder = (products: IProduct[], meta_data?: IMetaData[], isReschedule = false): IOrder => {
+  const months = Array.from(new Set(products.map(obj => dayjs(obj.date_time).format('YYYY-MM')))).join(',');
   return {
     customer_id: Number(userStore.data!.id),
     meta_data: [
@@ -16,13 +17,7 @@ export const prepareOrder = (products: ICartProduct[], meta: IMetaData[] = [], i
       quantity: 1,
       subtotal: el.price,
       total: isReschedule ? '0' : (el?.total || el.price),
-      meta_data: [
-        {
-          key: 'date',
-          value: el.day
-        },
-        ...meta
-      ]
+      meta_data
     }))
   };
 };

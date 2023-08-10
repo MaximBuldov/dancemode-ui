@@ -9,3 +9,4 @@ export const CART = '/cart';
 export const MAKEUPS = '/makeups';
 export const STUDENTS = '/students';
 export const ORDERS = '/orders';
+export const CALENDAR = '/calendar';

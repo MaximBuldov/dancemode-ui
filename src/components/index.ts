@@ -6,3 +6,6 @@ export * from './profile-form';
 export * from './cart-item';
 export * from './payments-products';
 export * from './ui';
+export * from './add-class-modal';
+export * from './create-products-form';
+export * from './create-single-product-form';

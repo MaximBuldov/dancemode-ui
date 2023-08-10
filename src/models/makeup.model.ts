@@ -4,7 +4,8 @@ export interface IMakeUp {
   author: number;
   acf: {
     origin: string;
-    class_name: string;
+    product_id: number;
+    product_name: string;
     deadline: string;
     make_up?: string;
   }

@@ -4,8 +4,8 @@ import dayjs from 'dayjs';
 import React from 'react';
 
 interface MonthStepperProps {
-  month: number;
-  setMonth: (n: number) => void
+  month: dayjs.Dayjs;
+  setMonth: (n: dayjs.Dayjs) => void
 }
 
 export const MonthStepper = ({ month, setMonth }: MonthStepperProps) => {
@@ -14,28 +14,24 @@ export const MonthStepper = ({ month, setMonth }: MonthStepperProps) => {
       <Button
         type="primary"
         block
-        onClick={() => setMonth(month - 1)}
+        onClick={() => setMonth(month.subtract(1, 'M'))}
       >
-        <ArrowLeftOutlined /> {renderMonth(month - 1)}
+        <ArrowLeftOutlined /> {month.subtract(1, 'M').format('MMMM')}
       </Button>
       <Button
         type="primary"
         ghost
         block
       >
-        {renderMonth(month)}
+        {month.format('MMMM')}
       </Button>
       <Button
         type="primary"
         block
-        onClick={() => setMonth(month + 1)}
+        onClick={() => setMonth(month.add(1, 'M'))}
       >
-        {renderMonth(month + 1)} <ArrowRightOutlined />
+        {month.add(1, 'M').format('MMMM')} <ArrowRightOutlined />
       </Button>
     </Space.Compact>
   );
-
-  function renderMonth(n: number) {
-    return dayjs().month(n).format('MMMM');
-  }
 };

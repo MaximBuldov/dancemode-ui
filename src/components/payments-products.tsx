@@ -1,5 +1,5 @@
 import { Table } from 'antd';
-import { IROrderProduct, IStatus } from 'models';
+import { IROrderProduct } from 'models';
 import type { ColumnsType } from 'antd/es/table';
 import dayjs from 'dayjs';
 
@@ -12,11 +12,8 @@ interface PaymentsProductsProps {
 const columns: ColumnsType<IROrderProduct> = [
   { title: 'Class', dataIndex: 'name', key: 'name' },
   {
-    title: 'Date', dataIndex: 'meta_data', key: 'data',
-    render: (_, el) => {
-      const date = el.meta_data.find(el => el.key === IStatus.DATE)?.value;
-      return dayjs(date).format('MMM D');
-    }
+    title: 'Date', dataIndex: 'date_time', key: 'data',
+    render: (el) => dayjs(el).format('MMM D')
   },
   {
     title: 'Price', dataIndex: 'name', key: 'name',

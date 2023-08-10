@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import dayjs from 'dayjs';
-import { IStatus, IStatusValue, IKeys, IROrder, IROrderProduct } from 'models';
+import { IStatus, IStatusValue, IKeys, IROrder, IProduct } from 'models';
 import { orderService } from 'services';
 import { makeupStore, userStore } from 'stores';
 
@@ -8,30 +8,33 @@ import { useError } from './useError';
 
 interface IMutate { key: IStatus, value: IStatusValue }
 
-export const useUpdateOrder = (day: dayjs.Dayjs, isDeadline: boolean, status: IROrderProduct) => {
+export const useUpdateOrder = (product: IProduct, order: number, item_id: number) => {
   const { onErrorFn, contextHolder } = useError();
   const client = useQueryClient();
   const userId = userStore.data!.id;
+  const day = dayjs(product.date_time);
   const body = {
-    origin: dayjs(day).format('YYYYMMDD'),
-    deadline: dayjs(day).add(1, 'month').endOf('month').format('YYYYMMDD'),
-    class_name: status.name
+    origin: day.format('YYYYMMDD'),
+    deadline: day.add(1, 'month').endOf('month').format('YYYYMMDD'),
+    product_id: product.id,
+    product_name: product.name
   };
+  const isDeadline = dayjs().isBefore(day.subtract(5, 'hour'));
 
   const { mutate, isLoading } = useMutation({
     mutationFn: ({ key, value }: IMutate) => {
       const create_makeup = isDeadline && key === IStatus.CANCEL;
       const data = { key, value, create_makeup, userId, ...body };
-      return orderService.update({ data, order: status?.order, item: status!.id });
+      return orderService.update({ data, order, item: item_id });
     },
     onError: onErrorFn,
     onSuccess: (data, values) => {
-      client.setQueriesData([IKeys.ORDERS, { month: dayjs(day).month() }], (orders: IROrder[] | undefined) => {
+      client.setQueriesData([IKeys.ORDERS, { month: day.format('YYYY-MM') }], (orders: IROrder[] | undefined) => {
         if (orders) {
-          const updated = orders.map(order => order.id === status.order ? ({
-            ...order,
+          const updated = orders.map(el => el.id === order ? ({
+            ...el,
             line_items: data.orders
-          }) : order);
+          }) : el);
           return updated;
         }
 

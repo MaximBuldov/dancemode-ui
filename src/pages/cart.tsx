@@ -16,7 +16,7 @@ export const Cart = observer(() => {
   const { mutate, isSuccess, isLoading, data } = useMutation({
     mutationFn: orderService.create,
     onSuccess: (data) => {
-      cartStore.clearCart();
+      cartStore.clear();
       client.setQueriesData(
         [IKeys.ORDERS],
         (orders: IROrder[] | undefined) => orders ? [...orders, data] : orders
@@ -69,7 +69,7 @@ export const Cart = observer(() => {
       <Row align="middle" justify="space-between">
         <Typography.Text strong style={{ fontSize: 20 }}><ShoppingCartOutlined /> Cart</Typography.Text>
         <Button
-          onClick={() => cartStore.clearCart()}
+          onClick={() => cartStore.clear()}
           danger
           type="text"
           icon={<DeleteOutlined />}

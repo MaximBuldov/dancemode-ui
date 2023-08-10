@@ -3,25 +3,25 @@ import { MenuProps, Typography, Spin, Row, Col, Space, Checkbox, Tag, Dropdown }
 import dayjs from 'dayjs';
 import { useUpdateOrder } from 'hooks';
 import { observer } from 'mobx-react-lite';
-import { IProduct, IROrderProduct, IStatus, IStatusValue } from 'models';
+import { IMetaData, IProduct, IStatus, IStatusValue } from 'models';
 import { useMemo } from 'react';
 
 interface PaidClassProps {
-  data: IProduct;
+  product: IProduct;
   isExpired: boolean;
-  day: dayjs.Dayjs;
-  status: IROrderProduct;
+  order: number;
+  meta_data: IMetaData[];
+  item_id: number;
 }
 
-export const PaidClass = observer(({ data, isExpired, day, status }: PaidClassProps) => {
-  const classTime = dayjs(day).hour(Number(data.time));
-  const isDeadline = dayjs().isBefore(classTime.subtract(5, 'hour')); //true - you get free class
+export const PaidClass = observer(({ product, isExpired, order, meta_data, item_id }: PaidClassProps) => {
+  const classTime = dayjs(product.date_time);
 
-  const isConfirmed = status?.meta_data.some(el => el.key === IStatus.CONFIRM && el.value === IStatusValue.TRUE);
-  const isCanceled = status?.meta_data.some(el => el.key === IStatus.CANCEL && el.value === IStatusValue.TRUE);
-  const isRescheduled = status?.meta_data.some(el => el.key === IStatus.RESCHEDULE && el.value === IStatusValue.TRUE);
+  const isConfirmed = meta_data?.some(el => el.key === IStatus.CONFIRM && el.value === IStatusValue.TRUE);
+  const isCanceled = meta_data?.some(el => el.key === IStatus.CANCEL && el.value === IStatusValue.TRUE);
+  const isRescheduled = meta_data?.some(el => el.key === IStatus.RESCHEDULE && el.value === IStatusValue.TRUE);
 
-  const { mutate, contextHolder, isLoading } = useUpdateOrder(day, isDeadline, status);
+  const { mutate, contextHolder, isLoading } = useUpdateOrder(product, order, item_id);
 
   const items = useMemo(() => {
     const elements: MenuProps['items'] = [];
@@ -51,7 +51,7 @@ export const PaidClass = observer(({ data, isExpired, day, status }: PaidClassPr
         <Col>
           <Space>
             <Checkbox disabled />
-            <Typography>{data.name}: {classTime.format('ha')}</Typography>
+            <Typography>{product.name}: {classTime.format('ha')}</Typography>
             <div>
               {!isRescheduled && <Tag icon={<DollarOutlined />} color="processing">Payed</Tag>}
               {isRescheduled && <Tag icon={<ClockCircleOutlined />} color="warning">Rescheduled</Tag>}

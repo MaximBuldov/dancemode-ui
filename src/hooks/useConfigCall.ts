@@ -1,20 +1,20 @@
 import { useQuery } from '@tanstack/react-query';
 import { makeupService, orderService, productService } from 'services';
-import { makeupStore, productStore, userStore } from 'stores';
+import { makeupStore, userStore } from 'stores';
 import { IKeys } from 'models';
 import dayjs from 'dayjs';
 
 import { useError } from './useError';
 
-export const useConfigCall = (month: number) => {
+export const useConfigCall = (day: dayjs.Dayjs) => {
   const { onErrorFn, contextHolder } = useError();
   const today = dayjs().format('YYYYMMDD');
+  const month = day.format('YYYY-MM');
 
   const products = useQuery({
     queryKey: [IKeys.PRODUCTS],
-    queryFn: productService.getAll,
-    enabled: !productStore.data && userStore.isAuth,
-    onSuccess: (data) => productStore.setProducts(data),
+    queryFn: () => productService.getAll({ month }),
+    enabled: userStore.isAuth,
     onError: onErrorFn
   });
 
@@ -29,11 +29,11 @@ export const useConfigCall = (month: number) => {
 
   const orders = useQuery({
     queryKey: [IKeys.ORDERS, { month: month }],
-    queryFn: () => orderService.getByMonth(month),
+    queryFn: () => orderService.getByMonth(day),
     onError: onErrorFn,
     staleTime: 1000 * 30
   });
 
   const loading = products.isFetching || makeups.isFetching || orders.isFetching;
-  return { loading, contextHolder, orders: orders.data };
+  return { loading, contextHolder, orders: orders.data, products: products.data };
 };

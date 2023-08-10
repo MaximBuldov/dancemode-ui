@@ -2,19 +2,19 @@ import { DeleteOutlined } from '@ant-design/icons';
 import { Button, Col, Row } from 'antd';
 import { Price } from 'components';
 import dayjs from 'dayjs';
-import { ICartProduct } from 'models';
+import { IProduct } from 'models';
 import React from 'react';
 import { cartStore } from 'stores';
 
 interface CartItemProps {
-  item: ICartProduct
+  item: IProduct
 }
 
 export const CartItem = ({ item }: CartItemProps) => {
   return (
     <Row align="middle" justify="space-between" style={{ width: '100%' }}>
       <Col span={14}>
-        <b>{item.name}:</b> {dayjs(item.day).format('MMMM DD')}
+        <b>{item.name}:</b> {dayjs(item.date_time).format('MMMM DD')}
       </Col>
       <Col span={6}>
         <Price total={item.total || item.price} subtotal={item.price} />
@@ -24,7 +24,7 @@ export const CartItem = ({ item }: CartItemProps) => {
           icon={<DeleteOutlined />}
           danger
           type="text"
-          onClick={() => cartStore.removeFromCart(item)}
+          onClick={() => cartStore.remove(item)}
         />
       </Col>
     </Row>

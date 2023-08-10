@@ -29,7 +29,7 @@ const userItems = [
 
 const adminItems = [
   {
-    label: 'classes',
+    label: 'calendar',
     icon: '🗓️'
   },
   {

@@ -29,23 +29,25 @@ interface IFilters {
   customer_id?: number
 }
 
+const _fields = 'id,status,date_created,total,customer_id,line_items';
+
 class OrderService {
   async create(data: IOrder) {
     try {
-      const res = await $wc.post('/wc/v3/orders', data);
+      const res = await $wc.post('/wc/v3/orders', data, { params: { _fields } });
       return res.data as IROrder;
     } catch (error) {
       throw error;
     }
   }
 
-  async getByMonth(month: number) {
+  async getByMonth(month: dayjs.Dayjs) {
     try {
       const res = await $wc.get('/wc/v3/orders', {
         params: {
-          _fields: 'id,status,date_created,total,customer_id,line_items',
+          _fields,
           customer: userStore.data?.id,
-          date: dayjs().month(month).format('YYYYMM')
+          date: month.format('YYYY-MM')
         }
       });
       return res.data as IROrder[];
@@ -58,7 +60,7 @@ class OrderService {
     try {
       const res = await $wc.get('/wc/v3/orders', {
         params: {
-          _fields: 'id,status,date_created,total,customer_id,line_items',
+          _fields,
           customer: userStore.data?.id,
           per_page: 10,
           dp: 0,
@@ -75,7 +77,7 @@ class OrderService {
     try {
       const res = await $wc.get('/wc/v3/orders', {
         params: {
-          _fields: 'id,status,date_created,total,customer_id,line_items,customer_name',
+          _fields,
           dp: 0,
           ...values
         }

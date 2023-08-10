@@ -4,12 +4,14 @@ import dayjs from 'dayjs';
 
 import { $api } from '../http';
 
+const _fields = 'id,author,acf,date';
+
 class MakeUpService {
   async getCurrent() {
     try {
       const res = await $api.get<IMakeUp[]>('/wp/v2/makeups', {
         params: {
-          _fields: 'id,author,acf',
+          _fields,
           author: userStore.data?.id,
           today: dayjs().format('YYYYMMDD')
         }
@@ -22,7 +24,7 @@ class MakeUpService {
 
   async update(data: any, id: number) {
     try {
-      const res = await $api.post(`/wp/v2/makeups/${id}`, data);
+      const res = await $api.post(`/wp/v2/makeups/${id}`, data, { params: { _fields } });
       return res.data as IMakeUp;
     } catch (error) {
       throw error;

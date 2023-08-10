@@ -11,27 +11,21 @@ import { makeupStore, cartStore } from 'stores';
 import { prepareOrder } from 'utils';
 
 interface UnpaidClassProps {
-  data: IProduct;
+  product: IProduct;
   isExpired: boolean;
-  day: dayjs.Dayjs;
 }
 
-export const UnpaidClass = observer(({ data, isExpired, day }: UnpaidClassProps) => {
-  const classTime = dayjs(day).hour(Number(data.time));
+export const UnpaidClass = observer(({ product, isExpired }: UnpaidClassProps) => {
+  const classTime = dayjs(product.date_time);
   const client = useQueryClient();
   const { contextHolder, onErrorFn } = useError();
-  const product = useMemo(() => ({
-    ...data,
-    day: classTime.format('YYYYMMDD'),
-    month: classTime.format('YYYYMM')
-  }), [classTime, data]);
 
   const { mutate, isLoading } = useMutation({
     mutationFn: orderService.create,
     onError: onErrorFn,
     onSuccess: (data) => {
       client.setQueriesData(
-        [IKeys.ORDERS, { month: dayjs(day).month() }],
+        [IKeys.ORDERS, { month: classTime.format('YYYY-MM') }],
         (orders: IROrder[] | undefined) => orders ? [...orders, data] : orders
       );
       updateMakeup.mutate(data.id);
@@ -67,10 +61,10 @@ export const UnpaidClass = observer(({ data, isExpired, day }: UnpaidClassProps)
           <Space>
             <Checkbox
               disabled={isExpired}
-              checked={cartStore.isProductInCart(product)}
-              onChange={() => cartStore.isProductInCart(product) ? cartStore.removeFromCart(product) : cartStore.addSingleProduct(product)}
+              checked={cartStore.isInCart(product)}
+              onChange={() => cartStore.isInCart(product) ? cartStore.remove(product) : cartStore.add(product)}
             />
-            <Typography>{data.name}: {classTime.format('ha')}</Typography>
+            <Typography>{product.name}: {classTime.format('ha')}</Typography>
           </Space>
         </Col>
         {(!!items.length && !isExpired) && (
