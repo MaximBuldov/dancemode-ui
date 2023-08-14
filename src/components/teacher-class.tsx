@@ -1,6 +1,6 @@
 import { CloseCircleOutlined, MoreOutlined } from '@ant-design/icons';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { MenuProps, Typography, Dropdown, Col, Row, Spin, Tag, Space, Modal, List, Table } from 'antd';
+import { MenuProps, Typography, Dropdown, Col, Row, Spin, Tag, Space, Modal, Table } from 'antd';
 import dayjs from 'dayjs';
 import { useError } from 'hooks';
 import { observer } from 'mobx-react-lite';

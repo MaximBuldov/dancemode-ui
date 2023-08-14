@@ -32,13 +32,11 @@ const App = observer(() => {
 
 export default App;
 
-/*
-TODO:
-- after cancel class by user, out available spot for others(return back quantity o products +1)
-- messages, email, telegram
-- setup PWA
-- add swipe library for refresh
-- add quantity change on edit product
-- after cancel class by jane, whats going on?
-- can we update meta_data in order after payment?
-*/
+// TODO after cancel class by user, out available spot for others(return back quantity o products +1)
+// - messages, email, telegram
+// - add swipe library for refresh
+// - add quantity change on edit product
+// - after cancel class by jane, whats going on?
+// - can we update meta_data in order after payment?
+// - setup deployment
+// - check makeups, admin also have makeups?
