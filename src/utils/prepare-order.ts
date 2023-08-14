@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import { IMetaData, IOrder, IProduct, IStatus } from 'models';
+import { IMetaData, IOrder, IProduct } from 'models';
 import { userStore } from 'stores';
 
 export const prepareOrder = (products: IProduct[], meta_data?: IMetaData[], isReschedule = false): IOrder => {
@@ -8,7 +8,7 @@ export const prepareOrder = (products: IProduct[], meta_data?: IMetaData[], isRe
     customer_id: Number(userStore.data!.id),
     meta_data: [
       {
-        key: IStatus.DATE,
+        key: 'date',
         value: months
       }
     ],

@@ -26,10 +26,11 @@ interface IUpdateResponse {
 interface IFilters {
   page?: number,
   per_page?: number,
-  customer_id?: number
+  customer_id?: number,
+  product?: number
 }
 
-const _fields = 'id,status,date_created,total,customer_id,line_items';
+const _fields = 'id,status,date_created,total,customer_id,line_items,customer_name';
 
 class OrderService {
   async create(data: IOrder) {
@@ -75,7 +76,7 @@ class OrderService {
 
   async getAll(values: IFilters) {
     try {
-      const res = await $wc.get('/wc/v3/orders', {
+      const res = await $wc.get<IROrder[]>('/wc/v3/orders', {
         params: {
           _fields,
           dp: 0,

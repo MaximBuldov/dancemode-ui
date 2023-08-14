@@ -1,10 +1,10 @@
 import { ClockCircleOutlined, MoreOutlined } from '@ant-design/icons';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { MenuProps, Typography, Dropdown, Checkbox, Col, Row, Space, Spin } from 'antd';
+import { MenuProps, Typography, Dropdown, Checkbox, Col, Row, Space, Spin, Tag } from 'antd';
 import dayjs from 'dayjs';
 import { useError } from 'hooks';
 import { observer } from 'mobx-react-lite';
-import { IKeys, IProduct, IROrder, IStatus, IStatusValue } from 'models';
+import { IKeys, IProduct, IROrder, IStatus, IStatusValue, IStockStatus } from 'models';
 import { useMemo } from 'react';
 import { makeupService, orderService } from 'services';
 import { makeupStore, cartStore } from 'stores';
@@ -17,6 +17,7 @@ interface UnpaidClassProps {
 
 export const UnpaidClass = observer(({ product, isExpired }: UnpaidClassProps) => {
   const classTime = dayjs(product.date_time);
+  const isOutOfStock = product.stock_status === IStockStatus.OUTOFSTOCK;
   const client = useQueryClient();
   const { contextHolder, onErrorFn } = useError();
 
@@ -60,14 +61,15 @@ export const UnpaidClass = observer(({ product, isExpired }: UnpaidClassProps) =
         <Col>
           <Space>
             <Checkbox
-              disabled={isExpired}
+              disabled={isExpired || isOutOfStock}
               checked={cartStore.isInCart(product)}
               onChange={() => cartStore.isInCart(product) ? cartStore.remove(product) : cartStore.add(product)}
             />
             <Typography>{product.name}: {classTime.format('ha')}</Typography>
+            {isOutOfStock && <Tag color="#f50">Sold out</Tag>}
           </Space>
         </Col>
-        {(!!items.length && !isExpired) && (
+        {(!!items.length && !isExpired && !isOutOfStock) && (
           <Col>
             <Dropdown
               menu={{ items }}

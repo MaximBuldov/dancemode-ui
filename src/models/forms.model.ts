@@ -16,7 +16,7 @@ export interface ICreateProductsForm {
 }
 
 export interface ICreateSingleProductsForm {
-  date_time: dayjs.Dayjs,
-  name: string,
-  regular_price: number,
+  date_time?: dayjs.Dayjs | string,
+  name?: string,
+  regular_price?: string
 }

@@ -6,6 +6,7 @@ export interface IOrder {
 
 export interface IROrder extends IOrder {
   id: number;
+  customer_name: string;
   status: string;
   date: string;
   total: string;
@@ -33,7 +34,6 @@ export interface IMetaData {
 }
 
 export enum IStatus {
-  DATE = 'date',
   CONFIRM = 'confirm',
   CANCEL = 'cancel',
   RESCHEDULE = 'reschedule'

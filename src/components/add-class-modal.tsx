@@ -4,7 +4,7 @@ import { useState } from 'react';
 
 interface AddClassModalProps {
   isOpen: boolean;
-  closeModal: () => void
+  closeModal: (data: boolean) => void
 }
 const options = ['Single', 'Multiple'];
 
@@ -16,7 +16,7 @@ export const AddClassModal = ({ isOpen, closeModal }: AddClassModalProps) => {
       title={<span style={{ fontSize: 20 }}>Add class</span>}
       open={isOpen}
       footer={null}
-      onCancel={() => closeModal()}
+      onCancel={() => closeModal(false)}
     >
       <Radio.Group
         options={options}

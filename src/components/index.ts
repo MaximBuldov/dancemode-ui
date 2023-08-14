@@ -9,3 +9,6 @@ export * from './ui';
 export * from './add-class-modal';
 export * from './create-products-form';
 export * from './create-single-product-form';
+export * from './month-stepper';
+export * from './teacher-class';
+export * from './product-form';

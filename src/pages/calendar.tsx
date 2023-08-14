@@ -1,21 +1,38 @@
-import { Button, message } from 'antd';
-import { AddClassModal } from 'components';
+import { Button, Space, Spin } from 'antd';
+import { AddClassModal, DayCard, MonthStepper } from 'components';
+import dayjs from 'dayjs';
+import { useProducts } from 'hooks';
 import { useState } from 'react';
 
 export const Calendar = () => {
   const [modal, setModal] = useState(false);
-  const [messageApi, contextHolder] = message.useMessage();
-
-  const onSuccess = () => {
+  const [month, setMonth] = useState(dayjs());
+  const { groupedProducts, message, products } = useProducts(month);
+  const onSuccess = (isSuccess: boolean) => {
     setModal(false);
-    messageApi.success('Success!');
+    if (isSuccess) {
+      message.messageApi.success('Success!');
+    }
   };
 
   return (
-    <>
-      <Button block type="primary" onClick={() => setModal(true)}>Add class</Button>
-      <AddClassModal isOpen={modal} closeModal={() => onSuccess()} />
-      {contextHolder}
-    </>
+    <Spin spinning={products.isLoading}>
+      <Space direction="vertical" size={12} style={{ width: '100%' }}>
+        <Button block type="primary" onClick={() => setModal(true)}>Add class</Button>
+        <MonthStepper month={month} setMonth={setMonth} />
+        {Object.keys(groupedProducts).map((el) => {
+          return (
+            <DayCard
+              day={el}
+              key={el}
+              classes={groupedProducts[el]}
+            />
+          );
+        }
+        )}
+      </Space>
+      <AddClassModal isOpen={modal} closeModal={onSuccess} />
+      {message.contextHolder}
+    </Spin>
   );
 };

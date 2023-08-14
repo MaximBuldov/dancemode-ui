@@ -1,3 +1,20 @@
 .badge-hide {
   display: none;
 }
+
+.canceled {
+  border: 2px solid #ff5500;
+  position: relative;
+
+  &-text {
+    color: #ff5500;
+    position: absolute;
+    font-weight: bold;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background: #ffffff85;
+    text-align: center;
+    text-transform: uppercase
+  }
+}

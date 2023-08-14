@@ -1,8 +1,10 @@
 import { observer } from 'mobx-react-lite';
 import { IMetaData, IProduct } from 'models';
+import { userStore } from 'stores';
 
 import { PaidClass } from './paid-class';
 import { UnpaidClass } from './unpaid-class';
+import { TeacherClass } from './teacher-class';
 
 interface SingleClassProps {
   product: IProduct;
@@ -12,8 +14,10 @@ interface SingleClassProps {
   item_id?: number;
 }
 
-export const SingleClass = observer((props: SingleClassProps) => {
-  const { order, meta_data, item_id, ...rest } = props;
+export const SingleClass = observer(({ order, meta_data, item_id, ...rest }: SingleClassProps) => {
+  if (userStore.isAdmin) {
+    return <TeacherClass {...rest} />;
+  }
   return (order && meta_data && item_id) ?
     <PaidClass
       {...rest}
