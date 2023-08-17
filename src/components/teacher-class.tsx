@@ -22,13 +22,25 @@ export const TeacherClass = observer(({ product }: TeacherClassProps) => {
   const [modal, setModal] = useState(false);
   const { contextHolder, onErrorFn } = useError();
 
-  const productApi = useMutation({
+  const updateProduct = useMutation({
     mutationFn: (data: any) => productService.update(data, product.id),
     onError: onErrorFn,
     onSuccess: (data) => {
       client.setQueriesData(
         [IKeys.PRODUCTS, { month: classTime.format('YYYY-MM') }],
         (products: IProduct[] | undefined) => products ? products.map(el => el.id === data.id ? data : el) : products
+      );
+      setModal(false);
+    }
+  });
+
+  const deleteProduct = useMutation({
+    mutationFn: () => productService.delete(product.id),
+    onError: onErrorFn,
+    onSuccess: (data) => {
+      client.setQueriesData(
+        [IKeys.PRODUCTS, { month: classTime.format('YYYY-MM') }],
+        (products: IProduct[] | undefined) => products ? products.filter(el => el.id !== data.id) : products
       );
       setModal(false);
     }
@@ -45,17 +57,22 @@ export const TeacherClass = observer(({ product }: TeacherClassProps) => {
       {
         label: product.is_canceled ? 'Undo cancel' : 'Cancel',
         key: 'cancel',
-        onClick: () => productApi.mutate({ is_canceled: !product.is_canceled })
+        onClick: () => updateProduct.mutate({ is_canceled: !product.is_canceled })
       },
       {
         label: 'Edit',
         key: 'edit',
         onClick: () => setModal(true)
+      },
+      {
+        label: 'Delete',
+        key: 'delete',
+        onClick: () => deleteProduct.mutate()
       }
     ];
 
     return elements;
-  }, [product.is_canceled, productApi]);
+  }, [deleteProduct, product.is_canceled, updateProduct]);
 
   const columns: ColumnsType<IROrder> = [
     {
@@ -82,7 +99,7 @@ export const TeacherClass = observer(({ product }: TeacherClassProps) => {
   ];
 
   return (
-    <Spin spinning={productApi.isLoading || orderApi.isLoading}>
+    <Spin spinning={updateProduct.isLoading || orderApi.isLoading || deleteProduct.isLoading}>
       <Row justify="space-between">
         <Col>
           <Space>
@@ -114,7 +131,7 @@ export const TeacherClass = observer(({ product }: TeacherClassProps) => {
         />
       )}
       <Modal title="Edit class" open={modal} footer={false} onCancel={() => setModal(false)}>
-        <ProductForm onFinish={(values) => productApi.mutate(values)} isLoading={productApi.isLoading} initialValues={{ name: product.name, regular_price: product.price, date_time: classTime.format('YYYY-MM-DDTHH:MM') }} />
+        <ProductForm onFinish={(values) => updateProduct.mutate(values)} isLoading={updateProduct.isLoading} initialValues={{ name: product.name, regular_price: product.price, date_time: classTime.format('YYYY-MM-DDTHH:MM') }} />
       </Modal>
       {contextHolder}
     </Spin>

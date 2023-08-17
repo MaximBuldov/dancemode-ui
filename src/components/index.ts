@@ -12,3 +12,4 @@ export * from './create-single-product-form';
 export * from './month-stepper';
 export * from './teacher-class';
 export * from './product-form';
+export * from './promo-code';

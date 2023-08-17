@@ -1,5 +1,6 @@
-import { Button, Form, Input } from 'antd';
-import { ICreateSingleProductsForm } from 'models';
+import { Button, Form, Input, Select } from 'antd';
+import { Categories, ICreateSingleProductsForm, NameOfClass } from 'models';
+import { useState } from 'react';
 
 interface CreateSingleProductFormProps {
   onFinish: (values: ICreateSingleProductsForm) => void,
@@ -10,12 +11,16 @@ interface CreateSingleProductFormProps {
 const { useForm, Item } = Form;
 
 export const ProductForm = ({ onFinish, isLoading, initialValues }: CreateSingleProductFormProps) => {
+  const [isCustomName, setCustomName] = useState(false);
   const [form] = useForm();
 
   return (
-    <Form
+    <Form<ICreateSingleProductsForm>
       form={form}
-      onFinish={onFinish}
+      onFinish={(values) => {
+        onFinish(values);
+        form.resetFields();
+      }}
       initialValues={initialValues}
     >
 
@@ -25,12 +30,30 @@ export const ProductForm = ({ onFinish, isLoading, initialValues }: CreateSingle
       >
         <Input type="datetime-local" />
       </Item>
-      <Item
-        label="Class name"
-        name="name"
-      >
-        <Input placeholder="Class name" />
-      </Item>
+      {!initialValues && (
+        <Item
+          label="Class name"
+          name="category"
+        >
+          <Select
+            labelInValue
+            options={[
+              { label: NameOfClass.BEGINNER, value: Categories.BEGINNER },
+              { label: NameOfClass.ADV, value: Categories.ADV },
+              { label: NameOfClass.CUSTOM, value: Categories.CUSTOM }
+            ]}
+            onChange={(el) => setCustomName(el.value === Categories.CUSTOM)}
+          />
+        </Item>
+      )}
+      {(isCustomName || !!initialValues) && (
+        <Item
+          name="name"
+          label={!!initialValues && 'Class name'}
+        >
+          <Input placeholder="Class name" />
+        </Item>
+      )}
       <Item
         label="Price"
         name="regular_price"

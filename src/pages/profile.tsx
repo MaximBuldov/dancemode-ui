@@ -35,14 +35,16 @@ export const Profile = () => {
         initialValues={userStore.data}
         isRequired={false}
       />
-      <Divider />
       {prompt && (
-        <Button
-          block
-          onClick={() => promptToInstall()}
-        >
-          Add to Home Screen
-        </Button>
+        <>
+          <Divider />
+          <Button
+            block
+            onClick={() => promptToInstall()}
+          >
+            Add to Home Screen
+          </Button>
+        </>
       )
       }
       <Divider />

@@ -1,7 +1,7 @@
 import { DeleteOutlined, DollarOutlined, ShoppingCartOutlined } from '@ant-design/icons';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Button, Col, List, Result, Row, Typography } from 'antd';
-import { CartItem } from 'components';
+import { CartItem, PromoCode } from 'components';
 import { useError } from 'hooks';
 import { observer } from 'mobx-react-lite';
 import { IKeys, IROrder } from 'models';
@@ -82,21 +82,24 @@ export const Cart = observer(() => {
 
   function renderFooter() {
     return (
-      <Row align="top" justify="space-between">
-        <Col>
-          <Typography.Text strong>Total count: <span style={{ color: '#1677ff' }}>{cartStore.count}</span></Typography.Text>
-        </Col>
-        <Col span={8} style={{ textAlign: 'right' }}>
-          <Row>
-            <Col span={12}>Subtotal:</Col>
-            <Col span={12}><Typography.Link strong>${cartStore.subtotal}</Typography.Link></Col>
-            <Col span={12}>Sale:</Col>
-            <Col span={12}><Typography.Link strong>${cartStore.total - cartStore.subtotal}</Typography.Link></Col>
-            <Col span={12}><b>Total:</b></Col>
-            <Col span={12}><Typography.Link strong>${cartStore.total}</Typography.Link></Col>
-          </Row>
-        </Col>
-      </Row>
+      <>
+        <PromoCode />
+        <Row align="top" justify="space-between">
+          <Col>
+            <Typography.Text strong>Total count: <span style={{ color: '#1677ff' }}>{cartStore.count}</span></Typography.Text>
+          </Col>
+          <Col span={8} style={{ textAlign: 'right' }}>
+            <Row>
+              <Col span={12}>Subtotal:</Col>
+              <Col span={12}><Typography.Link strong>${cartStore.subtotal}</Typography.Link></Col>
+              <Col span={12}>Sale:</Col>
+              <Col span={12}><Typography.Link strong>${cartStore.total - cartStore.subtotal}</Typography.Link></Col>
+              <Col span={12}><b>Total:</b></Col>
+              <Col span={12}><Typography.Link strong>${cartStore.total}</Typography.Link></Col>
+            </Row>
+          </Col>
+        </Row>
+      </>
     );
   }
 });

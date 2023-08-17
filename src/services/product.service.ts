@@ -43,6 +43,15 @@ class ProductService {
       throw error;
     }
   }
+
+  async delete(id: number) {
+    try {
+      const res = await $wc.delete(`/wc/v3/products/${id}`);
+      return res.data as IProduct;
+    } catch (error) {
+      throw error;
+    }
+  }
 }
 
 export const productService = new ProductService();

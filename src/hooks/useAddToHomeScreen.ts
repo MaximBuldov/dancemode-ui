@@ -16,11 +16,6 @@ export function useAddToHomescreen(): [IBeforeInstallPromptEvent | null, () => v
     if (prompt) {
       return prompt.prompt();
     }
-    return Promise.reject(
-      new Error(
-        'Tried installing before browser sent "beforeinstallprompt" event'
-      )
-    );
   };
 
   React.useEffect(() => {

@@ -28,11 +28,10 @@ export const DayCard = observer(({ day, orders, classes }: DayCardProps) => {
       <Card size="small" title={renderTitle()}>
         <Space direction="vertical" style={{ width: '100%' }}>
           {classes?.map(el =>
-            <div className={classNames({ [styles['canceled']]: el.is_canceled && !userStore.isAdmin })}>
+            <div key={el.id} className={classNames({ [styles['canceled']]: el.is_canceled && !userStore.isAdmin })}>
               <SingleClass
                 product={el}
                 isExpired={isExpired || !!isJaneCanceled || el.is_canceled}
-                key={el.id}
                 order={findStatus(el)?.order}
                 meta_data={findStatus(el)?.meta_data}
                 item_id={findStatus(el)?.item_id}

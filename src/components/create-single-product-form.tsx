@@ -22,6 +22,11 @@ export const CreateSingleProductForm = ({ closeModal }: CreateSingleProductFormP
   });
 
   const onFinish = (values: ICreateSingleProductsForm) => {
+    values.categories = [{ id: values.category?.value }];
+    if (!values.name) {
+      values.name = values.category?.label;
+    }
+    delete values.category;
     mutate(values);
   };
 

@@ -48,3 +48,5 @@ export default App;
 // - can we update meta_data in order after payment?
 // - forgot password
 // - check makeups, admin also have makeups?
+// - add ability to delete class and check if someone buy it
+// - add additional question on all delete and cancel actions

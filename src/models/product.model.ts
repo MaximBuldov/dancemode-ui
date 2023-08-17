@@ -1,6 +1,6 @@
 export interface IProduct {
   id: number;
-  name: NameOfClass;
+  name: string | NameOfClass;
   price: string;
   time: string;
   date_time: string;
@@ -8,6 +8,7 @@ export interface IProduct {
   is_canceled: boolean;
   total_sales: number;
   stock_status: IStockStatus;
+  categories: ICategory[];
 }
 
 export interface ICartProduct extends IProduct {
@@ -28,9 +29,22 @@ export interface IBatchProducts {
   delete?: number[]
 }
 
+export interface ICategory {
+  id: number | Categories,
+  name?: string;
+  slug?: string;
+}
+
 export enum NameOfClass {
   BEGINNER = 'Beginner',
-  ADV = 'Int/Adv'
+  ADV = 'Int/Adv',
+  CUSTOM = 'Custom'
+}
+
+export enum Categories {
+  BEGINNER = 1,
+  ADV = 23,
+  CUSTOM = 24
 }
 
 export enum IStockStatus {

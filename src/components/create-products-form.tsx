@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { Button, Checkbox, DatePicker, Form } from 'antd';
+import { Button, DatePicker, Form, Select } from 'antd';
 import dayjs from 'dayjs';
-import { IKeys, IProduct, NameOfClass } from 'models';
+import { Categories, IKeys, IProduct, NameOfClass } from 'models';
 import { productService } from 'services';
 import { prepareProducts } from 'utils';
 
@@ -11,7 +11,10 @@ interface CreateProductsFormProps {
 
 const { useForm, Item } = Form;
 
-const checkboxOptions = [NameOfClass.BEGINNER, NameOfClass.ADV];
+const checkboxOptions = [
+  { label: NameOfClass.BEGINNER, value: Categories.BEGINNER },
+  { label: NameOfClass.ADV, value: Categories.ADV }
+];
 
 export const CreateProductsForm = ({ closeModal }: CreateProductsFormProps) => {
   const [form] = useForm();
@@ -23,6 +26,7 @@ export const CreateProductsForm = ({ closeModal }: CreateProductsFormProps) => {
         [IKeys.PRODUCTS],
         (products: IProduct[] | undefined) => (products && create) ? [...products, ...create] : products
       );
+      form.resetFields();
       closeModal(true);
     }
   });
@@ -30,9 +34,6 @@ export const CreateProductsForm = ({ closeModal }: CreateProductsFormProps) => {
   return (
     <Form
       form={form}
-      initialValues={{
-        classes: checkboxOptions
-      }}
       onFinish={(values) => mutate(prepareProducts(values))}
     >
 
@@ -51,8 +52,11 @@ export const CreateProductsForm = ({ closeModal }: CreateProductsFormProps) => {
         label="Classes"
         name="classes"
       >
-        <Checkbox.Group
+        <Select
           options={checkboxOptions}
+          allowClear
+          mode="multiple"
+          labelInValue
         />
       </Item>
       <Item>

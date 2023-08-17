@@ -1,13 +1,14 @@
 import dayjs from 'dayjs';
 import { makeAutoObservable } from 'mobx';
 import { makePersistable } from 'mobx-persist-store';
-import { IProduct } from 'models';
+import { ICoupon, IProduct } from 'models';
 import { getAllMondaysOfMonth } from 'utils';
 
 import { userStore } from './userStore';
 
 class CartStore {
   data: IProduct[] = [];
+  coupones: ICoupon[] = [];
 
   constructor() {
     makeAutoObservable(this);
