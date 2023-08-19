@@ -1,21 +1,21 @@
 import { useQuery } from '@tanstack/react-query';
-import { makeupService, orderService } from 'services';
-import { makeupStore, userStore } from 'stores';
+import { couponService, orderService } from 'services';
+import { cartStore, userStore } from 'stores';
 import { IKeys } from 'models';
 import dayjs from 'dayjs';
 
 import { useProducts } from './useProducts';
 
 export const useConfigCall = (day: dayjs.Dayjs) => {
-  const today = dayjs().format('YYYYMMDD');
   const month = day.format('YYYY-MM');
 
   const { message: { onErrorFn, contextHolder }, products, groupedProducts } = useProducts(day);
 
-  const makeups = useQuery({
-    queryKey: [IKeys.MAKEUPS, { today }],
-    queryFn: makeupService.getCurrent,
-    onSuccess: (data) => makeupStore.setMakeups(data),
+  const coupons = useQuery({
+    queryKey: [IKeys.COUPONS],
+    queryFn: () => couponService.getMy(),
+    select: (data) => data.data,
+    onSuccess: (data) => cartStore.setCoupons(data),
     onError: onErrorFn,
     enabled: !!userStore.data?.id,
     staleTime: 1000 * 60
@@ -28,6 +28,6 @@ export const useConfigCall = (day: dayjs.Dayjs) => {
     staleTime: 1000 * 30
   });
 
-  const loading = products.isFetching || makeups.isFetching || orders.isFetching;
+  const loading = products.isFetching || coupons.isFetching || orders.isFetching;
   return { loading, contextHolder, orders: orders.data, products: products.data, groupedProducts };
 };

@@ -8,7 +8,7 @@ import { userStore } from './userStore';
 
 class CartStore {
   data: IProduct[] = [];
-  coupones: ICoupon[] = [];
+  coupons: ICoupon[] = [];
 
   constructor() {
     makeAutoObservable(this);
@@ -39,8 +39,20 @@ class CartStore {
     this.checkSale(product, false);
   }
 
+  setCoupons(coupons: ICoupon[]) {
+    this.coupons = coupons;
+  }
+
+  addCoupon(coupon: ICoupon) {
+    this.coupons.push(coupon);
+  }
+
   get count() {
     return this.data.length;
+  }
+
+  get couponCount() {
+    return this.coupons.length;
   }
 
   get total() {

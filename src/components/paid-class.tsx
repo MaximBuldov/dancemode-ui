@@ -1,4 +1,4 @@
-import { CloseCircleOutlined, ClockCircleOutlined, CheckCircleOutlined, DollarOutlined, MoreOutlined } from '@ant-design/icons';
+import { CloseCircleOutlined, CheckCircleOutlined, DollarOutlined, MoreOutlined } from '@ant-design/icons';
 import { MenuProps, Typography, Spin, Row, Col, Space, Checkbox, Tag, Dropdown } from 'antd';
 import dayjs from 'dayjs';
 import { useUpdateOrder } from 'hooks';
@@ -19,7 +19,6 @@ export const PaidClass = observer(({ product, isExpired, order, meta_data, item_
 
   const isConfirmed = meta_data?.some(el => el.key === IStatus.CONFIRM && el.value === IStatusValue.TRUE);
   const isCanceled = meta_data?.some(el => el.key === IStatus.CANCEL && el.value === IStatusValue.TRUE);
-  const isRescheduled = meta_data?.some(el => el.key === IStatus.RESCHEDULE && el.value === IStatusValue.TRUE);
 
   const { mutate, contextHolder, isLoading } = useUpdateOrder(product, order, item_id);
 
@@ -53,8 +52,7 @@ export const PaidClass = observer(({ product, isExpired, order, meta_data, item_
             <Checkbox disabled />
             <Typography>{product.name}: {classTime.format('ha')}</Typography>
             <div>
-              {!isRescheduled && <Tag icon={<DollarOutlined />} color="processing">Payed</Tag>}
-              {isRescheduled && <Tag icon={<ClockCircleOutlined />} color="warning">Rescheduled</Tag>}
+              <Tag icon={<DollarOutlined />} color="processing">Payed</Tag>
               {(isConfirmed && !isCanceled) && <Tag icon={<CheckCircleOutlined />} color="success">Confirmed</Tag>}
               {isCanceled && <Tag icon={<CloseCircleOutlined />} color="error">Canceled</Tag>}
             </div>

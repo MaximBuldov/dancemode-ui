@@ -2,7 +2,10 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import dayjs from 'dayjs';
 import { IStatus, IStatusValue, IKeys, IROrder, IProduct } from 'models';
 import { orderService } from 'services';
-import { makeupStore, userStore } from 'stores';
+import {
+  cartStore,
+  userStore
+} from 'stores';
 
 import { useError } from './useError';
 
@@ -13,18 +16,13 @@ export const useUpdateOrder = (product: IProduct, order: number, item_id: number
   const client = useQueryClient();
   const userId = userStore.data!.id;
   const day = dayjs(product.date_time);
-  const body = {
-    origin: day.format('YYYYMMDD'),
-    deadline: day.add(1, 'month').endOf('month').format('YYYYMMDD'),
-    product_id: product.id,
-    product_name: product.name
-  };
+
   const isDeadline = dayjs().isBefore(day.subtract(5, 'hour'));
 
   const { mutate, isLoading } = useMutation({
     mutationFn: ({ key, value }: IMutate) => {
-      const create_makeup = isDeadline && key === IStatus.CANCEL;
-      const data = { key, value, create_makeup, userId, ...body };
+      const create_code = isDeadline && key === IStatus.CANCEL;
+      const data = { key, value, create_code, userId, product_id: product.id };
       return orderService.update({ data, order, item: item_id });
     },
     onError: onErrorFn,
@@ -42,7 +40,7 @@ export const useUpdateOrder = (product: IProduct, order: number, item_id: number
       });
 
       if (isDeadline && values.key === IStatus.CANCEL) {
-        makeupStore.addMakeup({ author: Number(userId), acf: body, id: data.makeup_id });
+        cartStore.addCoupon(data.coupon);
       }
     }
   });

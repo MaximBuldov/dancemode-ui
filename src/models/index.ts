@@ -3,5 +3,4 @@ export * from './http.model';
 export * from './user.model';
 export * from './product.model';
 export * from './order.model';
-export * from './makeup.model';
 export * from './coupon.model';

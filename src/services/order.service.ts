@@ -1,4 +1,4 @@
-import { IOrder, IROrderProduct, IROrder, IStatus, IStatusValue } from 'models';
+import { IOrder, IROrderProduct, IROrder, IStatus, IStatusValue, ICoupon } from 'models';
 import { userStore } from 'stores';
 import dayjs from 'dayjs';
 
@@ -8,11 +8,8 @@ interface IUpdate {
   data: {
     key: IStatus,
     value: IStatusValue,
-    create_makeup: boolean,
-    userId: string,
-    origin: string,
-    deadline: string,
-    class_name?: string
+    create_code: boolean,
+    userId: string
   },
   order: number,
   item: number
@@ -20,7 +17,7 @@ interface IUpdate {
 
 interface IUpdateResponse {
   orders: IROrderProduct[],
-  makeup_id: number
+  coupon: ICoupon
 }
 
 interface IFilters {

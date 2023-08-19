@@ -1,4 +1,4 @@
-import { CloseCircleOutlined, MoreOutlined } from '@ant-design/icons';
+import { CaretRightOutlined, CloseCircleOutlined, MoreOutlined } from '@ant-design/icons';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { MenuProps, Typography, Dropdown, Col, Row, Spin, Tag, Space, Modal, Table } from 'antd';
 import dayjs from 'dayjs';
@@ -51,6 +51,7 @@ export const TeacherClass = observer(({ product }: TeacherClassProps) => {
     onError: onErrorFn
   });
   const orders = orderApi.data?.data;
+  const isOrders = orders && orders.length > 0;
 
   const items = useMemo(() => {
     const elements: MenuProps['items'] = [
@@ -103,6 +104,7 @@ export const TeacherClass = observer(({ product }: TeacherClassProps) => {
       <Row justify="space-between">
         <Col>
           <Space>
+            <CaretRightOutlined rotate={isOrders ? 90 : 0} />
             <Typography onClick={() => orderApi.mutate()}>
               {product.name}: {classTime.format('ha')}
             </Typography>
@@ -121,7 +123,7 @@ export const TeacherClass = observer(({ product }: TeacherClassProps) => {
           </Col>
         )}
       </Row>
-      {orders && orders.length > 0 && (
+      {isOrders && (
         <Table
           dataSource={orders}
           rowKey={(el) => el.id}

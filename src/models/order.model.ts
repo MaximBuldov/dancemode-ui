@@ -35,8 +35,7 @@ export interface IMetaData {
 
 export enum IStatus {
   CONFIRM = 'confirm',
-  CANCEL = 'cancel',
-  RESCHEDULE = 'reschedule'
+  CANCEL = 'cancel'
 }
 
 export enum IStatusValue {

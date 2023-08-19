@@ -8,7 +8,7 @@ export * from './video';
 export * from './forgot-password';
 export * from './error-page';
 export * from './cart';
-export * from './makeups';
+export * from './coupons';
 export * from './orders';
 export * from './students';
 export * from './calendar';

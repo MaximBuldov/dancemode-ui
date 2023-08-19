@@ -1,6 +1,6 @@
-import { Calendar, Cart, Classes, ForgotPassword, Login, Makeups, Orders, Payments, Profile, Registration, Students, Video } from 'pages';
+import { Calendar, Cart, Classes, Coupons, ForgotPassword, Login, Orders, Payments, Profile, Registration, Students, Video } from 'pages';
 
-import { CALENDAR, CART, CLASSES, FORGOT_PASSWORD, LOGIN, MAKEUPS, ORDERS, PAYMENTS, PROFILE, SIGN_UP, STUDENTS, VIDEO } from './consts';
+import { CALENDAR, CART, CLASSES, COUPONS, FORGOT_PASSWORD, LOGIN, ORDERS, PAYMENTS, PROFILE, SIGN_UP, STUDENTS, VIDEO } from './consts';
 
 interface IRoute {
   path: string;
@@ -48,8 +48,8 @@ export const userRoutes: IRoute[] = [
     element: <Cart />
   },
   {
-    path: MAKEUPS,
-    element: <Makeups />
+    path: COUPONS,
+    element: <Coupons />
   }
 ];
 
