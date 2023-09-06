@@ -12,3 +12,4 @@ export * from './coupons';
 export * from './orders';
 export * from './students';
 export * from './calendar';
+export * from './checkout';

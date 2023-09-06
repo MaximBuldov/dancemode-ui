@@ -12,7 +12,7 @@ class CartStore {
 
   constructor() {
     makeAutoObservable(this);
-    makePersistable(this, { name: 'cart', properties: ['data'], storage: window.localStorage });
+    makePersistable(this, { name: 'cart', properties: ['data', 'coupons'], storage: window.localStorage });
   }
 
   add(data: IProduct) {
@@ -24,6 +24,7 @@ class CartStore {
 
   clear() {
     this.data = [];
+    this.coupons = [];
     localStorage.removeItem('cart');
   }
 
@@ -47,12 +48,27 @@ class CartStore {
     this.coupons.push(coupon);
   }
 
+  removeCoupon(id: number) {
+    const index = this.coupons.findIndex(el => el.id === id);
+    if (index !== -1) {
+      this.coupons.splice(index, 1);
+    }
+  }
+
   get count() {
     return this.data.length;
   }
 
   get couponCount() {
     return this.coupons.length;
+  }
+
+  get isCoupons() {
+    return this.couponCount > 0;
+  }
+
+  get couponsTotal() {
+    return this.calculateTotal(this.coupons, 'amount');
   }
 
   get total() {
@@ -110,9 +126,9 @@ class CartStore {
     return data;
   }
 
-  private calculateTotal(arr: IProduct[], prop: keyof IProduct) {
+  private calculateTotal<T>(arr: T[], prop: keyof T) {
     return arr.reduce((acc, el) => {
-      const price = el[prop] ? Number(el[prop]) : +el.price;
+      const price = el[prop] ? Number(el[prop]) : Number((el as IProduct).price);
       return acc + price;
     }, 0);
   }

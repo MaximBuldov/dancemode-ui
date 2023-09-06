@@ -4,11 +4,12 @@ import { ICoupon } from 'models';
 import { $wc } from '../http';
 
 class CouponService {
-  async getMy() {
+  async getMy(params?: any) {
     try {
       const res = await $wc.get<ICoupon[]>('/wc/v3/coupons', {
         params: {
-          user: userStore.data?.id
+          user: userStore.data?.id,
+          ...params
         }
       });
       return res;

@@ -1,43 +1,14 @@
 import { DeleteOutlined, DollarOutlined, ShoppingCartOutlined } from '@ant-design/icons';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { Button, Col, List, Result, Row, Typography } from 'antd';
+import { Button, Col, List, Row, Typography } from 'antd';
 import { CartItem, PromoCode } from 'components';
-import { useError } from 'hooks';
 import { observer } from 'mobx-react-lite';
-import { IKeys, IROrder } from 'models';
 import { useNavigate } from 'react-router-dom';
-import { orderService } from 'services';
 import { cartStore } from 'stores';
-import { prepareOrder } from 'utils';
 
 export const Cart = observer(() => {
-  const { onErrorFn, contextHolder } = useError();
-  const client = useQueryClient();
-  const { mutate, isSuccess, isLoading, data } = useMutation({
-    mutationFn: orderService.create,
-    onSuccess: (data) => {
-      cartStore.clear();
-      client.setQueriesData(
-        [IKeys.ORDERS],
-        (orders: IROrder[] | undefined) => orders ? [...orders, data] : orders
-      );
-    },
-    onError: onErrorFn
-  });
   const navigate = useNavigate();
 
-  return isSuccess ? (
-    <Result
-      status="success"
-      title="Classes Successfully Purchased!"
-      subTitle={`Order number: ${data.id}`}
-      extra={[
-        <Button key="home" type="primary" onClick={() => navigate('/classes')} block>
-          Go to Classes
-        </Button>
-      ]}
-    />
-  ) : (
+  return (
     <>
       <List
         header={renderHeader()}
@@ -55,12 +26,10 @@ export const Cart = observer(() => {
         block
         icon={<DollarOutlined />}
         disabled={!cartStore.count}
-        onClick={() => mutate(prepareOrder(cartStore.data))}
-        loading={isLoading}
+        onClick={() => navigate('/checkout')}
       >
-        Paid
+        Checkout
       </Button>
-      {contextHolder}
     </>
   );
 
@@ -90,15 +59,22 @@ export const Cart = observer(() => {
           </Col>
           <Col span={8} style={{ textAlign: 'right' }}>
             <Row>
-              <Col span={12}>Subtotal:</Col>
-              <Col span={12}><Typography.Link strong>${cartStore.subtotal}</Typography.Link></Col>
-              <Col span={12}>Sale:</Col>
-              <Col span={12}><Typography.Link strong>${cartStore.total - cartStore.subtotal}</Typography.Link></Col>
-              <Col span={12}><b>Total:</b></Col>
-              <Col span={12}><Typography.Link strong>${cartStore.total}</Typography.Link></Col>
+              {renderTotalLine('Subtotal', cartStore.subtotal)}
+              {renderTotalLine('Sale', cartStore.subtotal - cartStore.total, true)}
+              {cartStore.isCoupons && renderTotalLine('Coupons', cartStore.couponsTotal, true)}
+              {renderTotalLine('Total', cartStore.total - cartStore.couponsTotal)}
             </Row>
           </Col>
         </Row>
+      </>
+    );
+  }
+
+  function renderTotalLine(title: string, amount: number, minus: boolean = false) {
+    return (
+      <>
+        <Col span={12}>{title}:</Col>
+        <Col span={12}><Typography.Link strong>{minus && '-'}${amount}</Typography.Link></Col>
       </>
     );
   }

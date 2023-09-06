@@ -10,3 +10,4 @@ export const COUPONS = '/coupons';
 export const STUDENTS = '/students';
 export const ORDERS = '/orders';
 export const CALENDAR = '/calendar';
+export const CHECKOUT = '/checkout';

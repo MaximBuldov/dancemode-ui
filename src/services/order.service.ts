@@ -94,6 +94,15 @@ class OrderService {
       throw error;
     }
   }
+
+  async stripe(data: { total: number }) {
+    try {
+      const res = await $api.post('/custom/v1/process-payment', data);
+      return res.data;
+    } catch (error) {
+      throw error;
+    }
+  }
 }
 
 export const orderService = new OrderService();
