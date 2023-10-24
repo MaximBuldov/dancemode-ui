@@ -4,7 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import { Spin } from 'antd';
 import { CheckoutForm } from 'components';
 import { IKeys } from 'models';
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { orderService } from 'services';
 import { cartStore } from 'stores';
 
@@ -16,21 +16,20 @@ export const Checkout = () => {
   const stripe = useQuery({
     queryFn: () => orderService.stripe({ total: cartStore.total - cartStore.couponsTotal }),
     queryKey: [IKeys.STRIPE],
-    onSuccess: (data) => setClientSecret(data as string)
+    onSuccess: ({ clientSecret }) => setClientSecret(clientSecret as string)
   });
 
-  const options = {
+  const options = useMemo(() => ({
     clientSecret,
     appearance: {
       theme: 'stripe'
     }
-  };
-
+  }), [clientSecret]);
   return (
     <Spin spinning={stripe.isLoading}>
-      {stripe.isSuccess && (
+      {clientSecret && (
         <Elements options={options as StripeElementsOptions} stripe={stripePromise}>
-          <CheckoutForm />
+          <CheckoutForm clientSecret={clientSecret} />
         </Elements>
       )}
     </Spin>

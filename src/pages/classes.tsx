@@ -1,5 +1,5 @@
 import { ShoppingCartOutlined } from '@ant-design/icons';
-import { FloatButton, Space, Spin } from 'antd';
+import { Empty, FloatButton, Space, Spin } from 'antd';
 import { DayCard, MonthStepper } from 'components';
 import dayjs from 'dayjs';
 import { useConfigCall } from 'hooks';
@@ -13,22 +13,23 @@ export const Classes = observer(() => {
   const navigate = useNavigate();
 
   const { loading, contextHolder, orders, groupedProducts } = useConfigCall(month);
-
+  const products = Object.keys(groupedProducts);
   return (
     <Spin spinning={loading}>
       <Space direction="vertical" size={12} style={{ width: '100%' }}>
         <MonthStepper month={month} setMonth={setMonth} />
-        {Object.keys(groupedProducts).map((el) => {
-          return (
-            <DayCard
-              day={el}
-              key={el}
-              orders={orders}
-              classes={groupedProducts[el]}
-            />
-          );
-        }
-        )}
+        {products.length > 0 ? (
+          products.map((el) => {
+            return (
+              <DayCard
+                day={el}
+                key={el}
+                orders={orders}
+                classes={groupedProducts[el]}
+              />
+            );
+          }
+          )) : <Empty />}
       </Space>
       {!!cartStore.count && (
         <FloatButton

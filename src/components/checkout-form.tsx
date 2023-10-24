@@ -5,7 +5,11 @@ import { Button } from 'antd';
 import React, { FormEvent, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
-export const CheckoutForm = () => {
+interface CheckoutFormProps {
+  clientSecret: string
+}
+
+export const CheckoutForm = ({ clientSecret }: CheckoutFormProps) => {
   const stripe = useStripe();
   const elements = useElements();
 
@@ -17,10 +21,6 @@ export const CheckoutForm = () => {
     if (!stripe) {
       return;
     }
-
-    const clientSecret = new URLSearchParams(window.location.search).get(
-      'payment_intent_client_secret'
-    );
 
     if (!clientSecret) {
       return;
@@ -42,7 +42,7 @@ export const CheckoutForm = () => {
           break;
       }
     });
-  }, [params, stripe]);
+  }, [clientSecret, params, stripe]);
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();

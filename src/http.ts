@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { redirect } from 'react-router-dom';
 import { userStore } from 'stores';
 import { secureLs } from 'utils';
 
@@ -8,16 +9,6 @@ const axiosInstance = axios.create({
   },
   baseURL: process.env.REACT_APP_API_URL
 });
-
-axiosInstance.interceptors.response.use(
-  response => response,
-  (error) => {
-    if (error.response && error.response.data && error.response.data.code === 'jwt_auth_valid_token') {
-      userStore.logout();
-    }
-    return Promise.reject(error);
-  }
-);
 
 //auth
 const $auth = axios.create({
@@ -31,7 +22,18 @@ const authInterceptor = (config: any) => {
   config.headers.authorization = `Bearer ${secureLs.get('token')}`;
   return config;
 };
+
 $api.interceptors.request.use(authInterceptor);
+$api.interceptors.response.use(
+  response => response,
+  (error) => {
+    if (error?.response?.data?.code === 'jwt_auth_invalid_token') {
+      userStore.logout();
+      redirect('/');
+    }
+    return Promise.reject(error);
+  }
+);
 
 //wc
 const $wc = axios.create({ ...axiosInstance.defaults });;

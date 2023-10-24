@@ -33,38 +33,41 @@ export const PromoCode = () => {
         <Col><Typography.Text strong>Promo Code</Typography.Text></Col>
         <Col><CaretRightOutlined rotate={open ? 90 : 0} /></Col>
       </Row>
-      {cartStore.isCoupons && (
-        <List
-          dataSource={cartStore.coupons}
-          renderItem={(el) => (
-            <List.Item key={el.id}>
-              <Row justify="space-between" style={{ width: '100%' }}>
-                <Tag color="green">{el.code.toUpperCase()}: ${el.amount} off</Tag>
-                <DeleteTwoTone onClick={() => cartStore.removeCoupon(el.id)} />
-              </Row>
-            </List.Item>
-          )}
-        />
-      )}
       {open && (
-        <Form<{ code: string }>
-          onFinish={({ code }) => mutate(code)}
-          form={form}
-        >
-          <Row justify="space-between" wrap={false} gutter={[16, 0]}>
-            <Col style={{ width: '100%' }}>
-              <Form.Item
-                style={{ marginBottom: 0 }}
-                name="code"
-              >
-                <Input placeholder="Promo Code" />
-              </Form.Item>
-            </Col>
-            <Col>
-              <Form.Item style={{ marginBottom: 0 }}><Button type="primary" ghost htmlType="submit">Apply</Button></Form.Item>
-            </Col>
-          </Row>
-        </Form >
+        <>
+          {cartStore.isCoupons && (
+            <List
+              dataSource={cartStore.coupons}
+              renderItem={(el) => (
+                <List.Item key={el.id}>
+                  <Row justify="space-between" style={{ width: '100%' }}>
+                    <Tag color="green">{el.code.toUpperCase()}: ${el.amount} off</Tag>
+                    <DeleteTwoTone onClick={() => cartStore.removeCoupon(el.id)} />
+                  </Row>
+                </List.Item>
+              )}
+            />
+          )}
+          <Form<{ code: string }>
+            onFinish={({ code }) => mutate(code)}
+            form={form}
+          >
+            <Row justify="space-between" wrap={false} gutter={[16, 0]}>
+              <Col style={{ width: '100%' }}>
+                <Form.Item
+                  style={{ marginBottom: 0 }}
+                  name="code"
+                  rules={[{ required: true, message: 'Please input Promo Code!' }]}
+                >
+                  <Input placeholder="Promo Code" />
+                </Form.Item>
+              </Col>
+              <Col>
+                <Form.Item style={{ marginBottom: 0 }}><Button type="primary" ghost htmlType="submit">Apply</Button></Form.Item>
+              </Col>
+            </Row>
+          </Form >
+        </>
       )}
     </Space>
   );

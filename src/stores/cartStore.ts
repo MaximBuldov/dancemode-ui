@@ -40,10 +40,6 @@ class CartStore {
     this.checkSale(product, false);
   }
 
-  setCoupons(coupons: ICoupon[]) {
-    this.coupons = coupons;
-  }
-
   addCoupon(coupon: ICoupon) {
     this.coupons.push(coupon);
   }
