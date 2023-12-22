@@ -1,97 +1,91 @@
-/* eslint-disable indent */
+import React, { FormEvent, useState } from 'react';
 import { LinkAuthenticationElement, PaymentElement, useElements, useStripe } from '@stripe/react-stripe-js';
-import { StripePaymentElementOptions } from '@stripe/stripe-js';
-import { Button } from 'antd';
-import React, { FormEvent, useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { StripeError, StripePaymentElementOptions } from '@stripe/stripe-js';
+import { useMutation } from '@tanstack/react-query';
+import { Button, Divider, message } from 'antd';
+import { IKeys, IPaymentIntent } from 'models';
+import { cartStore, userStore } from 'stores';
+import { orderService } from 'services';
+
+import { SuccessPage } from './success-page';
 
 interface CheckoutFormProps {
-  clientSecret: string
+  intent: IPaymentIntent
 }
 
-export const CheckoutForm = ({ clientSecret }: CheckoutFormProps) => {
+export const CheckoutForm = ({ intent }: CheckoutFormProps) => {
   const stripe = useStripe();
   const elements = useElements();
 
-  let params = useParams();
-  const [message, setMessage] = useState<null | string>(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const [messageApi, contextHolder] = message.useMessage();
+  const [successPage, showSuccessPage] = useState(false);
 
-  useEffect(() => {
-    if (!stripe) {
-      return;
+  const payment = useMutation({
+    mutationFn: () => stripe!.confirmPayment({
+      elements: elements!,
+      redirect: 'if_required'
+    }),
+    mutationKey: [IKeys.PAYMENTS],
+    onSuccess: () => cartStore.clear(),
+    onError: (error: StripeError) => {
+      messageApi.error(error.message);
     }
+  });
 
-    if (!clientSecret) {
-      return;
+  const order = useMutation({
+    mutationFn: () => orderService.create({
+      customer_id: Number(userStore.data?.id),
+      line_items: cartStore.preparedData,
+      meta_data: [{
+        key: '_stripe_intent_id',
+        value: intent!.paymentIntentId
+      }, {
+        key: 'date',
+        value: cartStore.orderDates
+      }]
+    }),
+    mutationKey: [IKeys.ORDERS],
+    onSuccess: () => {
+      payment.mutate();
+      showSuccessPage(true);
     }
-
-    stripe.retrievePaymentIntent(clientSecret).then(({ paymentIntent }) => {
-      switch (paymentIntent?.status) {
-        case 'succeeded':
-          setMessage('Payment succeeded!');
-          break;
-        case 'processing':
-          setMessage('Your payment is processing.');
-          break;
-        case 'requires_payment_method':
-          setMessage('Your payment was not successful, please try again.');
-          break;
-        default:
-          setMessage('Something went wrong.');
-          break;
-      }
-    });
-  }, [clientSecret, params, stripe]);
+  });
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (!stripe || !elements) {
+    if (!stripe || !elements || !cartStore.count) {
       return;
     }
 
-    setIsLoading(true);
+    order.mutate();
+  };
 
-    const { error } = await stripe.confirmPayment({
-      elements,
-      confirmParams: {
-        // Make sure to change this to your payment completion page
-        return_url: 'http://localhost:3000'
-      }
-    });
-
-    // This point will only be reached if there is an immediate error when
-    // confirming the payment. Otherwise, your customer will be redirected to
-    // your `return_url`. For some payment methods like iDEAL, your customer will
-    // be redirected to an intermediate site first to authorize the payment, then
-    // redirected to the `return_url`.
-    if (error.type === 'card_error' || error.type === 'validation_error') {
-      setMessage(error.message || 'Error');
-    } else {
-      setMessage('An unexpected error occurred.');
+  const paymentElementOptions: StripePaymentElementOptions = {
+    layout: 'tabs',
+    defaultValues: {
+      billingDetails: { email: userStore.data?.email }
     }
-
-    setIsLoading(false);
   };
 
-  const paymentElementOptions = {
-    layout: 'tabs'
-  };
-
-  return (
+  return successPage ? (
+    <SuccessPage />
+  ) : (
     <form id="payment-form" onSubmit={handleSubmit}>
       <LinkAuthenticationElement id="link-authentication-element" />
-      <PaymentElement id="payment-element" options={paymentElementOptions as StripePaymentElementOptions} />
+      <PaymentElement id="payment-element" options={paymentElementOptions} />
+      <Divider />
       <Button
         disabled={!stripe || !elements}
         htmlType="submit"
-        loading={isLoading}
+        loading={payment.isLoading || order.isLoading}
+        type="primary"
+        block
+        size="large"
       >
         Pay now
       </Button>
-      {/* Show any error or success messages */}
-      {message && <div id="payment-message">{message}</div>}
+      {contextHolder}
     </form>
   );
 };

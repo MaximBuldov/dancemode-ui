@@ -1,8 +1,9 @@
 import { Avatar, Layout } from 'antd';
-import { Outlet } from 'react-router-dom';
+import { Link, Outlet } from 'react-router-dom';
 import { Menu } from 'components';
 import { observer } from 'mobx-react-lite';
 import { userStore } from 'stores';
+import * as routes from 'routes/consts';
 
 import styles from './template.module.scss';
 
@@ -12,9 +13,13 @@ export const Template = observer(() => {
   return (
     <Layout>
       <Header className={styles.header}>
-        <div className={styles.logo}>DanceMode</div>
+        <div className={styles.logo}><Link to="/">DanceMode</Link></div>
         {userStore.data && (
-          <Avatar style={{ backgroundColor: '#1677ff' }}>{userStore.initials}</Avatar>
+          <Link to={routes.PROFILE}>
+            <Avatar style={{ backgroundColor: '#1677ff' }}>
+              {userStore.initials}
+            </Avatar>
+          </Link>
         )}
       </Header>
       <Layout className={styles.layout}>

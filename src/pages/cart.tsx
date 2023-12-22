@@ -4,6 +4,7 @@ import { CartItem, PromoCode } from 'components';
 import { observer } from 'mobx-react-lite';
 import { useNavigate } from 'react-router-dom';
 import { cartStore } from 'stores';
+import * as routes from 'routes/consts';
 
 export const Cart = observer(() => {
   const navigate = useNavigate();
@@ -26,7 +27,7 @@ export const Cart = observer(() => {
         block
         icon={<DollarOutlined />}
         disabled={!cartStore.count}
-        onClick={() => navigate('/checkout')}
+        onClick={() => navigate(routes.CHECKOUT)}
       >
         Checkout
       </Button>

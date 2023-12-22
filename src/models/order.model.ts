@@ -42,3 +42,8 @@ export enum IStatusValue {
   TRUE = '1',
   FALSE = '0'
 }
+
+export interface IPaymentIntent {
+  paymentIntentId: string;
+  clientSecret: string;
+}

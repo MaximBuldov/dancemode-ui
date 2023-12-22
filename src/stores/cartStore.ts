@@ -4,8 +4,6 @@ import { makePersistable } from 'mobx-persist-store';
 import { ICoupon, IProduct } from 'models';
 import { getAllMondaysOfMonth } from 'utils';
 
-import { userStore } from './userStore';
-
 class CartStore {
   data: IProduct[] = [];
   coupons: ICoupon[] = [];
@@ -75,23 +73,17 @@ class CartStore {
     return this.calculateTotal(this.data, 'price');
   }
 
+  get orderDates() {
+    return Array.from(new Set(this.data.map(obj => dayjs(obj.date_time).format('YYYY-MM')))).join(',');
+  }
+
   get preparedData() {
-    const months = Array.from(new Set(this.data.map(obj => dayjs(obj.date_time).format('YYYY-MM')))).join(',');
-    return {
-      customer_id: userStore.data?.id,
-      meta_data: [
-        {
-          key: 'date',
-          value: months
-        }
-      ],
-      line_items: this.data.map(el => ({
-        product_id: el.id,
-        quantity: 1,
-        subtotal: el.price,
-        total: el?.total || el.price
-      }))
-    };
+    return this.data.map(el => ({
+      product_id: el.id,
+      quantity: 1,
+      subtotal: el.price,
+      total: el?.total || el.price
+    }));
   }
 
   private checkSale(data: IProduct, action: boolean) {
