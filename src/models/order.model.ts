@@ -2,6 +2,7 @@ export interface IOrder {
   customer_id: number;
   line_items: IOrderProduct[];
   meta_data?: IMetaData[];
+  payment_method?: string;
 }
 
 export interface IROrder extends IOrder {

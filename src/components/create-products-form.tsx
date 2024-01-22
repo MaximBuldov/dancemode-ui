@@ -73,6 +73,7 @@ export const CreateProductsForm = ({ closeModal }: CreateProductsFormProps) => {
           allowClear
           mode="multiple"
           labelInValue
+          showSearch={false}
         />
       </Item>
       <Item>

@@ -1,4 +1,4 @@
-import { IOrder, IROrderProduct, IROrder, IStatus, IStatusValue, ICoupon, IOrderProduct } from 'models';
+import { IOrder, IROrderProduct, IROrder, IStatus, IStatusValue, ICoupon } from 'models';
 import { userStore } from 'stores';
 import dayjs from 'dayjs';
 
@@ -27,13 +27,6 @@ interface IFilters {
   product?: number
 }
 
-interface IStripe {
-  total: number,
-  line_items: IOrderProduct[],
-  months: string,
-  customer_id: number
-}
-
 const _fields = 'id,status,date_created,total,customer_id,line_items,customer_name';
 
 class OrderService {
@@ -52,7 +45,8 @@ class OrderService {
         params: {
           _fields,
           customer: userStore.data?.id,
-          date: month.format('YYYY-MM')
+          date: month.format('YYYY-MM'),
+          status: ['completed']
         }
       });
       return res.data as IROrder[];
@@ -102,7 +96,7 @@ class OrderService {
     }
   }
 
-  async stripe(data: IStripe) {
+  async stripe(data: { total: number }) {
     try {
       const res = await $api.post('/custom/v1/process-payment', data);
       return res.data;
