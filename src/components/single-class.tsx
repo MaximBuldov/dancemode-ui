@@ -10,13 +10,14 @@ interface SingleClassProps {
   product: IProduct;
   isExpired: boolean;
   isPaid: boolean;
+  price: number;
 }
 
-export const SingleClass = observer(({ isPaid, ...rest }: SingleClassProps) => {
+export const SingleClass = observer(({ isPaid, price, ...rest }: SingleClassProps) => {
   if (userStore.isAdmin) {
     return <TeacherClass {...rest} />;
   }
   return (isPaid) ?
-    <PaidClass {...rest} /> :
+    <PaidClass price={price} {...rest} /> :
     <UnpaidClass {...rest} />;
 });

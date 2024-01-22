@@ -27,6 +27,7 @@ export const Classes = observer(() => {
                 key={el}
                 payedClasses={payedClasses}
                 classes={groupedProducts[el]}
+                orders={orders}
               />
             );
           }

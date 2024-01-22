@@ -2,7 +2,7 @@ import { Badge, Card, Space, Typography } from 'antd';
 import classNames from 'classnames';
 import { SingleClass } from 'components';
 import dayjs from 'dayjs';
-import { IProduct } from 'models';
+import { IProduct, IROrder } from 'models';
 import { observer } from 'mobx-react-lite';
 import { userStore } from 'stores';
 import { FrownTwoTone } from '@ant-design/icons';
@@ -13,9 +13,10 @@ interface DayCardProps {
   day: string;
   payedClasses?: number[];
   classes?: IProduct[];
+  orders?: IROrder[];
 }
 
-export const DayCard = observer(({ day, payedClasses, classes }: DayCardProps) => {
+export const DayCard = observer(({ day, payedClasses, classes, orders }: DayCardProps) => {
   const isExpired = dayjs().isAfter(day, 'day');
   const isJaneCanceled = classes?.every(el => el.is_canceled);
 
@@ -33,6 +34,7 @@ export const DayCard = observer(({ day, payedClasses, classes }: DayCardProps) =
                 product={el}
                 isExpired={isExpired || !!isJaneCanceled || el.is_canceled}
                 isPaid={!!payedClasses?.includes(el.id)}
+                price={productTotal(el)}
               />
               {(el.is_canceled && !userStore.isAdmin) && <div className={styles['canceled-text']}><FrownTwoTone twoToneColor="#ff5500" /> Canceled</div>}
             </div>
@@ -44,5 +46,12 @@ export const DayCard = observer(({ day, payedClasses, classes }: DayCardProps) =
 
   function renderTitle() {
     return <Typography.Text delete={isExpired} disabled={isJaneCanceled}>{dayjs(day).format('MMMM D')}</Typography.Text>;
+  }
+
+  function productTotal(el: IProduct) {
+    return orders?.reduce((total, order) => {
+      const matchingItem = order.line_items.find(item => item.product_id === el.id);
+      return matchingItem ? Number(matchingItem.total) : total;
+    }, 0) || 0;
   }
 });

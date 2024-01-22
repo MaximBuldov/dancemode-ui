@@ -1,44 +1,25 @@
 import { CloseCircleOutlined, CheckCircleOutlined, DollarOutlined, MoreOutlined } from '@ant-design/icons';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { MenuProps, Typography, Spin, Row, Col, Space, Checkbox, Tag, Dropdown } from 'antd';
 import dayjs from 'dayjs';
-import { useError } from 'hooks';
+import { useProductStatusUpdate } from 'hooks';
 import { observer } from 'mobx-react-lite';
-import { IKeys, IProduct, IStatus } from 'models';
+import { IProduct, IStatus } from 'models';
 import { useMemo } from 'react';
-import { productService } from 'services';
 import { userStore } from 'stores';
 
 interface PaidClassProps {
   product: IProduct;
   isExpired: boolean;
+  price: number;
 }
 
-export const PaidClass = observer(({ product, isExpired }: PaidClassProps) => {
+export const PaidClass = observer(({ product, isExpired, price }: PaidClassProps) => {
   const classTime = dayjs(product.date_time);
   const userId = userStore.data!.id;
-  const { onErrorFn, contextHolder } = useError();
-  const client = useQueryClient();
+  const { mutate, isLoading, contextHolder } = useProductStatusUpdate(classTime, userId, price, product.id);
 
   const isConfirmed = Array.isArray(product.confirm) && product.confirm.includes(userId);
   const isCanceled = Array.isArray(product.cancel) && product.cancel.includes(userId);
-
-  const { mutate, isLoading } = useMutation({
-    mutationFn: ({ key }: { key: IStatus }) => {
-      return productService.update({ [key]: userId }, product.id);
-    },
-    onError: onErrorFn,
-    onSuccess: (data, value) => {
-      client.setQueryData([IKeys.PRODUCTS, { month: classTime.format('YYYY-MM') }], (items: IProduct[] | undefined) => {
-        if (items) {
-          const itemIndex = items.findIndex(el => el.id === product.id);
-          items[itemIndex][value.key] = data[value.key];
-        }
-
-        return items;
-      });
-    }
-  });
 
   const items = useMemo(() => {
     const elements: MenuProps['items'] = [];
