@@ -1,7 +1,13 @@
 import React from 'react';
 import { Result } from 'antd';
+import { IROrder } from 'models';
 
-export const SuccessPage = () => {
+interface SuccessPageProps {
+  order: IROrder
+}
+
+export const SuccessPage = ({ order }: SuccessPageProps) => {
+  console.log(order);
   return (
     <Result
       status="success"

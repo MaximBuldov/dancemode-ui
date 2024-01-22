@@ -10,7 +10,8 @@ export interface ILoginForm {
 export type ISignupForm = IUser & ILoginForm & { confirm: string };
 
 export interface ICreateProductsForm {
-  months: dayjs.Dayjs[];
+  startMonth: string;
+  endMonth: string;
   classes: ICategoryOption[];
 }
 

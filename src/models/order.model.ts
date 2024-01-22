@@ -47,3 +47,8 @@ export interface IPaymentIntent {
   paymentIntentId: string;
   clientSecret: string;
 }
+
+export interface IStripeResponse {
+  intent: IPaymentIntent,
+  order_id: number
+}

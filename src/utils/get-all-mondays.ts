@@ -1,8 +1,6 @@
-import dayjs from 'dayjs';
+import dayjs, { Dayjs } from 'dayjs';
 
-export function getAllMondaysOfMonth(month: number) {
-  const currentDate = dayjs().month(month);
-
+export function getAllMondaysOfMonth(currentDate: Dayjs) {
   const firstDayOfMonth = currentDate.startOf('month');
 
   let firstMonday = firstDayOfMonth.day(1);
@@ -21,14 +19,15 @@ export function getAllMondaysOfMonth(month: number) {
   return mondays;
 }
 
-export function getAllMondaysInRange(range: number[]) {
-  const [startMonth, endMonth] = range;
+export function getAllMondaysInRange(startMonth: string, endMonth: string) {
   const mondaysInRange = [];
+  const start = dayjs(startMonth);
+  const end = dayjs(endMonth);
 
-  if (startMonth === endMonth) {
-    mondaysInRange.push(...getAllMondaysOfMonth(startMonth));
+  if (start.isSame(end)) {
+    mondaysInRange.push(...getAllMondaysOfMonth(start));
   } else {
-    for (let month = startMonth; month <= endMonth; month++) {
+    for (let month = start; month.isSame(end, 'month') || month.isBefore(end, 'month'); month = month.add(1, 'month')) {
       const mondaysInMonth = getAllMondaysOfMonth(month);
       mondaysInRange.push(...mondaysInMonth);
     }

@@ -4,7 +4,7 @@ import dayjs from 'dayjs';
 import { getAllMondaysInRange } from './get-all-mondays';
 
 export function prepareProducts(values: ICreateProductsForm) {
-  const allMondays = getAllMondaysInRange(values.months.map(el => el.month()));
+  const allMondays = getAllMondaysInRange(values.startMonth, values.endMonth);
   const products = [];
 
   for (const date of allMondays) {
@@ -22,9 +22,6 @@ export function prepareProducts(values: ICreateProductsForm) {
       });
     }
   }
-  const data = {
-    create: products
-  };
 
-  return data;
+  return { create: products };
 }

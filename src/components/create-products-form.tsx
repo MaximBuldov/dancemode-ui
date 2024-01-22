@@ -1,7 +1,8 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { Button, DatePicker, Form, Select } from 'antd';
+import { Button, Form, Input, Select } from 'antd';
 import dayjs from 'dayjs';
 import { Categories, IKeys, IProduct, NameOfClass } from 'models';
+import { useMemo, useState } from 'react';
 import { productService } from 'services';
 import { prepareProducts } from 'utils';
 
@@ -18,6 +19,9 @@ const checkboxOptions = [
 
 export const CreateProductsForm = ({ closeModal }: CreateProductsFormProps) => {
   const [form] = useForm();
+  const minMonth = useMemo(() => dayjs().format('YYYY-MM'), []);
+  const maxMonth = useMemo(() => dayjs().add(6, 'month').format('YYYY-MM'), []);
+  const [updatedMonth, setMinMonth] = useState(minMonth);
   const client = useQueryClient();
   const { mutate, isLoading } = useMutation({
     mutationFn: productService.createMany,
@@ -38,14 +42,26 @@ export const CreateProductsForm = ({ closeModal }: CreateProductsFormProps) => {
     >
 
       <Item
-        label="Months"
-        name="months"
+        label="Start month"
+        name="startMonth"
       >
-        <DatePicker.RangePicker
-          picker="month"
-          allowClear
-          disabledDate={(current) => current < dayjs().startOf('month')}
-          style={{ width: '100%' }}
+        <Input
+          type="month"
+          placeholder="Start month"
+          min={minMonth}
+          max={maxMonth}
+          onChange={(event) => setMinMonth(event.target.value)}
+        />
+      </Item>
+      <Item
+        label="End month"
+        name="endMonth"
+      >
+        <Input
+          type="month"
+          placeholder="End month"
+          min={updatedMonth}
+          max={maxMonth}
         />
       </Item>
       <Item

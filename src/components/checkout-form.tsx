@@ -1,24 +1,22 @@
-import React, { FormEvent, useState } from 'react';
+import React, { FormEvent } from 'react';
 import { LinkAuthenticationElement, PaymentElement, useElements, useStripe } from '@stripe/react-stripe-js';
 import { StripeError, StripePaymentElementOptions } from '@stripe/stripe-js';
 import { useMutation } from '@tanstack/react-query';
 import { Button, Divider, message } from 'antd';
-import { IKeys, IPaymentIntent } from 'models';
+import { IKeys, IROrder } from 'models';
 import { cartStore, userStore } from 'stores';
-import { orderService } from 'services';
 
 import { SuccessPage } from './success-page';
 
 interface CheckoutFormProps {
-  intent: IPaymentIntent
+  order: IROrder
 }
 
-export const CheckoutForm = ({ intent }: CheckoutFormProps) => {
+export const CheckoutForm = ({ order }: CheckoutFormProps) => {
   const stripe = useStripe();
   const elements = useElements();
 
   const [messageApi, contextHolder] = message.useMessage();
-  const [successPage, showSuccessPage] = useState(false);
 
   const payment = useMutation({
     mutationFn: () => stripe!.confirmPayment({
@@ -26,28 +24,11 @@ export const CheckoutForm = ({ intent }: CheckoutFormProps) => {
       redirect: 'if_required'
     }),
     mutationKey: [IKeys.PAYMENTS],
-    onSuccess: () => cartStore.clear(),
+    onSuccess: () => {
+      cartStore.clear();
+    },
     onError: (error: StripeError) => {
       messageApi.error(error.message);
-    }
-  });
-
-  const order = useMutation({
-    mutationFn: () => orderService.create({
-      customer_id: Number(userStore.data?.id),
-      line_items: cartStore.preparedData,
-      meta_data: [{
-        key: '_stripe_intent_id',
-        value: intent!.paymentIntentId
-      }, {
-        key: 'date',
-        value: cartStore.orderDates
-      }]
-    }),
-    mutationKey: [IKeys.ORDERS],
-    onSuccess: () => {
-      payment.mutate();
-      showSuccessPage(true);
     }
   });
 
@@ -58,7 +39,7 @@ export const CheckoutForm = ({ intent }: CheckoutFormProps) => {
       return;
     }
 
-    order.mutate();
+    payment.mutate();
   };
 
   const paymentElementOptions: StripePaymentElementOptions = {
@@ -68,8 +49,8 @@ export const CheckoutForm = ({ intent }: CheckoutFormProps) => {
     }
   };
 
-  return successPage ? (
-    <SuccessPage />
+  return payment.isSuccess ? (
+    <SuccessPage order={order} />
   ) : (
     <form id="payment-form" onSubmit={handleSubmit}>
       <LinkAuthenticationElement id="link-authentication-element" />
@@ -78,7 +59,7 @@ export const CheckoutForm = ({ intent }: CheckoutFormProps) => {
       <Button
         disabled={!stripe || !elements}
         htmlType="submit"
-        loading={payment.isLoading || order.isLoading}
+        loading={payment.isLoading}
         type="primary"
         block
         size="large"

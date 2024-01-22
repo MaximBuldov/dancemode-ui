@@ -87,7 +87,7 @@ class CartStore {
   }
 
   private checkSale(data: IProduct, action: boolean) {
-    const mondays = getAllMondaysOfMonth(dayjs(data.date_time).month());
+    const mondays = getAllMondaysOfMonth(dayjs(data.date_time));
     const classes = action ? [...this.data, data] : this.data;
     const isWholeMonth = mondays.every(mon => classes.some(cls => cls.name === data.name && dayjs(cls.date_time).isSame(mon, 'day')));
 
