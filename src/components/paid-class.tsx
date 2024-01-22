@@ -1,26 +1,44 @@
 import { CloseCircleOutlined, CheckCircleOutlined, DollarOutlined, MoreOutlined } from '@ant-design/icons';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { MenuProps, Typography, Spin, Row, Col, Space, Checkbox, Tag, Dropdown } from 'antd';
 import dayjs from 'dayjs';
-import { useUpdateOrder } from 'hooks';
+import { useError } from 'hooks';
 import { observer } from 'mobx-react-lite';
-import { IMetaData, IProduct, IStatus, IStatusValue } from 'models';
+import { IKeys, IProduct, IStatus } from 'models';
 import { useMemo } from 'react';
+import { productService } from 'services';
+import { userStore } from 'stores';
 
 interface PaidClassProps {
   product: IProduct;
   isExpired: boolean;
-  order: number;
-  meta_data: IMetaData[];
-  item_id: number;
 }
 
-export const PaidClass = observer(({ product, isExpired, order, meta_data, item_id }: PaidClassProps) => {
+export const PaidClass = observer(({ product, isExpired }: PaidClassProps) => {
   const classTime = dayjs(product.date_time);
+  const userId = userStore.data!.id;
+  const { onErrorFn, contextHolder } = useError();
+  const client = useQueryClient();
 
-  const isConfirmed = meta_data?.some(el => el.key === IStatus.CONFIRM && el.value === IStatusValue.TRUE);
-  const isCanceled = meta_data?.some(el => el.key === IStatus.CANCEL && el.value === IStatusValue.TRUE);
+  const isConfirmed = Array.isArray(product.confirm) && product.confirm.includes(userId);
+  const isCanceled = Array.isArray(product.cancel) && product.cancel.includes(userId);
 
-  const { mutate, contextHolder, isLoading } = useUpdateOrder(product, order, item_id);
+  const { mutate, isLoading } = useMutation({
+    mutationFn: ({ key }: { key: IStatus }) => {
+      return productService.update({ [key]: userId }, product.id);
+    },
+    onError: onErrorFn,
+    onSuccess: (data, value) => {
+      client.setQueryData([IKeys.PRODUCTS, { month: classTime.format('YYYY-MM') }], (items: IProduct[] | undefined) => {
+        if (items) {
+          const itemIndex = items.findIndex(el => el.id === product.id);
+          items[itemIndex][value.key] = data[value.key];
+        }
+
+        return items;
+      });
+    }
+  });
 
   const items = useMemo(() => {
     const elements: MenuProps['items'] = [];
@@ -29,7 +47,7 @@ export const PaidClass = observer(({ product, isExpired, order, meta_data, item_
       elements.push({
         label: <Typography.Text type="danger"><CloseCircleOutlined /> Cancel</Typography.Text>,
         key: 'cancel',
-        onClick: () => mutate({ key: IStatus.CANCEL, value: IStatusValue.TRUE })
+        onClick: () => mutate({ key: IStatus.CANCEL })
       });
     }
 
@@ -37,7 +55,7 @@ export const PaidClass = observer(({ product, isExpired, order, meta_data, item_
       elements.push({
         label: <Typography.Text type="success"><CheckCircleOutlined /> Confirm</Typography.Text>,
         key: 'Confirm',
-        onClick: () => mutate({ key: IStatus.CONFIRM, value: IStatusValue.TRUE })
+        onClick: () => mutate({ key: IStatus.CONFIRM })
       });
     }
 

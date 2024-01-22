@@ -4,7 +4,7 @@ import { DayCard, MonthStepper } from 'components';
 import dayjs from 'dayjs';
 import { useConfigCall } from 'hooks';
 import { observer } from 'mobx-react-lite';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { cartStore } from 'stores';
 
@@ -14,6 +14,7 @@ export const Classes = observer(() => {
 
   const { loading, contextHolder, orders, groupedProducts } = useConfigCall(month);
   const products = Object.keys(groupedProducts);
+  const payedClasses = useMemo(() => orders?.flatMap(order => order.line_items.map(el => el.product_id)), [orders]);
   return (
     <Spin spinning={loading}>
       <Space direction="vertical" size={12} style={{ width: '100%' }}>
@@ -24,7 +25,7 @@ export const Classes = observer(() => {
               <DayCard
                 day={el}
                 key={el}
-                orders={orders}
+                payedClasses={payedClasses}
                 classes={groupedProducts[el]}
               />
             );

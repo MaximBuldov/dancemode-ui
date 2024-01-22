@@ -7,7 +7,7 @@ class ProductService {
     try {
       const res = await $wc.get('/wc/v3/products', {
         params: {
-          _fields: 'id,name,price,date_time,is_canceled,total_sales,stock_status',
+          _fields: 'id,name,price,date_time,is_canceled,total_sales,stock_status,cancel,confirm',
           ...params
         }
       });
