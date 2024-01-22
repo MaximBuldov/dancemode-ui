@@ -7,7 +7,6 @@ interface SuccessPageProps {
 }
 
 export const SuccessPage = ({ order }: SuccessPageProps) => {
-  console.log(order);
   return (
     <Result
       status="success"
