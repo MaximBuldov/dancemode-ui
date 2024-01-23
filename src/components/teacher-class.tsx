@@ -4,7 +4,7 @@ import { MenuProps, Typography, Dropdown, Col, Row, Spin, Tag, Space, Modal, Tab
 import dayjs from 'dayjs';
 import { useError } from 'hooks';
 import { observer } from 'mobx-react-lite';
-import { IKeys, IProduct, IROrder, IStatus, IStatusValue } from 'models';
+import { IKeys, IProduct, IROrder } from 'models';
 import { useMemo, useState } from 'react';
 import { orderService, productService } from 'services';
 import { ColumnsType } from 'antd/es/table';
