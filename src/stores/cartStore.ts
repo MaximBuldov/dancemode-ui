@@ -86,6 +86,10 @@ class CartStore {
     }));
   }
 
+  get preparedCoupons() {
+    return this.coupons.map(el => ({ code: el.code }));
+  }
+
   private checkSale(data: IProduct, action: boolean) {
     const mondays = getAllMondaysOfMonth(dayjs(data.date_time));
     const classes = action ? [...this.data, data] : this.data;

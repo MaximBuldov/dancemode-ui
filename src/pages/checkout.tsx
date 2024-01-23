@@ -25,6 +25,7 @@ export const Checkout = () => {
     mutationFn: () => orderService.create({
       customer_id: Number(userStore.data?.id),
       line_items: cartStore.preparedData,
+      coupon_lines: cartStore.preparedCoupons,
       payment_method: 'stripe',
       meta_data: [{
         key: '_stripe_intent_id',

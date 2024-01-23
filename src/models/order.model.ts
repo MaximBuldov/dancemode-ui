@@ -3,6 +3,7 @@ export interface IOrder {
   line_items: IOrderProduct[];
   meta_data?: IMetaData[];
   payment_method?: string;
+  coupon_lines?: { code: string }[];
 }
 
 export interface IROrder extends IOrder {

@@ -18,8 +18,8 @@ export const PaidClass = observer(({ product, isExpired, price }: PaidClassProps
   const userId = userStore.data!.id;
   const { mutate, isLoading, contextHolder } = useProductStatusUpdate(classTime, userId, price, product.id);
 
-  const isConfirmed = Array.isArray(product.confirm) && product.confirm.includes(userId);
-  const isCanceled = Array.isArray(product.cancel) && product.cancel.includes(userId);
+  const isConfirmed = Array.isArray(product.confirm) && product.confirm.includes(Number(userId));
+  const isCanceled = Array.isArray(product.cancel) && product.cancel.includes(Number(userId));
 
   const items = useMemo(() => {
     const elements: MenuProps['items'] = [];

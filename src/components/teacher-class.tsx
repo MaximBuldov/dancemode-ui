@@ -85,9 +85,8 @@ export const TeacherClass = observer(({ product }: TeacherClassProps) => {
       title: 'Status',
       key: 'status',
       render: (_, el) => {
-        const meta = el.line_items.find(item => item.product_id === product.id)?.meta_data;
-        const isConfirm = meta?.some(el => el.key === IStatus.CONFIRM && el.value === IStatusValue.TRUE);
-        const isCanceled = meta?.some(el => el.key === IStatus.CANCEL && el.value === IStatusValue.TRUE);
+        const isConfirm = Array.isArray(product.confirm) && product.confirm.includes(el.customer_id);
+        const isCanceled = Array.isArray(product.cancel) && product.cancel.includes(el.customer_id);
         if (isConfirm) {
           return <Tag color="green">Confirmed</Tag>;
         }
@@ -102,10 +101,10 @@ export const TeacherClass = observer(({ product }: TeacherClassProps) => {
   return (
     <Spin spinning={updateProduct.isLoading || orderApi.isLoading || deleteProduct.isLoading}>
       <Row justify="space-between">
-        <Col>
+        <Col onClick={() => orderApi.mutate()}>
           <Space>
             <CaretRightOutlined rotate={isOrders ? 90 : 0} />
-            <Typography onClick={() => orderApi.mutate()}>
+            <Typography>
               {product.name}: {classTime.format('ha')}
             </Typography>
             {product.is_canceled && <Tag icon={<CloseCircleOutlined />} color="error">Canceled</Tag>}

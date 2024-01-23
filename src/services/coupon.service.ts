@@ -12,6 +12,7 @@ class CouponService {
           ...params
         }
       });
+      res.data = res.data.filter(el => el.usage_count < el.usage_limit);
       return res;
     } catch (error) {
       throw error;

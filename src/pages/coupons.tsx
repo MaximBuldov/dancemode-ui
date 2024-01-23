@@ -15,7 +15,7 @@ const columns: ColumnsType<ICoupon> = [
 
 export const Coupons = () => {
   const { data, isFetching } = useQuery({
-    queryFn: couponService.getMy,
+    queryFn: () => couponService.getMy(),
     queryKey: [IKeys.COUPONS]
   });
 

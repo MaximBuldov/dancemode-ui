@@ -9,8 +9,8 @@ export interface IProduct {
   total_sales: number;
   stock_status: IStockStatus;
   categories: ICategory[];
-  cancel: string[];
-  confirm: string[];
+  cancel: number[];
+  confirm: number[];
 }
 
 export interface ICartProduct extends IProduct {

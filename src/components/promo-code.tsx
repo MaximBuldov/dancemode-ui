@@ -1,6 +1,6 @@
 import { CaretRightOutlined, DeleteTwoTone } from '@ant-design/icons';
 import { useMutation } from '@tanstack/react-query';
-import { Button, Col, Form, Input, List, Row, Space, Tag, Typography } from 'antd';
+import { Button, Col, Form, Input, List, Row, Space, Tag, Typography, message } from 'antd';
 import { useState } from 'react';
 import { couponService } from 'services';
 import { cartStore } from 'stores';
@@ -8,11 +8,16 @@ import { cartStore } from 'stores';
 export const PromoCode = () => {
   const [open, setOpen] = useState(false);
   const [form] = Form.useForm();
+  const [messageApi, contextHolder] = message.useMessage();
 
   const { mutate } = useMutation({
     mutationFn: (code: string) => couponService.getMy({ code }),
     onSuccess: ({ data }) => {
-      cartStore.addCoupon(data[0]);
+      if (!!data.length) {
+        cartStore.addCoupon(data[0]);
+      } else {
+        messageApi.error('Coupon code is not valid');
+      }
     },
     onSettled: () => form.resetFields()
   });
@@ -69,6 +74,7 @@ export const PromoCode = () => {
           </Form >
         </>
       )}
+      {contextHolder}
     </Space>
   );
 };
