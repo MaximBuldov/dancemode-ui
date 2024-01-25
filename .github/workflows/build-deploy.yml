@@ -27,6 +27,7 @@ jobs:
         echo "REACT_APP_SECURE_LS=${{ vars.REACT_APP_SECURE_LS }}" >> .env.production.local
         echo "REACT_APP_WC_KEY=${{ vars.REACT_APP_WC_KEY }}" >> .env.production.local
         echo "REACT_APP_WC_SECRET=${{ vars.REACT_APP_WC_SECRET }}" >> .env.production.local
+        echo "REACT_APP_STRIPE_PUBLIC_KEY=${{ vars.REACT_APP_STRIPE_PUBLIC_KEY }}" >> .env.production.local
 
     - name: Build
       run: yarn build
