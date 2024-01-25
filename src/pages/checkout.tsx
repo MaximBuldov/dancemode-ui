@@ -15,7 +15,8 @@ export const Checkout = () => {
   const { onErrorFn, contextHolder } = useError();
   const stripe = useQuery({
     queryFn: () => orderService.stripe({
-      total: (cartStore.total - cartStore.couponsTotal) * 100
+      total: (cartStore.total - cartStore.couponsTotal) * 100,
+      customer: userStore.data?.id
     }),
     onSuccess: () => {
       order.mutate();
