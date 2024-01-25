@@ -9,6 +9,7 @@ import { useNavigate } from 'react-router-dom';
 import { cartStore } from 'stores';
 
 export const Classes = observer(() => {
+  console.log({ key: process.env.REACT_APP_STRIPE_PUBLIC_KEY, url: process.env.REACT_APP_API_URL })
   const [month, setMonth] = useState(dayjs());
   const navigate = useNavigate();
 
