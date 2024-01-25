@@ -2,15 +2,17 @@ import { Elements } from '@stripe/react-stripe-js';
 import React, { useMemo } from 'react';
 import { StripeElementsOptions, loadStripe } from '@stripe/stripe-js';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { Spin } from 'antd';
+import { Skeleton } from 'antd';
 import { CheckoutForm } from 'components';
 import { IKeys } from 'models';
 import { orderService } from 'services';
 import { cartStore, userStore } from 'stores';
+import { useError } from 'hooks';
 
 const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLIC_KEY || '');
 
 export const Checkout = () => {
+  const { onErrorFn, contextHolder } = useError();
   const stripe = useQuery({
     queryFn: () => orderService.stripe({
       total: (cartStore.total - cartStore.couponsTotal) * 100
@@ -18,6 +20,7 @@ export const Checkout = () => {
     onSuccess: () => {
       order.mutate();
     },
+    onError: onErrorFn,
     queryKey: [IKeys.STRIPE]
   });
 
@@ -35,7 +38,8 @@ export const Checkout = () => {
         value: cartStore.orderDates
       }]
     }),
-    mutationKey: [IKeys.ORDERS]
+    mutationKey: [IKeys.ORDERS],
+    onError: onErrorFn
   });
 
   const options: StripeElementsOptions = useMemo(() => ({
@@ -46,12 +50,14 @@ export const Checkout = () => {
   }), [stripe.data?.clientSecret]);
 
   return (
-    <Spin spinning={stripe.isLoading || order.isLoading}>
+    <>
+      {(stripe.isLoading || order.isLoading) && <Skeleton active />}
       {(stripe.isSuccess && order.isSuccess) && (
         <Elements options={options} stripe={stripePromise}>
           <CheckoutForm order={order.data} />
         </Elements>
       )}
-    </Spin>
+      {contextHolder}
+    </>
   );
 };
