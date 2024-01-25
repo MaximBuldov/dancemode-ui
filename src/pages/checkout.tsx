@@ -14,6 +14,7 @@ const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLIC_KEY || '');
 export const Checkout = () => {
   // eslint-disable-next-line no-console
   console.log(process.env.REACT_APP_STRIPE_PUBLIC_KEY);
+
   const { onErrorFn, contextHolder } = useError();
   const stripe = useQuery({
     queryFn: () => orderService.stripe({
