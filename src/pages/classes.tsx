@@ -11,7 +11,6 @@ import { cartStore } from 'stores';
 export const Classes = observer(() => {
   // eslint-disable-next-line no-console
   console.log({ key: process.env.REACT_APP_STRIPE_PUBLIC_KEY, url: process.env.REACT_APP_API_URL, wc: process.env.REACT_APP_WC_KEY, test: process.env.REACT_APP_PAYMENT_KEY });
-
   const [month, setMonth] = useState(dayjs());
   const navigate = useNavigate();
 
