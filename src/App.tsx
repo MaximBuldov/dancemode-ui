@@ -28,7 +28,7 @@ const App = observer(() => {
   ]);
   const handlers = useSwipeable({
     onSwipedDown: () => window.location.reload(),
-    delta: 150
+    delta: 250
   });
 
   return (
@@ -46,3 +46,5 @@ export default App;
 // - add ability to delete class and check if someone buy it
 // - add additional question on all delete and cancel actions
 // - all error and success mesages
+// - add notification after reset password 
+

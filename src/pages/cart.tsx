@@ -61,7 +61,7 @@ export const Cart = observer(() => {
           <Col span={8} style={{ textAlign: 'right' }}>
             <Row>
               {renderTotalLine('Subtotal', cartStore.subtotal)}
-              {renderTotalLine('Sale', cartStore.subtotal - cartStore.total, true)}
+              {cartStore.isDiscount && renderTotalLine('Discount', cartStore.discount, true)}
               {cartStore.isCoupons && renderTotalLine('Coupons', cartStore.couponsTotal, true)}
               {renderTotalLine('Total', cartStore.total - cartStore.couponsTotal)}
             </Row>

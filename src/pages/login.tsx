@@ -1,10 +1,10 @@
-import { Button, Form, Input, Typography } from 'antd';
+import { Button, Divider, Form, Input, Typography } from 'antd';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { useMutation } from '@tanstack/react-query';
 import { userService } from 'services';
 import { userStore } from 'stores';
 import { observer } from 'mobx-react-lite';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useError } from 'hooks';
 
 const { useForm, Item } = Form;
@@ -59,6 +59,8 @@ export const Login = observer(() => {
           Login
         </Button>
       </Form>
+      <Divider />
+      <Typography.Paragraph>If you don't have account please <Link to="/sign-up">signup</Link></Typography.Paragraph>
       {contextHolder}
     </div>
   );

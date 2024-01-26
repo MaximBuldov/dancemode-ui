@@ -21,6 +21,7 @@ export const TeacherClass = observer(({ product }: TeacherClassProps) => {
   const client = useQueryClient();
   const [modal, setModal] = useState(false);
   const { contextHolder, onErrorFn } = useError();
+  const [isOrders, setIsOrders] = useState(false);
 
   const updateProduct = useMutation({
     mutationFn: (data: any) => productService.update(data, product.id),
@@ -48,10 +49,13 @@ export const TeacherClass = observer(({ product }: TeacherClassProps) => {
 
   const orderApi = useMutation({
     mutationFn: () => orderService.getAll({ per_page: 100, product: product.id }),
-    onError: onErrorFn
+    mutationKey: [IKeys.PRODUCTS, { id: product.id }],
+    onError: onErrorFn,
+    onSuccess: ({ data }) => {
+      setIsOrders(data.length > 0);
+    }
   });
   const orders = orderApi.data?.data;
-  const isOrders = orders && orders.length > 0;
 
   const items = useMemo(() => {
     const elements: MenuProps['items'] = [
@@ -98,10 +102,18 @@ export const TeacherClass = observer(({ product }: TeacherClassProps) => {
     }
   ];
 
+  const loadCustomers = () => {
+    if (isOrders) {
+      setIsOrders(false);
+    } else {
+      orderApi.mutate();
+    }
+  };
+
   return (
     <Spin spinning={updateProduct.isLoading || orderApi.isLoading || deleteProduct.isLoading}>
       <Row justify="space-between">
-        <Col onClick={() => orderApi.mutate()}>
+        <Col onClick={() => loadCustomers()}>
           <Space>
             <CaretRightOutlined rotate={isOrders ? 90 : 0} />
             <Typography>

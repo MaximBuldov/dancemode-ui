@@ -90,6 +90,14 @@ class CartStore {
     return this.coupons.map(el => ({ code: el.code }));
   }
 
+  get discount() {
+    return this.subtotal - this.total;
+  }
+
+  get isDiscount() {
+    return this.discount > 0;
+  }
+
   private checkSale(data: IProduct, action: boolean) {
     const mondays = getAllMondaysOfMonth(dayjs(data.date_time));
     const classes = action ? [...this.data, data] : this.data;

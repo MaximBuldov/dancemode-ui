@@ -1,5 +1,5 @@
 import { InstagramOutlined, LockOutlined, MailOutlined, PhoneOutlined, UserOutlined } from '@ant-design/icons';
-import { Button, DatePicker, Form, Input, Typography } from 'antd';
+import { Button, Form, Input, Typography } from 'antd';
 import dayjs from 'dayjs';
 import { ISignupForm, IUser } from 'models';
 import React from 'react';
@@ -74,8 +74,8 @@ export const ProfileForm = ({ title, onSubmit, isLoading, isLabels, submitButton
           />
         </Item>
         <Item name={['acf', 'dob']}>
-          <DatePicker
-            format="MM/DD/YYYY"
+          <Input
+            type="date"
             placeholder={dob}
             style={{ width: '100%' }}
           />
@@ -95,9 +95,13 @@ export const ProfileForm = ({ title, onSubmit, isLoading, isLabels, submitButton
         </Item>
         <Item
           name={['acf', 'billing_phone']}
-          rules={[{ required: isRequired, message: 'Please input your phone!' }]}
+          rules={[{ required: isRequired, message: 'Please input your phone!' }, {
+            min: 10,
+            message: 'Please enter correct phone number'
+          }]}
         >
           <Input
+            maxLength={10}
             addonBefore={label(phone)}
             prefix={<PhoneOutlined />}
             placeholder={placeholder(phone)}

@@ -15,7 +15,7 @@ const columns: ColumnsType<IROrder> = [
     title: 'Status', dataIndex: 'total', key: 'status',
     render: (el) => el === '0' ?
       <Tag color="warning">Rescheduled</Tag> :
-      <Tag color="processing">Payed</Tag>
+      <Tag color="processing">Paid</Tag>
   },
   {
     title: 'Total', dataIndex: 'total', key: 'total',

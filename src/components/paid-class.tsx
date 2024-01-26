@@ -51,7 +51,7 @@ export const PaidClass = observer(({ product, isExpired, price }: PaidClassProps
             <Checkbox disabled />
             <Typography>{product.name}: {classTime.format('ha')}</Typography>
             <div>
-              <Tag icon={<DollarOutlined />} color="processing">Payed</Tag>
+              <Tag icon={<DollarOutlined />} color="processing">Paid</Tag>
               {(isConfirmed && !isCanceled) && <Tag icon={<CheckCircleOutlined />} color="success">Confirmed</Tag>}
               {isCanceled && <Tag icon={<CloseCircleOutlined />} color="error">Canceled</Tag>}
             </div>

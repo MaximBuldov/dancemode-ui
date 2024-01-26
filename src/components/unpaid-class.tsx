@@ -22,7 +22,7 @@ export const UnpaidClass = observer(({ product, isExpired }: UnpaidClassProps) =
             checked={cartStore.isInCart(product)}
             onChange={() => cartStore.isInCart(product) ? cartStore.remove(product) : cartStore.add(product)}
           />
-          <Typography>{product.name}: {classTime.format('ha')}</Typography>
+          <Typography>{product.name}: {classTime.format('ha')} - <b>${product.price}</b></Typography>
           {isOutOfStock && <Tag color="#f50">Sold out</Tag>}
         </Space>
       </Col>
