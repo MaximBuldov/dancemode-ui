@@ -75,8 +75,9 @@ export const ProfileForm = ({ title, onSubmit, isLoading, isLabels, submitButton
         </Item>
         <Item name={['acf', 'dob']}>
           <Input
+            addonBefore={label(dob)}
             type="date"
-            placeholder={dob}
+            placeholder={placeholder(dob)}
             style={{ width: '100%' }}
           />
         </Item>

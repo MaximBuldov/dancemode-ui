@@ -12,6 +12,9 @@ code {
     monospace;
 }
 
-.ant-picker-panels>*:last-child {
-  display: none;
+.policy {
+  background-color: azure;
+  padding: 10px;
+  font-size: 12px;
+  margin: 10px 0;
 }

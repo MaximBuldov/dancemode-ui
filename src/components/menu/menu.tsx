@@ -18,10 +18,6 @@ const userItems = [
     icon: '💵'
   },
   {
-    label: 'video',
-    icon: '📹'
-  },
-  {
     label: 'profile',
     icon: '💃'
   }

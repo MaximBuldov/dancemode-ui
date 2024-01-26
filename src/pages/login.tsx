@@ -60,7 +60,7 @@ export const Login = observer(() => {
         </Button>
       </Form>
       <Divider />
-      <Typography.Paragraph>If you don't have account please <Link to="/sign-up">signup</Link></Typography.Paragraph>
+      <Typography.Paragraph>Don't have account yet? Please <Link to="/sign-up">signup</Link></Typography.Paragraph>
       {contextHolder}
     </div>
   );
