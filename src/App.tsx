@@ -43,7 +43,6 @@ export default App;
 // TODO
 // - messages, email, telegram
 // - add quantity change on edit product
-// - forgot password
 // - add ability to delete class and check if someone buy it
 // - add additional question on all delete and cancel actions
 // - all error and success mesages

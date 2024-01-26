@@ -23,3 +23,16 @@ export enum IUserRoles {
   ADMIN = 'administrator',
   CUSTOMER = 'customer'
 }
+
+export interface IRResetPassword {
+  data: {
+    status: number
+  };
+  message: string;
+}
+
+export interface IResetPassword {
+  email: string;
+  code?: string;
+  password?: string;
+}

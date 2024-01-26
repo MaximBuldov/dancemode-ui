@@ -30,6 +30,7 @@ export const Login = observer(() => {
         form={form}
         name="login"
         onFinish={(data) => mutate(data)}
+        size="large"
       >
         <Item
           name="username"

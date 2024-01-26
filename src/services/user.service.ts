@@ -1,4 +1,4 @@
-import { ILoginForm, IRUser, ISignupForm, IUserResponse } from 'models';
+import { ILoginForm, IRResetPassword, IRUser, IResetPassword, ISignupForm, IUserResponse } from 'models';
 import { userStore } from 'stores';
 
 import { $api, $auth, $wc } from '../http';
@@ -34,6 +34,24 @@ class UserService {
   async getCustomers(params?: any) {
     try {
       const res = await $wc.get<IRUser[]>('/wc/v3/customers', { params });
+      return res;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async sendCode(data: IResetPassword) {
+    try {
+      const res = await $auth<IRResetPassword>('/bdpwr/v1/reset-password', { data });
+      return res;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async resetPassword(data: IResetPassword) {
+    try {
+      const res = await $auth<IRResetPassword>('/bdpwr/v1/set-password', { data });
       return res;
     } catch (error) {
       throw error;

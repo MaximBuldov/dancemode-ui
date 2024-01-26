@@ -130,7 +130,7 @@ export const ProfileForm = ({ title, onSubmit, isLoading, isLabels, submitButton
             placeholder={placeholder(password)}
           />
         </Item>
-        <Form.Item
+        <Item
           name="confirm"
           dependencies={['password']}
           hasFeedback
@@ -154,7 +154,7 @@ export const ProfileForm = ({ title, onSubmit, isLoading, isLabels, submitButton
             placeholder={placeholder(confirmPassword)}
             prefix={<LockOutlined />}
           />
-        </Form.Item>
+        </Item>
         <Button
           type="primary"
           htmlType="submit"
