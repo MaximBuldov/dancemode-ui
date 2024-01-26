@@ -1,5 +1,5 @@
 import { CloseCircleOutlined, CheckCircleOutlined, DollarOutlined, MoreOutlined } from '@ant-design/icons';
-import { MenuProps, Typography, Row, Col, Space, Checkbox, Tag, Dropdown, Modal, Button } from 'antd';
+import { MenuProps, Typography, Row, Col, Space, Checkbox, Tag, Dropdown, Modal } from 'antd';
 import dayjs from 'dayjs';
 import { useProductStatusUpdate } from 'hooks';
 import { observer } from 'mobx-react-lite';
@@ -24,7 +24,6 @@ export const PaidClass = observer(({ product, isExpired, price }: PaidClassProps
   const isCanceled = Array.isArray(product.cancel) && product.cancel.includes(Number(userId));
 
   const isConfirmModal = modalOpen === IStatus.CONFIRM;
-  const isDeadline = dayjs().isBefore(classTime.subtract(5, 'hour'));
 
   const items = useMemo(() => {
     const elements: MenuProps['items'] = [];
