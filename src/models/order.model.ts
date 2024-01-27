@@ -9,7 +9,7 @@ export interface IOrder {
 export interface IROrder extends IOrder {
   id: number;
   customer_name: string;
-  status: string;
+  status: IOrderStatus;
   date: string;
   total: string;
   line_items: IROrderProduct[];
@@ -38,6 +38,12 @@ export interface IMetaData {
 export enum IStatus {
   CONFIRM = 'confirm',
   CANCEL = 'cancel'
+}
+
+export enum IOrderStatus {
+  COMPLETED = 'completed',
+  PENDING = 'pending',
+  CANCELLED = 'cancelled'
 }
 
 export enum IStatusValue {

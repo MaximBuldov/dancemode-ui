@@ -1,26 +1,15 @@
-import { IOrder, IROrderProduct, IROrder, IStatus, IStatusValue, ICoupon } from 'models';
+import { IOrder, IROrder } from 'models';
 import { userStore } from 'stores';
 import dayjs from 'dayjs';
 
 import { $api, $wc } from '../http';
 
-interface IUpdate {
-  data: {
-    key: IStatus,
-    value: IStatusValue,
-    create_code: boolean,
-    userId: string
-  },
-  order: number,
-  item: number
+export interface IUpdate {
+  data: Partial<IROrder>,
+  id: string | number
 }
 
-interface IUpdateResponse {
-  orders: IROrderProduct[],
-  coupon: ICoupon
-}
-
-interface IFilters {
+export interface IFilters {
   page?: number,
   per_page?: number,
   customer_id?: number,
@@ -46,7 +35,7 @@ class OrderService {
           _fields,
           customer: userStore.data?.id,
           date: month.format('YYYY-MM'),
-          status: ['completed']
+          status: ['completed', 'pending']
         }
       });
       return res.data as IROrder[];
@@ -87,10 +76,10 @@ class OrderService {
     }
   }
 
-  async update({ data, order, item }: IUpdate) {
+  async update({ data, id }: IUpdate) {
     try {
-      const res = await $api.post(`/custom/v2/order/${order}/${item}`, data);
-      return res.data as IUpdateResponse;
+      const res = await $wc.put(`/wc/v3/orders/${id}`, data);
+      return res.data as IROrder;
     } catch (error) {
       throw error;
     }

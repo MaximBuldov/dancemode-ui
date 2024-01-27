@@ -1,36 +1,58 @@
-import { DeleteOutlined, DollarOutlined, ShoppingCartOutlined } from '@ant-design/icons';
-import { Button, Col, List, Row, Typography } from 'antd';
-import { CartItem, PromoCode } from 'components';
+import { CreditCardOutlined, DeleteOutlined, DollarOutlined, ShoppingCartOutlined } from '@ant-design/icons';
+import { Button, Col, Flex, List, Row, Typography } from 'antd';
+import { CartItem, PromoCode, SuccessPage } from 'components';
 import { observer } from 'mobx-react-lite';
 import { useNavigate } from 'react-router-dom';
 import { cartStore } from 'stores';
 import * as routes from 'routes/consts';
+import { useCreateOrder, useError } from 'hooks';
 
 export const Cart = observer(() => {
   const navigate = useNavigate();
+  const { onErrorFn, contextHolder } = useError();
+  const order = useCreateOrder({ paymentIntentId: 'cash', onErrorFn, onSuccess: () => cartStore.clear() });
 
   return (
     <>
-      <List
-        header={renderHeader()}
-        footer={renderFooter()}
-        bordered={false}
-        dataSource={cartStore.data}
-        renderItem={(item) => (
-          <List.Item>
-            <CartItem item={item} />
-          </List.Item>
-        )}
-      />
-      <Button
-        type="primary"
-        block
-        icon={<DollarOutlined />}
-        disabled={!cartStore.count}
-        onClick={() => navigate(routes.CHECKOUT)}
-      >
-        Checkout
-      </Button>
+      {order.isSuccess ? (
+        <SuccessPage order={order.data} />
+      ) : (
+        <>
+          <List
+            header={renderHeader()}
+            footer={renderFooter()}
+            bordered={false}
+            dataSource={cartStore.data}
+            renderItem={(item) => (
+              <List.Item>
+                <CartItem item={item} />
+              </List.Item>
+            )} /><Flex gap="small">
+            <Button
+              type="primary"
+              size="large"
+              block
+              icon={<CreditCardOutlined />}
+              disabled={!cartStore.count || order.isLoading}
+              onClick={() => navigate(routes.CHECKOUT)}
+            >
+              Pay Card
+            </Button>
+            <Button
+              type="default"
+              size="large"
+              block
+              icon={<DollarOutlined />}
+              disabled={!cartStore.count}
+              onClick={() => order.mutate()}
+              loading={order.isLoading}
+            >
+              Pay Cash
+            </Button>
+          </Flex>
+        </>
+      )}
+      {contextHolder}
     </>
   );
 

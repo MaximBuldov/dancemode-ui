@@ -1,4 +1,4 @@
-import { CloseCircleOutlined, CheckCircleOutlined, DollarOutlined, MoreOutlined } from '@ant-design/icons';
+import { CloseCircleOutlined, CheckCircleOutlined, MoreOutlined, CreditCardOutlined } from '@ant-design/icons';
 import { MenuProps, Typography, Row, Col, Space, Checkbox, Tag, Dropdown, Modal } from 'antd';
 import dayjs from 'dayjs';
 import { useProductStatusUpdate } from 'hooks';
@@ -54,7 +54,7 @@ export const PaidClass = observer(({ product, isExpired, price }: PaidClassProps
           <Checkbox disabled />
           <Typography>{product.name}: {classTime.format('ha')}</Typography>
           <div>
-            <Tag icon={<DollarOutlined />} color="processing">Paid</Tag>
+            <Tag icon={<CreditCardOutlined />} color="processing">Paid</Tag>
             {(isConfirmed && !isCanceled) && <Tag icon={<CheckCircleOutlined />} color="success">Confirmed</Tag>}
             {isCanceled && <Tag icon={<CloseCircleOutlined />} color="error">Canceled</Tag>}
           </div>
@@ -73,7 +73,7 @@ export const PaidClass = observer(({ product, isExpired, price }: PaidClassProps
       )}
       {contextHolder}
       <Modal
-        title={`Class ${modalOpen}ation: ${classTime.format('MM/DD ha')} - ${product.name.toLocaleLowerCase()}`}
+        title={`Class ${isConfirmModal ? 'confirmation' : 'cancellation'}: ${classTime.format('MM/DD ha')} - ${product.name.toLocaleLowerCase()}`}
         open={!!modalOpen}
         onOk={() => mutate({ key: modalOpen! })}
         confirmLoading={isLoading}
@@ -81,6 +81,7 @@ export const PaidClass = observer(({ product, isExpired, price }: PaidClassProps
           setModalOpen(null);
           setSeePolicy(false);
         }}
+        cancelText="Close"
         okButtonProps={{
           danger: !isConfirmModal
         }}
@@ -88,11 +89,11 @@ export const PaidClass = observer(({ product, isExpired, price }: PaidClassProps
       >
         <div>
           {`${isConfirmModal ? 'Do you want to confirm?' : 'Are you sure you want to cancel? Cancel 5 hours before class for a coupon; within 5 hours, no refunds. '} `}
-          {!seePolicy && <Typography.Link onClick={() => setSeePolicy(true)}>See cancelation policy</Typography.Link>}
+          {(!seePolicy && !isConfirmModal) && <Typography.Link onClick={() => setSeePolicy(true)}>See cancelation policy</Typography.Link>}
         </div>
         {seePolicy && (
           <div className="policy">
-            It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English.
+            If unable to attend, kindly cancel in your account at least 5 hours prior. For no-call, no-show, or cancellations less than 5 hours prior to the class, the class will still be deducted from your package, except in the case of emergencies.
           </div>
         )}
       </Modal>

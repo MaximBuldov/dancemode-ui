@@ -1,13 +1,13 @@
 import { Elements } from '@stripe/react-stripe-js';
 import React, { useMemo } from 'react';
 import { StripeElementsOptions, loadStripe } from '@stripe/stripe-js';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { Skeleton } from 'antd';
 import { CheckoutForm } from 'components';
 import { IKeys } from 'models';
 import { orderService } from 'services';
 import { cartStore, userStore } from 'stores';
-import { useError } from 'hooks';
+import { useCreateOrder, useError } from 'hooks';
 
 const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLIC_KEY || '');
 
@@ -25,23 +25,7 @@ export const Checkout = () => {
     queryKey: [IKeys.STRIPE]
   });
 
-  const order = useMutation({
-    mutationFn: () => orderService.create({
-      customer_id: Number(userStore.data?.id),
-      line_items: cartStore.preparedData,
-      coupon_lines: cartStore.preparedCoupons,
-      payment_method: 'stripe',
-      meta_data: [{
-        key: '_stripe_intent_id',
-        value: stripe.data.paymentIntentId
-      }, {
-        key: 'date',
-        value: cartStore.orderDates
-      }]
-    }),
-    mutationKey: [IKeys.ORDERS],
-    onError: onErrorFn
-  });
+  const order = useCreateOrder({ paymentIntentId: stripe.data.paymentIntentId, onErrorFn });
 
   const options: StripeElementsOptions = useMemo(() => ({
     clientSecret: stripe.data?.clientSecret,

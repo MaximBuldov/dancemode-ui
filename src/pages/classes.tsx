@@ -4,6 +4,7 @@ import { DayCard, MonthStepper } from 'components';
 import dayjs from 'dayjs';
 import { useConfigCall } from 'hooks';
 import { observer } from 'mobx-react-lite';
+import { IOrderStatus } from 'models';
 import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { cartStore } from 'stores';
@@ -14,7 +15,28 @@ export const Classes = observer(() => {
 
   const { loading, contextHolder, orders, groupedProducts } = useConfigCall(month);
   const products = Object.keys(groupedProducts);
-  const payedClasses = useMemo(() => orders?.flatMap(order => order.line_items.map(el => el.product_id)), [orders]);
+  const payedClasses = useMemo(() => {
+    if (orders) {
+      const pendingProductIDs: number[] = [];
+      const completedProductIDs: number[] = [];
+
+      orders.forEach(order => {
+        if (order.status === IOrderStatus.PENDING) {
+          order.line_items.forEach(product => {
+            pendingProductIDs.push(product.product_id);
+          });
+        } else if (order.status === IOrderStatus.COMPLETED) {
+          order.line_items.forEach(product => {
+            completedProductIDs.push(product.product_id);
+          });
+        }
+      });
+      return {
+        pending: pendingProductIDs,
+        completed: completedProductIDs
+      };
+    }
+  }, [orders]);
   return (
     <Spin spinning={loading}>
       <Space direction="vertical" size={12} style={{ width: '100%' }}>
