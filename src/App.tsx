@@ -44,7 +44,5 @@ export default App;
 // - messages, email, telegram
 // - add quantity change on edit product
 // - add ability to delete class and check if someone buy it
-// - add additional question on all delete and cancel actions
-// - all error and success mesages
 // - add notification after reset password 
 

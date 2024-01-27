@@ -49,7 +49,7 @@ export const ProfileForm = ({ title, onSubmit, isLoading, isLabels, submitButton
         onFinish={onSubmit}
         layout="vertical"
         initialValues={initialValues ?
-          { ...initialValues, acf: { ...initialValues.acf, dob: dayjs(initialValues.acf.dob) } } :
+          { ...initialValues, acf: { ...initialValues.acf, dob: dayjs(initialValues.acf.dob).format('YYYY-MM-DD') } } :
           undefined
         }
       >
