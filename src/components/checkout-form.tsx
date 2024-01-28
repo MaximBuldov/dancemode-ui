@@ -2,21 +2,27 @@ import React, { FormEvent } from 'react';
 import { LinkAuthenticationElement, PaymentElement, useElements, useStripe } from '@stripe/react-stripe-js';
 import { StripeError, StripePaymentElementOptions } from '@stripe/stripe-js';
 import { useMutation } from '@tanstack/react-query';
-import { Button, Divider, message } from 'antd';
-import { IKeys, IROrder } from 'models';
+import { Button, Divider } from 'antd';
+import { IKeys } from 'models';
 import { cartStore, userStore } from 'stores';
+import { useCreateOrder, useError } from 'hooks';
 
 import { SuccessPage } from './success-page';
 
 interface CheckoutFormProps {
-  order: IROrder
+  paymentIntentId: string;
 }
 
-export const CheckoutForm = ({ order }: CheckoutFormProps) => {
+export const CheckoutForm = ({ paymentIntentId }: CheckoutFormProps) => {
   const stripe = useStripe();
   const elements = useElements();
+  const { onErrorFn, contextHolder, messageApi } = useError();
 
-  const [messageApi, contextHolder] = message.useMessage();
+  const order = useCreateOrder({
+    paymentIntentId,
+    onErrorFn,
+    onSuccess: () => payment.mutate()
+  });
 
   const payment = useMutation({
     mutationFn: () => stripe!.confirmPayment({
@@ -39,7 +45,7 @@ export const CheckoutForm = ({ order }: CheckoutFormProps) => {
       return;
     }
 
-    payment.mutate();
+    order.mutate();
   };
 
   const paymentElementOptions: StripePaymentElementOptions = {
@@ -49,8 +55,8 @@ export const CheckoutForm = ({ order }: CheckoutFormProps) => {
     }
   };
 
-  return payment.isSuccess ? (
-    <SuccessPage order={order} />
+  return (payment.isSuccess && order.isSuccess) ? (
+    <SuccessPage order={order.data} />
   ) : (
     <form id="payment-form" onSubmit={handleSubmit}>
       <LinkAuthenticationElement id="link-authentication-element" />
@@ -59,7 +65,7 @@ export const CheckoutForm = ({ order }: CheckoutFormProps) => {
       <Button
         disabled={!stripe || !elements}
         htmlType="submit"
-        loading={payment.isLoading}
+        loading={payment.isLoading || order.isLoading}
         type="primary"
         block
         size="large"

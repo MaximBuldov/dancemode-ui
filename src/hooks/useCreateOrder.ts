@@ -5,7 +5,7 @@ import { orderService } from 'services';
 import { cartStore, userStore } from 'stores';
 
 interface IUseCreateOrder {
-  paymentIntentId: string;
+  paymentIntentId?: string;
   onErrorFn: (error: AxiosError<IResponseError>) => void;
   onSuccess?: () => void
 }
@@ -19,7 +19,7 @@ export const useCreateOrder = ({ paymentIntentId, onErrorFn, onSuccess }: IUseCr
       payment_method: 'stripe',
       meta_data: [{
         key: '_stripe_intent_id',
-        value: paymentIntentId
+        value: paymentIntentId || ''
       }, {
         key: 'date',
         value: cartStore.orderDates

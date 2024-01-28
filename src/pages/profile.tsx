@@ -1,14 +1,13 @@
 import { useMutation } from '@tanstack/react-query';
 import { Button, Divider } from 'antd';
 import { ProfileForm } from 'components';
-import { useAddToHomescreen, useError } from 'hooks';
+import { useError } from 'hooks';
 import { useNavigate } from 'react-router-dom';
 import { userService } from 'services';
 import { userStore } from 'stores';
 
 export const Profile = () => {
   const { onErrorFn, contextHolder, messageApi } = useError();
-  const [prompt, promptToInstall] = useAddToHomescreen();
   const navigate = useNavigate();
 
   const { mutate, isLoading } = useMutation({
@@ -35,18 +34,6 @@ export const Profile = () => {
         initialValues={userStore.data}
         isRequired={false}
       />
-      {prompt && (
-        <>
-          <Divider />
-          <Button
-            block
-            onClick={() => promptToInstall()}
-          >
-            Add to Home Screen
-          </Button>
-        </>
-      )
-      }
       <Divider />
       <Button
         danger

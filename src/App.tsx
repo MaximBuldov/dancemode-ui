@@ -32,7 +32,7 @@ const App = observer(() => {
   });
 
   return (
-    <div {...handlers}>
+    <div {...handlers} className="app-container">
       <RouterProvider router={router} />
     </div>
   );
@@ -41,7 +41,6 @@ const App = observer(() => {
 export default App;
 
 // TODO
-// - messages, email, telegram
 // - add quantity change on edit product
 // - add ability to delete class and check if someone buy it
 // - add notification after reset password 

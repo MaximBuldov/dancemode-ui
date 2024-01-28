@@ -18,7 +18,13 @@ export const PaidClass = observer(({ product, isExpired, price }: PaidClassProps
   const [seePolicy, setSeePolicy] = useState(false);
   const classTime = dayjs(product.date_time);
   const userId = userStore.data!.id;
-  const { mutate, isLoading, contextHolder } = useProductStatusUpdate(classTime, userId, price, product.id);
+  const { mutate, isLoading, contextHolder } = useProductStatusUpdate({
+    day: classTime,
+    userId,
+    price,
+    product_id: product.id,
+    onSuccess: () => setModalOpen(null)
+  });
 
   const isConfirmed = Array.isArray(product.confirm) && product.confirm.includes(Number(userId));
   const isCanceled = Array.isArray(product.cancel) && product.cancel.includes(Number(userId));

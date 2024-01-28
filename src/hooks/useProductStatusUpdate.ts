@@ -5,7 +5,15 @@ import { productService } from 'services';
 
 import { useError } from './useError';
 
-export const useProductStatusUpdate = (day: dayjs.Dayjs, userId: string, price: number, product_id: number) => {
+interface IUseProductStatusUpdate {
+  day: dayjs.Dayjs,
+  userId: string,
+  price: number,
+  product_id: number,
+  onSuccess?: () => void
+}
+
+export const useProductStatusUpdate = ({ day, userId, price, product_id, onSuccess }: IUseProductStatusUpdate) => {
   const { onErrorFn, contextHolder, messageApi } = useError();
   const client = useQueryClient();
   const isDeadline = dayjs().isBefore(day.subtract(5, 'hour'));
@@ -32,6 +40,7 @@ export const useProductStatusUpdate = (day: dayjs.Dayjs, userId: string, price: 
       if (value.key === IStatus.CONFIRM) {
         messageApi.success('Thank you for your confirmation, I look forward to seeing you in class!');
       }
+      onSuccess && onSuccess();
     }
   });
 
