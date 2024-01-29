@@ -1,17 +1,12 @@
-import { ShoppingCartOutlined } from '@ant-design/icons';
-import { Empty, FloatButton, Space, Spin } from 'antd';
+import { Empty, Space, Spin } from 'antd';
 import { DayCard, MonthStepper } from 'components';
 import dayjs from 'dayjs';
 import { useConfigCall } from 'hooks';
-import { observer } from 'mobx-react-lite';
 import { IOrderStatus } from 'models';
 import { useMemo, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { cartStore } from 'stores';
 
-export const Classes = observer(() => {
+export const Classes = () => {
   const [month, setMonth] = useState(dayjs());
-  const navigate = useNavigate();
 
   const { loading, contextHolder, orders, groupedProducts } = useConfigCall(month);
   const products = Object.keys(groupedProducts);
@@ -55,16 +50,7 @@ export const Classes = observer(() => {
           }
           )) : <Empty />}
       </Space>
-      {!!cartStore.count && (
-        <FloatButton
-          icon={<ShoppingCartOutlined />}
-          type="primary"
-          style={{ bottom: 80 }}
-          badge={{ count: cartStore.count }}
-          onClick={() => navigate('/cart')}
-        />
-      )}
       {contextHolder}
     </Spin>
   );
-});
+};
