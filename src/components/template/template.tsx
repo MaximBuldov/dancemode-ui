@@ -12,7 +12,6 @@ const { Header, Content } = Layout;
 
 export const Template = observer(() => {
   const navigate = useNavigate();
-
   return (
     <Layout>
       <Header className={styles.header}>
