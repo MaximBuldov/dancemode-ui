@@ -49,6 +49,10 @@ class CartStore {
     }
   }
 
+  isCouponAdded(code: string) {
+    return this.coupons.some(el => el.code.toLocaleLowerCase() === code.toLocaleLowerCase());
+  };
+
   get count() {
     return this.data.length;
   }
@@ -71,6 +75,10 @@ class CartStore {
 
   get subtotal() {
     return this.calculateTotal(this.data, 'price');
+  }
+
+  get totalMinusCoupons() {
+    return this.total - this.couponsTotal;
   }
 
   get orderDates() {

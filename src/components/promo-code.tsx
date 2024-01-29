@@ -10,7 +10,7 @@ export const PromoCode = () => {
   const [form] = Form.useForm();
   const [messageApi, contextHolder] = message.useMessage();
 
-  const { mutate } = useMutation({
+  const { mutate, isLoading } = useMutation({
     mutationFn: (code: string) => couponService.getMy({ code }),
     onSuccess: ({ data }) => {
       if (!!data.length) {
@@ -54,7 +54,14 @@ export const PromoCode = () => {
             />
           )}
           <Form<{ code: string }>
-            onFinish={({ code }) => mutate(code)}
+            onFinish={({ code }) => {
+              if (cartStore.isCouponAdded(code)) {
+                messageApi.error('You already use this coupon');
+                form.resetFields();
+              } else {
+                mutate(code);
+              }
+            }}
             form={form}
           >
             <Row justify="space-between" wrap={false} gutter={[16, 0]}>
@@ -68,7 +75,7 @@ export const PromoCode = () => {
                 </Form.Item>
               </Col>
               <Col>
-                <Form.Item style={{ marginBottom: 0 }}><Button type="primary" ghost htmlType="submit">Apply</Button></Form.Item>
+                <Form.Item style={{ marginBottom: 0 }}><Button loading={isLoading} type="primary" ghost htmlType="submit">Apply</Button></Form.Item>
               </Col>
             </Row>
           </Form >

@@ -27,13 +27,14 @@ export const Cart = observer(() => {
               <List.Item>
                 <CartItem item={item} />
               </List.Item>
-            )} /><Flex gap="small">
+            )} />
+          <Flex gap="small">
             <Button
               type="primary"
               size="large"
               block
               icon={<CreditCardOutlined />}
-              disabled={!cartStore.count || order.isLoading}
+              disabled={!cartStore.count || order.isLoading || cartStore.totalMinusCoupons <= 0}
               onClick={() => navigate(routes.CHECKOUT)}
             >
               Pay Card
@@ -43,7 +44,7 @@ export const Cart = observer(() => {
               size="large"
               block
               icon={<DollarOutlined />}
-              disabled={!cartStore.count}
+              disabled={!cartStore.count || cartStore.totalMinusCoupons <= 0}
               onClick={() => order.mutate()}
               loading={order.isLoading}
             >
@@ -85,7 +86,7 @@ export const Cart = observer(() => {
               {renderTotalLine('Subtotal', cartStore.subtotal)}
               {cartStore.isDiscount && renderTotalLine('Discount', cartStore.discount, true)}
               {cartStore.isCoupons && renderTotalLine('Coupons', cartStore.couponsTotal, true)}
-              {renderTotalLine('Total', cartStore.total - cartStore.couponsTotal)}
+              {renderTotalLine('Total', cartStore.totalMinusCoupons)}
             </Row>
           </Col>
         </Row>
