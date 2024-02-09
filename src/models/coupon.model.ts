@@ -1,3 +1,5 @@
+import { Categories } from './product.model';
+
 export interface ICoupon {
   id: number;
   code: string;
@@ -14,7 +16,7 @@ export interface ICoupon {
   usage_limit_per_user: number;
   limit_usage_to_x_items: number;
   product_categories: number[];
-  excluded_product_categories: number[];
+  excluded_product_categories: Categories[];
   email_restrictions: string[];
   used_by: number[];
 }

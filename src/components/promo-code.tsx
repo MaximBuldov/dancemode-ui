@@ -14,7 +14,12 @@ export const PromoCode = () => {
     mutationFn: (code: string) => couponService.getMy({ code }),
     onSuccess: ({ data }) => {
       if (!!data.length) {
-        cartStore.addCoupon(data[0]);
+        if (cartStore.isExludedCat(data[0])) {
+          messageApi.error('You can not use this coupon');
+          form.resetFields();
+        } else {
+          cartStore.addCoupon(data[0]);
+        }
       } else {
         messageApi.error('Coupon code is not valid');
       }

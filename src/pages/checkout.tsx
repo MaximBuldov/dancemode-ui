@@ -9,7 +9,7 @@ import { orderService } from 'services';
 import { cartStore, userStore } from 'stores';
 import { useError } from 'hooks';
 
-const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLIC_KEY || '');
+const stripePromise = !userStore.isAdmin && loadStripe(process.env.REACT_APP_STRIPE_PUBLIC_KEY || '');
 
 export const Checkout = () => {
   const { onErrorFn, contextHolder } = useError();
@@ -32,7 +32,7 @@ export const Checkout = () => {
   return (
     <>
       {(isLoading) && <Skeleton active />}
-      {(isSuccess) && (
+      {(isSuccess && stripePromise) && (
         <Elements options={options} stripe={stripePromise}>
           <CheckoutForm paymentIntentId={data.paymentIntentId} />
         </Elements>

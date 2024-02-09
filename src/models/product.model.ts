@@ -11,6 +11,7 @@ export interface IProduct {
   categories: ICategory[];
   cancel: number[];
   confirm: number[];
+  stock_quantity: number;
 }
 
 export interface ICartProduct extends IProduct {
@@ -44,7 +45,7 @@ export enum NameOfClass {
 }
 
 export enum Categories {
-  BEGINNER = 1,
+  BEGINNER = 16,
   ADV = 23,
   CUSTOM = 24
 }

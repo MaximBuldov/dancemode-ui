@@ -8,18 +8,17 @@ import { useError } from './useError';
 interface IUseProductStatusUpdate {
   day: dayjs.Dayjs,
   userId: string,
-  price: number,
   product_id: number,
   onSuccess?: () => void
 }
 
-export const useProductStatusUpdate = ({ day, userId, price, product_id, onSuccess }: IUseProductStatusUpdate) => {
+export const useProductStatusUpdate = ({ day, userId, product_id, onSuccess }: IUseProductStatusUpdate) => {
   const { onErrorFn, contextHolder, messageApi } = useError();
   const client = useQueryClient();
   const isDeadline = dayjs().isBefore(day.subtract(5, 'hour'));
 
   const { mutate, isLoading } = useMutation({
-    mutationFn: ({ key }: { key: IStatus }) => productService.update({ [key]: userId, isDeadline, price }, product_id),
+    mutationFn: ({ key }: { key: IStatus }) => productService.update({ [key]: userId, isDeadline }, product_id),
     onError: onErrorFn,
     onSuccess: (data, value) => {
       client.setQueryData([IKeys.PRODUCTS, { month: day.format('YYYY-MM') }], (items: IProduct[] | undefined) => {

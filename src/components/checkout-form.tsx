@@ -1,4 +1,4 @@
-import React, { FormEvent } from 'react';
+import React, { FormEvent, useState } from 'react';
 import { LinkAuthenticationElement, PaymentElement, useElements, useStripe } from '@stripe/react-stripe-js';
 import { StripeError, StripePaymentElementOptions } from '@stripe/stripe-js';
 import { useMutation } from '@tanstack/react-query';
@@ -17,6 +17,7 @@ export const CheckoutForm = ({ paymentIntentId }: CheckoutFormProps) => {
   const stripe = useStripe();
   const elements = useElements();
   const { onErrorFn, contextHolder, messageApi } = useError();
+  const [stripeError, setStripeError] = useState(false);
 
   const order = useCreateOrder({
     paymentIntentId,
@@ -30,22 +31,28 @@ export const CheckoutForm = ({ paymentIntentId }: CheckoutFormProps) => {
       redirect: 'if_required'
     }),
     mutationKey: [IKeys.PAYMENTS],
-    onSuccess: () => {
-      cartStore.clear();
+    onSuccess: (data) => {
+      if (data.error) {
+        messageApi.error(data.error.message);
+      } else {
+        setStripeError(true);
+        cartStore.clear();
+      }
     },
     onError: (error: StripeError) => {
       messageApi.error(error.message);
     }
   });
 
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (!stripe || !elements || !cartStore.count) {
       return;
     }
-
-    order.mutate();
+    elements.submit().then((res) => {
+      res.error ? messageApi.error(res.error.message) : order.mutate();
+    });
   };
 
   const paymentElementOptions: StripePaymentElementOptions = {
@@ -55,7 +62,7 @@ export const CheckoutForm = ({ paymentIntentId }: CheckoutFormProps) => {
     }
   };
 
-  return (payment.isSuccess && order.isSuccess) ? (
+  return (stripeError && order.isSuccess) ? (
     <SuccessPage order={order.data} />
   ) : (
     <form id="payment-form" onSubmit={handleSubmit}>

@@ -12,7 +12,6 @@ interface SingleClassProps {
   isExpired: boolean;
   isPaid: boolean;
   isPrePaid: boolean;
-  price: number;
   order?: IROrder;
 }
 

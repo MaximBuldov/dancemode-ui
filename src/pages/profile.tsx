@@ -4,7 +4,7 @@ import { ProfileForm } from 'components';
 import { useError } from 'hooks';
 import { useNavigate } from 'react-router-dom';
 import { userService } from 'services';
-import { userStore } from 'stores';
+import { cartStore, userStore } from 'stores';
 
 export const Profile = () => {
   const { onErrorFn, contextHolder, messageApi } = useError();
@@ -40,6 +40,7 @@ export const Profile = () => {
         block
         onClick={() => {
           navigate('/');
+          cartStore.clear();
           userStore.logout();
         }}
       >

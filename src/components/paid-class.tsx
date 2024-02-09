@@ -10,10 +10,9 @@ import { userStore } from 'stores';
 interface PaidClassProps {
   product: IProduct;
   isExpired: boolean;
-  price: number;
 }
 
-export const PaidClass = observer(({ product, isExpired, price }: PaidClassProps) => {
+export const PaidClass = observer(({ product, isExpired }: PaidClassProps) => {
   const [modalOpen, setModalOpen] = useState<IStatus | null>(null);
   const [seePolicy, setSeePolicy] = useState(false);
   const classTime = dayjs(product.date_time);
@@ -21,7 +20,6 @@ export const PaidClass = observer(({ product, isExpired, price }: PaidClassProps
   const { mutate, isLoading, contextHolder } = useProductStatusUpdate({
     day: classTime,
     userId,
-    price,
     product_id: product.id,
     onSuccess: () => setModalOpen(null)
   });

@@ -53,6 +53,10 @@ class CartStore {
     return this.coupons.some(el => el.code.toLocaleLowerCase() === code.toLocaleLowerCase());
   };
 
+  isExludedCat(coupon: ICoupon) {
+    return this.data.every(el => el.categories[0].id === coupon.excluded_product_categories[0]);
+  };
+
   get count() {
     return this.data.length;
   }

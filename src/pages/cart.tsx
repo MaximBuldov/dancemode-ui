@@ -44,11 +44,11 @@ export const Cart = observer(() => {
               size="large"
               block
               icon={<DollarOutlined />}
-              disabled={!cartStore.count || cartStore.totalMinusCoupons <= 0}
+              disabled={!cartStore.count || cartStore.totalMinusCoupons < 0}
               onClick={() => order.mutate()}
               loading={order.isLoading}
             >
-              Pay Cash
+              {cartStore.totalMinusCoupons === 0 ? 'Book class' : 'Pay Cash'}
             </Button>
           </Flex>
         </>

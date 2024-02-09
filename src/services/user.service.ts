@@ -3,6 +3,8 @@ import { userStore } from 'stores';
 
 import { $api, $auth, $wc } from '../http';
 
+const _fields = 'id,role,acf,first_name,last_name,email';
+
 class UserService {
   async login(data: ILoginForm) {
     try {
@@ -33,7 +35,7 @@ class UserService {
 
   async getCustomers(params?: any) {
     try {
-      const res = await $wc.get<IRUser[]>('/wc/v3/customers', { params });
+      const res = await $wc.get<IRUser[]>('/wc/v3/customers', { params: { ...params, _fields } });
       return res;
     } catch (error) {
       throw error;
