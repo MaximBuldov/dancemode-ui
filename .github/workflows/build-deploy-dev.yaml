@@ -1,4 +1,4 @@
-name: Build/Deploy Dev
+name: UI Dev
 
 on:
   push:
@@ -16,7 +16,7 @@ jobs:
     - name: Set up Node.js
       uses: actions/setup-node@v2
       with:
-        node-version: 16.17.1
+        node-version: 20.11.0
 
     - name: Install dependencies
       run: yarn
