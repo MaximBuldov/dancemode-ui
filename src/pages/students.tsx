@@ -51,7 +51,7 @@ export const Students = () => {
           expandedRowRender: (el) => el && (
             <Descriptions size="small">
               <Descriptions.Item label="Phone"><Typography.Link href={`tel:${el.acf.billing_phone}`}>{el.acf.billing_phone}</Typography.Link></Descriptions.Item>
-              <Descriptions.Item label="Insta"><Typography.Paragraph style={{ marginBottom: 0 }} copyable={!!el.acf.instagram}>{el.acf.instagram}</Typography.Paragraph></Descriptions.Item>
+              <Descriptions.Item label="Insta"><Typography.Link href={`https://instagram.com/${el.acf.instagram}`}>{el.acf.instagram}</Typography.Link></Descriptions.Item>
               <Descriptions.Item label="Email"><Typography.Link href={`tel:${el.email}`}>{el.email}</Typography.Link></Descriptions.Item>
             </Descriptions>
           )

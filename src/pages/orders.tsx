@@ -68,7 +68,7 @@ export const Orders = () => {
         pagination={{
           current: page,
           pageSize: per_page,
-          total: orders.isSuccess && orders.data?.headers['X-Wp-Total'],
+          total: orders.isSuccess && orders.data?.headers['x-wp-total'],
           onChange: (number) => setPage(number)
         }}
       />
