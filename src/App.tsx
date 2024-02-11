@@ -44,5 +44,5 @@ export default App;
 // - add quantity change on edit product
 // - add ability to delete class and check if someone buy it
 // - add notification after reset password
-// - add to product new array who bought it, and remove after cancle 
+// - add to product new array who bought it, and remove after cancle  
 
