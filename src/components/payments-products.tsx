@@ -1,12 +1,13 @@
-import { Table } from 'antd';
-import { IROrderProduct } from 'models';
+import { Descriptions, DescriptionsProps, Divider, Table } from 'antd';
+import { IROrder, IROrderProduct } from 'models';
 import type { ColumnsType } from 'antd/es/table';
 import dayjs from 'dayjs';
 
 import { Price } from './ui';
 
 interface PaymentsProductsProps {
-  data: IROrderProduct[];
+  order: IROrder;
+  info?: boolean;
 }
 
 const columns: ColumnsType<IROrderProduct> = [
@@ -21,13 +22,36 @@ const columns: ColumnsType<IROrderProduct> = [
   }
 ];
 
-export const PaymentsProducts = ({ data }: PaymentsProductsProps) => {
+export const PaymentsProducts = ({ order, info }: PaymentsProductsProps) => {
+  const items: DescriptionsProps['items'] = [
+    {
+      key: 'date',
+      label: 'Date',
+      children: dayjs(order.date_created).format('MMM D')
+    },
+    {
+      key: 'payment',
+      label: 'Payment',
+      children: order.payment_method
+    }
+  ];
   return (
-    <Table
-      dataSource={data}
-      columns={columns}
-      pagination={false}
-      rowKey={(line) => line.id}
-    />
+    <>
+      {info && (
+        <>
+          <Descriptions
+            items={items}
+            size="small"
+          />
+          <Divider style={{ margin: 0 }} />
+        </>
+      )}
+      <Table
+        dataSource={order.line_items}
+        columns={columns}
+        pagination={false}
+        rowKey={(line) => line.id}
+      />
+    </>
   );
 };

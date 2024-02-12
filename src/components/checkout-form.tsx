@@ -3,7 +3,7 @@ import { LinkAuthenticationElement, PaymentElement, useElements, useStripe } fro
 import { StripeError, StripePaymentElementOptions } from '@stripe/stripe-js';
 import { useMutation } from '@tanstack/react-query';
 import { Button, Divider } from 'antd';
-import { IKeys } from 'models';
+import { IKeys, IPaymentMethod } from 'models';
 import { cartStore, userStore } from 'stores';
 import { useCreateOrder, useError } from 'hooks';
 
@@ -22,7 +22,8 @@ export const CheckoutForm = ({ paymentIntentId }: CheckoutFormProps) => {
   const order = useCreateOrder({
     paymentIntentId,
     onErrorFn,
-    onSuccess: () => payment.mutate()
+    onSuccess: () => payment.mutate(),
+    payment_method: IPaymentMethod.STRIPE
   });
 
   const payment = useMutation({

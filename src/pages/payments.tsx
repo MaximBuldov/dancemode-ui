@@ -1,12 +1,12 @@
 import { useQuery } from '@tanstack/react-query';
-import { Table, Tag } from 'antd';
+import { Table } from 'antd';
 import { IKeys, IOrderStatus, IROrder } from 'models';
 import { useState } from 'react';
 import { orderService } from 'services';
 import type { ColumnsType } from 'antd/es/table';
 import dayjs from 'dayjs';
 import { CancelOrderModal, PaymentsProducts } from 'components';
-import { MoreOutlined } from '@ant-design/icons';
+import { MoreOutlined, SyncOutlined } from '@ant-design/icons';
 
 export const Payments = () => {
   const [page, setPage] = useState(1);
@@ -27,7 +27,7 @@ export const Payments = () => {
     },
     {
       title: 'Status', dataIndex: 'status', key: 'status',
-      render: (el) => <Tag color={el === IOrderStatus.COMPLETED ? 'green' : el === IOrderStatus.CANCELLED ? 'red' : 'blue'}>{el}</Tag>
+      render: (el) => el === IOrderStatus.COMPLETED ? '✅' : <SyncOutlined spin style={{ color: '#0958d9' }} />
     },
     {
       dataIndex: 'status', key: 'status',
@@ -44,7 +44,7 @@ export const Payments = () => {
         rowKey={(line) => line.id}
         size="small"
         expandable={{
-          expandedRowRender: (record) => <PaymentsProducts data={record.line_items} />
+          expandedRowRender: (record) => <PaymentsProducts order={record} />
         }}
         pagination={{
           current: page,

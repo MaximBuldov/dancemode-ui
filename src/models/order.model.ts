@@ -2,7 +2,7 @@ export interface IOrder {
   customer_id: number;
   line_items: IOrderProduct[];
   meta_data?: IMetaData[];
-  payment_method?: string;
+  payment_method?: IPaymentMethod;
   coupon_lines?: { code: string }[];
 }
 
@@ -11,6 +11,7 @@ export interface IROrder extends IOrder {
   customer_name: string;
   status: IOrderStatus;
   date: string;
+  date_created: string;
   total: string;
   line_items: IROrderProduct[];
 }
@@ -59,4 +60,10 @@ export interface IPaymentIntent {
 export interface IStripeResponse {
   intent: IPaymentIntent,
   order_id: number
+}
+
+export enum IPaymentMethod {
+  CASH = 'cash',
+  STRIPE = 'stripe',
+  COUPON = 'coupon'
 }

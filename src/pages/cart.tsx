@@ -6,11 +6,18 @@ import { useNavigate } from 'react-router-dom';
 import { cartStore } from 'stores';
 import * as routes from 'routes/consts';
 import { useCreateOrder, useError } from 'hooks';
+import { IPaymentMethod } from 'models';
 
 export const Cart = observer(() => {
   const navigate = useNavigate();
   const { onErrorFn, contextHolder } = useError();
-  const order = useCreateOrder({ paymentIntentId: 'cash', onErrorFn, onSuccess: () => cartStore.clear() });
+  const isTotalZero = cartStore.totalMinusCoupons === 0;
+  const order = useCreateOrder({
+    paymentIntentId: 'cash',
+    onErrorFn,
+    onSuccess: () => cartStore.clear(),
+    payment_method: isTotalZero ? IPaymentMethod.COUPON : IPaymentMethod.CASH
+  });
 
   return (
     <>
@@ -48,7 +55,7 @@ export const Cart = observer(() => {
               onClick={() => order.mutate()}
               loading={order.isLoading}
             >
-              {cartStore.totalMinusCoupons === 0 ? 'Book class' : 'Pay Cash'}
+              {isTotalZero ? 'Book class' : 'Pay Cash'}
             </Button>
           </Flex>
         </>

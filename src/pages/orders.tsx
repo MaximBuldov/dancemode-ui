@@ -1,11 +1,10 @@
-import { MoreOutlined } from '@ant-design/icons';
+import { MoreOutlined, SyncOutlined } from '@ant-design/icons';
 import { useQuery } from '@tanstack/react-query';
-import { Collapse, CollapseProps, Divider, Table, Tag } from 'antd';
+import { Collapse, CollapseProps, Divider, Table } from 'antd';
 import { ColumnsType } from 'antd/es/table';
 import { PaymentsProducts } from 'components';
 import { FilterOrdersForm } from 'components/filter-orders-form';
 import { OrderModalActions } from 'components/order-modal-actions';
-import dayjs from 'dayjs';
 import { IKeys, IOrderStatus, IROrder } from 'models';
 import { useMemo, useState } from 'react';
 import { orderService } from 'services';
@@ -38,15 +37,14 @@ export const Orders = () => {
 
   const columns: ColumnsType<IROrder> = [
     { title: 'ID', dataIndex: 'id', key: 'id' },
-    { title: 'Date', dataIndex: 'date_created', key: 'date', render: (el) => dayjs(el).format('MMM D') },
     { title: 'Customer', dataIndex: 'customer_name', key: 'customer' },
     {
       title: 'Total', dataIndex: 'total', key: 'total',
-      render: (el) => el !== '0' && `$${el}`
+      render: (el) => el !== '0' && `$${Math.round(Number(el))}`
     },
     {
       title: 'Status', dataIndex: 'status', key: 'status',
-      render: (el) => <Tag color={el === IOrderStatus.COMPLETED ? 'green' : el === IOrderStatus.CANCELLED ? 'red' : 'blue'}>{el}</Tag>
+      render: (el) => el === IOrderStatus.COMPLETED ? '✅' : <SyncOutlined spin style={{ color: '#0958d9' }} />
     },
     {
       dataIndex: 'status', key: 'actions',
@@ -64,7 +62,7 @@ export const Orders = () => {
         loading={orders.isFetching}
         rowKey={(line) => line.id}
         size="small"
-        expandable={{ expandedRowRender: (record) => record && <PaymentsProducts data={record.line_items} /> }}
+        expandable={{ expandedRowRender: (record) => record && <PaymentsProducts info order={record} /> }}
         pagination={{
           current: page,
           pageSize: per_page,
