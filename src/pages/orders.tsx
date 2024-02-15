@@ -44,7 +44,18 @@ export const Orders = () => {
     },
     {
       title: 'Status', dataIndex: 'status', key: 'status',
-      render: (el) => el === IOrderStatus.COMPLETED ? '✅' : <SyncOutlined spin style={{ color: '#0958d9' }} />
+      render: (el) => {
+        switch (el) {
+          case IOrderStatus.COMPLETED:
+            return '✅';
+          case IOrderStatus.CANCELLED:
+            return '🚫';
+          case IOrderStatus.PENDING:
+            return <SyncOutlined spin style={{ color: '#0958d9' }} />;
+          default:
+            return '';
+        }
+      }
     },
     {
       dataIndex: 'status', key: 'actions',

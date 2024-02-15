@@ -2,7 +2,7 @@ import { Badge, Card, Space, Typography } from 'antd';
 import classNames from 'classnames';
 import { SingleClass } from 'components';
 import dayjs from 'dayjs';
-import { IProduct, IROrder } from 'models';
+import { IProduct } from 'models';
 import { observer } from 'mobx-react-lite';
 import { userStore } from 'stores';
 import { FrownTwoTone } from '@ant-design/icons';
@@ -11,20 +11,12 @@ import styles from './day-card.module.scss';
 
 interface DayCardProps {
   day: string;
-  payedClasses?: {
-    completed: number[],
-    pending: number[]
-  };
   classes?: IProduct[];
-  orders?: IROrder[];
 }
 
-export const DayCard = observer(({ day, payedClasses, classes, orders }: DayCardProps) => {
+export const DayCard = observer(({ day, classes }: DayCardProps) => {
   const isExpired = dayjs().isAfter(day, 'day');
   const isJaneCanceled = classes?.every(el => el.is_canceled);
-  const orderId = (el: IProduct) => {
-    return orders?.find(order => order.line_items.some(product => el.id === product.product_id));
-  };
 
   return (
     <Badge.Ribbon
@@ -39,9 +31,6 @@ export const DayCard = observer(({ day, payedClasses, classes, orders }: DayCard
               <SingleClass
                 product={el}
                 isExpired={isExpired || !!isJaneCanceled || el.is_canceled}
-                isPaid={!!payedClasses?.completed.includes(el.id)}
-                isPrePaid={!!payedClasses?.pending.includes(el.id)}
-                order={orderId(el)}
               />
               {(el.is_canceled && !userStore.isAdmin) && <div className={styles['canceled-text']}><FrownTwoTone twoToneColor="#ff5500" /> Canceled</div>}
             </div>

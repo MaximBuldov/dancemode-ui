@@ -18,7 +18,11 @@ export const useProductStatusUpdate = ({ day, userId, product_id, onSuccess }: I
   const isDeadline = dayjs().isBefore(day.subtract(5, 'hour'));
 
   const { mutate, isLoading } = useMutation({
-    mutationFn: ({ key }: { key: IStatus }) => productService.update({ [key]: userId, isDeadline }, product_id),
+    mutationFn: ({ key }: { key: IStatus }) => productService.update({
+      user_id: userId,
+      field: key,
+      isDeadline
+    }, product_id),
     onError: onErrorFn,
     onSuccess: (data, value) => {
       client.setQueryData([IKeys.PRODUCTS, { month: day.format('YYYY-MM') }], (items: IProduct[] | undefined) => {

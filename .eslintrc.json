@@ -14,7 +14,10 @@
     ],
     "camelcase": "off",
     "no-console": "warn",
-    "jsx-quotes": ["warn", "prefer-double"],
+    "jsx-quotes": [
+      "warn",
+      "prefer-double"
+    ],
     "import/export": "off",
     "import/named": "off",
     "import/default": "off",
@@ -38,19 +41,34 @@
     "no-duplicate-imports": "error",
     "no-mixed-operators": "error",
     "no-multiple-empty-lines": [
-      "warn", { "max": 1 }
+      "warn",
+      {
+        "max": 1
+      }
     ],
     "no-undef": "off",
     "object-curly-spacing": [
-      "warn", "always"
+      "warn",
+      "always"
     ],
     "quotes": [
-      "warn", "single"
+      "warn",
+      "single"
     ],
     "quote-props": [
-      "warn", "as-needed"
+      "warn",
+      "as-needed"
     ],
-    "indent": ["warn", 2],
-    "semi": ["warn", "always"]
+    "indent": [
+      "warn",
+      2,
+      {
+        "SwitchCase": 1
+      }
+    ],
+    "semi": [
+      "warn",
+      "always"
+    ]
   }
 }
