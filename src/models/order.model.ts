@@ -4,6 +4,8 @@ export interface IOrder {
   meta_data?: IMetaData[];
   payment_method?: IPaymentMethod;
   coupon_lines?: { code: string }[];
+  billing?: IBilling,
+  shipping?: IBilling
 }
 
 export interface IROrder extends IOrder {
@@ -66,4 +68,14 @@ export enum IPaymentMethod {
   CASH = 'cash',
   STRIPE = 'stripe',
   COUPON = 'coupon'
+}
+
+interface IBilling {
+  first_name?: string,
+  last_name?: string,
+  city?: string,
+  state?: string,
+  email?: string,
+  phone?: string,
+  country?: string
 }

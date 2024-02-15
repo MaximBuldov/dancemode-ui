@@ -18,6 +18,15 @@ export const useCreateOrder = ({ paymentIntentId, onErrorFn, onSuccess, payment_
       line_items: cartStore.preparedData,
       coupon_lines: cartStore.preparedCoupons,
       payment_method,
+      billing: {
+        first_name: userStore.data?.first_name,
+        last_name: userStore.data?.last_name,
+        city: 'San Diego',
+        state: 'CA',
+        email: userStore.data?.email,
+        phone: userStore.data?.acf.billing_phone,
+        country: 'US'
+      },
       meta_data: [{
         key: '_stripe_intent_id',
         value: paymentIntentId || ''
