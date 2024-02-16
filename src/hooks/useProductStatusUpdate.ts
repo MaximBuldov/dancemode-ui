@@ -2,26 +2,27 @@ import dayjs from 'dayjs';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { IKeys, IProduct, IStatus } from 'models';
 import { productService } from 'services';
+import { userStore } from 'stores';
 
 import { useError } from './useError';
 
 interface IUseProductStatusUpdate {
   day: dayjs.Dayjs,
-  userId: string,
   product_id: number,
-  onSuccess?: () => void
+  onSuccess?: () => void,
+  isPaid: boolean
 }
 
-export const useProductStatusUpdate = ({ day, userId, product_id, onSuccess }: IUseProductStatusUpdate) => {
+export const useProductStatusUpdate = ({ day, product_id, onSuccess, isPaid }: IUseProductStatusUpdate) => {
   const { onErrorFn, contextHolder, messageApi } = useError();
   const client = useQueryClient();
   const isDeadline = dayjs().isBefore(day.subtract(5, 'hour'));
 
   const { mutate, isLoading } = useMutation({
     mutationFn: ({ key }: { key: IStatus }) => productService.update({
-      user_id: userId,
+      user_id: userStore.data?.id,
       field: key,
-      isDeadline
+      isDeadline: isDeadline && isPaid
     }, product_id),
     onError: onErrorFn,
     onSuccess: (data, value) => {

@@ -25,6 +25,10 @@ class User {
     this.data = null;
   }
 
+  checkUserId(arr?: number[]) {
+    return Array.isArray(arr) && arr.includes(Number(this.data?.id));
+  }
+
   get isAdmin() {
     return this.data?.role.includes(IUserRoles.ADMIN);
   }

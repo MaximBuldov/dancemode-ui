@@ -1,4 +1,4 @@
-import { CloseCircleOutlined, CheckCircleOutlined, MoreOutlined, CreditCardOutlined } from '@ant-design/icons';
+import { CloseCircleOutlined, CheckCircleOutlined, MoreOutlined, CreditCardOutlined, SyncOutlined } from '@ant-design/icons';
 import { MenuProps, Typography, Row, Col, Space, Checkbox, Tag, Dropdown, Modal } from 'antd';
 import dayjs from 'dayjs';
 import { useProductStatusUpdate } from 'hooks';
@@ -10,22 +10,24 @@ import { userStore } from 'stores';
 interface PaidClassProps {
   product: IProduct;
   isExpired: boolean;
+  isPaid: boolean;
+  isPrepaid: boolean;
 }
 
-export const PaidClass = observer(({ product, isExpired }: PaidClassProps) => {
+export const PaidClass = observer(({ product, isExpired, isPaid, isPrepaid }: PaidClassProps) => {
   const [modalOpen, setModalOpen] = useState<IStatus | null>(null);
   const [seePolicy, setSeePolicy] = useState(false);
   const classTime = dayjs(product.date_time);
-  const userId = userStore.data!.id;
+
+  const isConfirmed = userStore.checkUserId(product.confirm);
+  const isCanceled = userStore.checkUserId(product.cancel);
+
   const { mutate, isLoading, contextHolder } = useProductStatusUpdate({
     day: classTime,
-    userId,
     product_id: product.id,
+    isPaid,
     onSuccess: () => setModalOpen(null)
   });
-
-  const isConfirmed = Array.isArray(product.confirm) && product.confirm.includes(Number(userId));
-  const isCanceled = Array.isArray(product.cancel) && product.cancel.includes(Number(userId));
 
   const isConfirmModal = modalOpen === IStatus.CONFIRM;
 
@@ -58,7 +60,8 @@ export const PaidClass = observer(({ product, isExpired }: PaidClassProps) => {
           <Checkbox disabled />
           <Typography>{product.name}: {classTime.format('ha')}</Typography>
           <div>
-            <Tag icon={<CreditCardOutlined />} color="processing">Paid</Tag>
+            {isPaid && <Tag icon={<CreditCardOutlined />} color="processing">Paid</Tag>}
+            {isPrepaid && <Tag icon={<SyncOutlined spin />} color="cyan">Preordered</Tag>}
             {(isConfirmed && !isCanceled) && <Tag icon={<CheckCircleOutlined />} color="success">Confirmed</Tag>}
             {isCanceled && <Tag icon={<CloseCircleOutlined />} color="error">Canceled</Tag>}
           </div>

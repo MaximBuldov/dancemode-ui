@@ -15,5 +15,4 @@ export * from './product-form';
 export * from './promo-code';
 export * from './checkout-form';
 export * from './success-page';
-export * from './pre-paid-class';
 export * from './cancel-order-modal';
