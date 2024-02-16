@@ -54,7 +54,8 @@ export const Students = () => {
               <Descriptions.Item label="Insta"><Typography.Link href={`https://instagram.com/${el.acf.instagram}`}>{el.acf.instagram}</Typography.Link></Descriptions.Item>
               <Descriptions.Item label="Email"><Typography.Link href={`tel:${el.email}`}>{el.email}</Typography.Link></Descriptions.Item>
             </Descriptions>
-          )
+          ),
+          expandRowByClick: true
         }}
         pagination={{
           current: page,

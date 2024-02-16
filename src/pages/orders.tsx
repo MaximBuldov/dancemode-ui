@@ -73,7 +73,10 @@ export const Orders = () => {
         loading={orders.isFetching}
         rowKey={(line) => line.id}
         size="small"
-        expandable={{ expandedRowRender: (record) => record && <PaymentsProducts info order={record} /> }}
+        expandable={{
+          expandedRowRender: (record) => record && <PaymentsProducts info order={record} />,
+          expandRowByClick: true
+        }}
         pagination={{
           current: page,
           pageSize: per_page,
