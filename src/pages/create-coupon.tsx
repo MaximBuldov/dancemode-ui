@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { Button, Form, Input, InputNumber, Select, Typography } from 'antd';
+import { Button, Form, Input, InputNumber, Select, Spin, Typography } from 'antd';
 import dayjs from 'dayjs';
 import { useError } from 'hooks';
 import { IKeys, catOptions } from 'models';
@@ -32,7 +32,7 @@ export const CreateCoupon = () => {
       <Typography.Title level={4}>Create coupon</Typography.Title>
       <Form
         form={form}
-        onFinish={couponApi.mutate}
+        onFinish={(val) => ''}
         layout="inline"
       >
         <Item
@@ -54,12 +54,10 @@ export const CreateCoupon = () => {
         >
           <Input type="number" prefix="$" />
         </Item>
-        <Item name="allowed_users" label="Allowed users" style={style}>
-          <Select
-            options={usersApi.data?.data.map(el => ({ value: el.id, label: `${el.first_name} ${el.last_name}` }))}
-            loading={usersApi.isLoading}
-            mode="multiple"
-          />
+        <Item name="allowed_users" label={`Allowed users ${usersApi.isLoading ? <Spin spinning /> : ''}`} style={style}>
+          <select multiple>
+            {usersApi.data?.data.map(el => <option value={el.id}>{el.first_name} {el.last_name}</option>)}
+          </select>
         </Item>
         <Item
           name="date_expires"
