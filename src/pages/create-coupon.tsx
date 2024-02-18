@@ -32,7 +32,7 @@ export const CreateCoupon = () => {
       <Typography.Title level={4}>Create coupon</Typography.Title>
       <Form
         form={form}
-        onFinish={(val) => ''}
+        onFinish={couponApi.mutate}
         layout="inline"
       >
         <Item
@@ -54,10 +54,19 @@ export const CreateCoupon = () => {
         >
           <Input type="number" prefix="$" />
         </Item>
-        <Item name="allowed_users" label={`Allowed users ${usersApi.isLoading ? <Spin spinning /> : ''}`} style={style}>
-          <select multiple>
-            {usersApi.data?.data.map(el => <option value={el.id}>{el.first_name} {el.last_name}</option>)}
-          </select>
+        <Item name="allowed_users" label="Allowed users" style={style}>
+          {usersApi.isLoading ? <Spin spinning /> : (
+            <select
+              multiple
+              onChange={(e) => {
+                const users = Array.from(e.target.options).filter(el => el.selected).map(el => el.value);
+                form.setFieldValue('allowed_users', users)
+              }}
+            >
+              {usersApi.data?.data.map(el => <option value={el.id}>{el.first_name} {el.last_name}</option>)}
+            </select>
+          )}
+
         </Item>
         <Item
           name="date_expires"
