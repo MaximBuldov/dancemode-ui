@@ -60,7 +60,7 @@ export const CreateCoupon = () => {
               multiple
               onChange={(e) => {
                 const users = Array.from(e.target.options).filter(el => el.selected).map(el => el.value);
-                form.setFieldValue('allowed_users', users)
+                form.setFieldValue('allowed_users', users);
               }}
             >
               {usersApi.data?.data.map(el => <option value={el.id}>{el.first_name} {el.last_name}</option>)}
