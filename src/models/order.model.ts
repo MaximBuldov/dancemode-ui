@@ -16,6 +16,7 @@ export interface IROrder extends IOrder {
   date_created: string;
   total: string;
   line_items: IROrderProduct[];
+  note?: string;
 }
 
 export interface IOrderProduct {

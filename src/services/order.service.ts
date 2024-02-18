@@ -16,7 +16,7 @@ export interface IFilters {
   product?: number
 }
 
-const _fields = 'id,status,date_created,total,customer_id,line_items,customer_name,payment_method';
+const _fields = 'id,status,date_created,total,customer_id,line_items,customer_name,payment_method,note';
 
 class OrderService {
   async create(data: IOrder) {

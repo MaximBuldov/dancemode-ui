@@ -1,7 +1,8 @@
-import { Descriptions, DescriptionsProps, Divider, Table } from 'antd';
-import { IROrder, IROrderProduct } from 'models';
+import { Descriptions, DescriptionsProps, Divider, Spin, Table, Typography } from 'antd';
+import { IKeys, IROrder, IROrderProduct } from 'models';
 import type { ColumnsType } from 'antd/es/table';
 import dayjs from 'dayjs';
+import { useUpdateOrder } from 'hooks';
 
 import { Price } from './ui';
 
@@ -23,6 +24,8 @@ const columns: ColumnsType<IROrderProduct> = [
 ];
 
 export const PaymentsProducts = ({ order, info }: PaymentsProductsProps) => {
+  const [note, setNote] = useState(order?.note);
+  const { mutate, isLoading } = useUpdateOrder([IKeys.ORDERS, { id: order.id }]);
   const items: DescriptionsProps['items'] = [
     {
       key: 'date',
@@ -33,6 +36,21 @@ export const PaymentsProducts = ({ order, info }: PaymentsProductsProps) => {
       key: 'payment',
       label: 'Payment',
       children: order.payment_method
+    },
+    {
+      key: 'note',
+      label: 'Note',
+      children: <Typography.Paragraph
+        editable={{
+          onChange: (value) => {
+            setNote(value);
+            mutate({ id: order.id, data: { note: value } });
+          },
+          text: note,
+          triggerType: ['icon', 'text'],
+          enterIcon: null
+        }}
+      >{isLoading ? <Spin spinning /> : note}</Typography.Paragraph>
     }
   ];
   return (
