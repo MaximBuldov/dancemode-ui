@@ -57,3 +57,9 @@ export enum IStockStatus {
   OUTOFSTOCK = 'outofstock',
   ONBACKORDER = 'onbackorder'
 }
+
+export const catOptions = [
+  { label: NameOfClass.BEGINNER, value: Categories.BEGINNER },
+  { label: NameOfClass.ADV, value: Categories.ADV },
+  { label: NameOfClass.CUSTOM, value: Categories.CUSTOM }
+];

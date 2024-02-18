@@ -44,6 +44,10 @@ export const Coupons = () => {
       rowKey={(line) => line.id}
       size="small"
       pagination={false}
+      expandable={{
+        expandedRowRender: (el) => el.description,
+        rowExpandable: (el) => !!el.description
+      }}
     />
   );
 };

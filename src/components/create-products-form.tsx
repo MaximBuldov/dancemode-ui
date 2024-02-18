@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Button, Form, Input, Select } from 'antd';
 import dayjs from 'dayjs';
-import { Categories, IKeys, IProduct, NameOfClass } from 'models';
+import { IKeys, IProduct, catOptions } from 'models';
 import { useMemo, useState } from 'react';
 import { productService } from 'services';
 import { prepareProducts } from 'utils';
@@ -11,11 +11,6 @@ interface CreateProductsFormProps {
 }
 
 const { useForm, Item } = Form;
-
-const checkboxOptions = [
-  { label: NameOfClass.BEGINNER, value: Categories.BEGINNER },
-  { label: NameOfClass.ADV, value: Categories.ADV }
-];
 
 export const CreateProductsForm = ({ closeModal }: CreateProductsFormProps) => {
   const [form] = useForm();
@@ -69,7 +64,7 @@ export const CreateProductsForm = ({ closeModal }: CreateProductsFormProps) => {
         name="classes"
       >
         <Select
-          options={checkboxOptions}
+          options={catOptions}
           allowClear
           mode="multiple"
           labelInValue

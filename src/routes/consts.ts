@@ -11,3 +11,4 @@ export const STUDENTS = '/students';
 export const ORDERS = '/orders';
 export const CALENDAR = '/calendar';
 export const CHECKOUT = '/checkout';
+export const CREATE_COUPON = '/coupon';

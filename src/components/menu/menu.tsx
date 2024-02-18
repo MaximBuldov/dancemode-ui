@@ -37,6 +37,10 @@ const adminItems = [
     icon: '💵'
   },
   {
+    label: 'coupon',
+    icon: '🎟️'
+  },
+  {
     label: 'profile',
     icon: '💃'
   }

@@ -13,3 +13,4 @@ export * from './orders';
 export * from './students';
 export * from './calendar';
 export * from './checkout';
+export * from './create-coupon';

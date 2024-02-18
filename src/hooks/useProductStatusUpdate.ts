@@ -36,9 +36,13 @@ export const useProductStatusUpdate = ({ day, product_id, onSuccess, isPaid }: I
       });
 
       if (value.key === IStatus.CANCEL) {
-        isDeadline
-          ? messageApi.success('You have successfully canceled your class and received a coupon!')
-          : messageApi.warning('Class was canceled, but no coupon, is too late');
+        if (isDeadline) {
+          isPaid
+            ? messageApi.success('You have successfully canceled your class and received a coupon!')
+            : messageApi.warning('Class was canceled');
+        } else {
+          messageApi.warning('Class was canceled, but no coupon, is too late');
+        }
       }
 
       if (value.key === IStatus.CONFIRM) {

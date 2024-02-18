@@ -1,5 +1,5 @@
 import { Button, Form, Input, Select } from 'antd';
-import { Categories, ICreateSingleProductsForm, NameOfClass } from 'models';
+import { Categories, ICreateSingleProductsForm, catOptions } from 'models';
 import { useState } from 'react';
 
 interface CreateSingleProductFormProps {
@@ -37,11 +37,7 @@ export const ProductForm = ({ onFinish, isLoading, initialValues }: CreateSingle
         >
           <Select
             labelInValue
-            options={[
-              { label: NameOfClass.BEGINNER, value: Categories.BEGINNER },
-              { label: NameOfClass.ADV, value: Categories.ADV },
-              { label: NameOfClass.CUSTOM, value: Categories.CUSTOM }
-            ]}
+            options={catOptions}
             onChange={(el) => setCustomName(el.value === Categories.CUSTOM)}
           />
         </Item>

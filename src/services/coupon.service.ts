@@ -18,6 +18,15 @@ class CouponService {
       throw error;
     }
   }
+
+  async create(data?: Partial<ICoupon>) {
+    try {
+      const res = await $wc.post<ICoupon>('/wc/v3/coupons', data);
+      return res.data;
+    } catch (error) {
+      throw error;
+    }
+  }
 }
 
 export const couponService = new CouponService();
