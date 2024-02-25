@@ -26,7 +26,7 @@ const columns: ColumnsType<IROrderProduct> = [
 
 export const PaymentsProducts = ({ order }: PaymentsProductsProps) => {
   const [note, setNote] = useState(order?.note);
-  const { mutate, isLoading } = useUpdateOrder([IKeys.ORDERS, { id: order.id }]);
+  const { mutate, isPending } = useUpdateOrder([IKeys.ORDERS, { id: order.id }]);
   const items = useMemo(() => {
     const arr: DescriptionsProps['items'] = [
       {
@@ -61,11 +61,11 @@ export const PaymentsProducts = ({ order }: PaymentsProductsProps) => {
             triggerType: ['icon', 'text'],
             enterIcon: null
           }}
-        >{isLoading ? <Spin spinning /> : note}</Typography.Paragraph>
+        >{isPending ? <Spin spinning /> : note}</Typography.Paragraph>
       });
     }
     return arr;
-  }, [isLoading, mutate, note, order]);
+  }, [isPending, mutate, note, order]);
   return (
     <>
       <Descriptions

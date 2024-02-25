@@ -5,16 +5,14 @@ import { observer } from 'mobx-react-lite';
 import { useNavigate } from 'react-router-dom';
 import { cartStore } from 'stores';
 import * as routes from 'routes/consts';
-import { useCreateOrder, useError } from 'hooks';
+import { useCreateOrder } from 'hooks';
 import { IPaymentMethod } from 'models';
 
 export const Cart = observer(() => {
   const navigate = useNavigate();
-  const { onErrorFn, contextHolder } = useError();
   const isTotalZero = cartStore.totalMinusCoupons === 0;
   const order = useCreateOrder({
     paymentIntentId: 'cash',
-    onErrorFn,
     onSuccess: () => cartStore.clear(),
     payment_method: isTotalZero ? IPaymentMethod.COUPON : IPaymentMethod.CASH
   });
@@ -41,7 +39,7 @@ export const Cart = observer(() => {
               size="large"
               block
               icon={<CreditCardOutlined />}
-              disabled={!cartStore.count || order.isLoading || cartStore.totalMinusCoupons <= 0}
+              disabled={!cartStore.count || order.isPending || cartStore.totalMinusCoupons <= 0}
               onClick={() => navigate(routes.CHECKOUT)}
             >
               Pay Card
@@ -53,14 +51,13 @@ export const Cart = observer(() => {
               icon={<DollarOutlined />}
               disabled={!cartStore.count || cartStore.totalMinusCoupons < 0}
               onClick={() => order.mutate()}
-              loading={order.isLoading}
+              loading={order.isPending}
             >
               {isTotalZero ? 'Book class' : 'Pay Cash'}
             </Button>
           </Flex>
         </>
       )}
-      {contextHolder}
     </>
   );
 

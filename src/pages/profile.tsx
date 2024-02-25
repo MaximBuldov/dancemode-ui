@@ -7,10 +7,10 @@ import { userService } from 'services';
 import { cartStore, userStore } from 'stores';
 
 export const Profile = () => {
-  const { onErrorFn, contextHolder, messageApi } = useError();
+  const { contextHolder, messageApi } = useError();
   const navigate = useNavigate();
 
-  const { mutate, isLoading } = useMutation({
+  const { mutate, isPending } = useMutation({
     mutationFn: userService.update,
     onSuccess: (_, values) => {
       const { password, confirm, ...data } = values;
@@ -19,8 +19,7 @@ export const Profile = () => {
         type: 'success',
         content: 'Information successfully updated 🥳'
       });
-    },
-    onError: onErrorFn
+    }
   });
 
   return (
@@ -28,7 +27,7 @@ export const Profile = () => {
       <ProfileForm
         title="Profile 👩"
         onSubmit={mutate}
-        isLoading={isLoading}
+        isPending={isPending}
         isLabels={true}
         submitButton="Update profile"
         initialValues={userStore.data}

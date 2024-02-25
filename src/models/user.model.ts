@@ -1,3 +1,5 @@
+import { IStatus } from './order.model';
+
 export interface IUserResponse {
   token: string;
   user: IRUser;
@@ -15,8 +17,13 @@ export interface IUser {
 }
 
 export interface IRUser extends IUser {
-  id: string;
+  id: number;
   role: IUserRoles[];
+}
+
+export interface IUserWithStatus extends IRUser {
+  status?: IStatus;
+  paid: boolean;
 }
 
 export enum IUserRoles {

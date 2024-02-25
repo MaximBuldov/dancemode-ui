@@ -22,7 +22,7 @@ export const PaidClass = observer(({ product, isExpired, isPaid, isPrepaid }: Pa
   const isConfirmed = userStore.checkUserId(product.confirm);
   const isCanceled = userStore.checkUserId(product.cancel);
 
-  const { mutate, isLoading, contextHolder } = useProductStatusUpdate({
+  const { mutate, isPending, contextHolder } = useProductStatusUpdate({
     day: classTime,
     product_id: product.id,
     isPaid,
@@ -83,7 +83,7 @@ export const PaidClass = observer(({ product, isExpired, isPaid, isPrepaid }: Pa
         title={`Class ${isConfirmModal ? 'confirmation' : 'cancellation'}: ${classTime.format('MM/DD ha')} - ${product.name.toLocaleLowerCase()}`}
         open={!!modalOpen}
         onOk={() => mutate({ key: modalOpen! })}
-        confirmLoading={isLoading}
+        confirmLoading={isPending}
         onCancel={() => {
           setModalOpen(null);
           setSeePolicy(false);

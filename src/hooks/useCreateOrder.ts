@@ -1,17 +1,15 @@
 import { useMutation } from '@tanstack/react-query';
-import { AxiosError } from 'axios';
-import { IKeys, IPaymentMethod, IResponseError } from 'models';
+import { IKeys, IPaymentMethod } from 'models';
 import { orderService } from 'services';
 import { cartStore, userStore } from 'stores';
 
 interface IUseCreateOrder {
   paymentIntentId?: string;
-  onErrorFn: (error: AxiosError<IResponseError>) => void;
   onSuccess?: () => void,
   payment_method: IPaymentMethod
 }
 
-export const useCreateOrder = ({ paymentIntentId, onErrorFn, onSuccess, payment_method }: IUseCreateOrder) => {
+export const useCreateOrder = ({ paymentIntentId, onSuccess, payment_method }: IUseCreateOrder) => {
   return useMutation({
     mutationFn: () => orderService.create({
       customer_id: Number(userStore.data?.id),
@@ -36,7 +34,6 @@ export const useCreateOrder = ({ paymentIntentId, onErrorFn, onSuccess, payment_
       }]
     }),
     mutationKey: [IKeys.ORDERS],
-    onError: onErrorFn,
     onSuccess
   });
 };

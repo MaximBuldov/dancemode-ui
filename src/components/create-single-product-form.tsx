@@ -10,10 +10,10 @@ interface CreateSingleProductFormProps {
 
 export const CreateSingleProductForm = ({ closeModal }: CreateSingleProductFormProps) => {
   const client = useQueryClient();
-  const { mutate, isLoading } = useMutation({
+  const { mutate, isPending } = useMutation({
     mutationFn: productService.createOne,
     onSuccess: (data) => {
-      client.setQueriesData(
+      client.setQueryData(
         [IKeys.PRODUCTS],
         (products: IProduct[] | undefined) => products ? [...products, data] : products
       );
@@ -30,5 +30,5 @@ export const CreateSingleProductForm = ({ closeModal }: CreateSingleProductFormP
     mutate(values);
   };
 
-  return <ProductForm onFinish={onFinish} isLoading={isLoading} />;
+  return <ProductForm onFinish={onFinish} isPending={isPending} />;
 };

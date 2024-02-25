@@ -1,8 +1,11 @@
+import { useQuery } from '@tanstack/react-query';
 import { Button, Space, Spin } from 'antd';
 import { AddClassModal, DayCard, MonthStepper } from 'components';
 import dayjs from 'dayjs';
 import { useProducts } from 'hooks';
+import { IKeys } from 'models';
 import { useState } from 'react';
+import { userService } from 'services';
 
 export const Calendar = () => {
   const [modal, setModal] = useState(false);
@@ -14,13 +17,17 @@ export const Calendar = () => {
       message.messageApi.success('Success!');
     }
   };
+  const customersApi = useQuery({
+    queryFn: () => userService.getCustomers({ per_page: 100 }),
+    queryKey: [IKeys.CUSTOMERS]
+  });
 
   return (
-    <Spin spinning={products.isLoading}>
+    <Spin spinning={products.isPending || customersApi.isPending}>
       <Space direction="vertical" size={12} style={{ width: '100%' }}>
         <Button block type="primary" onClick={() => setModal(true)}>Add class</Button>
         <MonthStepper month={month} setMonth={setMonth} />
-        {Object.keys(groupedProducts).map((el) => {
+        {customersApi.isSuccess && Object.keys(groupedProducts).map((el) => {
           return (
             <DayCard
               day={el}

@@ -1,13 +1,13 @@
 import { CaretRightOutlined, CloseCircleOutlined, MoreOutlined } from '@ant-design/icons';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { MenuProps, Typography, Dropdown, Col, Row, Spin, Tag, Space, Modal, Table } from 'antd';
+import { MenuProps, Typography, Dropdown, Col, Row, Spin, Tag, Space, Modal, Table, Flex, Button } from 'antd';
 import dayjs from 'dayjs';
-import { useError } from 'hooks';
 import { observer } from 'mobx-react-lite';
-import { IKeys, IProduct, IROrder } from 'models';
-import { useMemo, useState } from 'react';
-import { orderService, productService } from 'services';
+import { IKeys, IProduct, IRUser, IStatus, IUserWithStatus } from 'models';
+import { Key, useMemo, useState } from 'react';
+import { productService } from 'services';
 import { ColumnsType } from 'antd/es/table';
+import { AxiosResponse } from 'axios';
 
 import { ProductForm } from './product-form';
 
@@ -16,46 +16,52 @@ interface TeacherClassProps {
 }
 
 export const TeacherClass = observer(({ product }: TeacherClassProps) => {
-  const classTime = dayjs(product.date_time);
+  const { date_time, paid, cancel, pending, confirm } = product;
+  const classTime = dayjs(date_time);
   const isExpired = dayjs().isAfter(classTime, 'day');
   const client = useQueryClient();
   const [modal, setModal] = useState(false);
-  const { contextHolder, onErrorFn } = useError();
-  const [isOrders, setIsOrders] = useState(false);
+  const [customersTable, openCustomersTable] = useState(false);
+  const [selectedRows, setSelectedRows] = useState<Key[]>([]);
+  const allCustomers = client.getQueryData<AxiosResponse<IRUser[]>>([IKeys.CUSTOMERS])?.data;
+
+  const customers = useMemo(() => {
+    const paidCustomersId = [...paid, ...pending];
+    return allCustomers?.reduce((res: IUserWithStatus[], customer) => {
+      const id = customer.id;
+      if (paidCustomersId.includes(id)) {
+        res.push({
+          ...customer,
+          paid: paid.includes(id),
+          status: confirm.includes(id) ? IStatus.CONFIRM : cancel.includes(id) ? IStatus.CANCEL : undefined
+        });
+      }
+      return res;
+    }, []) || [];
+  }, [allCustomers, cancel, confirm, paid, pending]);
 
   const updateProduct = useMutation({
     mutationFn: (data: any) => productService.update(data, product.id),
-    onError: onErrorFn,
     onSuccess: (data) => {
-      client.setQueriesData(
+      client.setQueryData(
         [IKeys.PRODUCTS, { month: classTime.format('YYYY-MM') }],
         (products: IProduct[] | undefined) => products ? products.map(el => el.id === data.id ? data : el) : products
       );
       setModal(false);
+      setSelectedRows([]);
     }
   });
 
   const deleteProduct = useMutation({
     mutationFn: () => productService.delete(product.id),
-    onError: onErrorFn,
     onSuccess: (data) => {
-      client.setQueriesData(
+      client.setQueryData(
         [IKeys.PRODUCTS, { month: classTime.format('YYYY-MM') }],
         (products: IProduct[] | undefined) => products ? products.filter(el => el.id !== data.id) : products
       );
       setModal(false);
     }
   });
-
-  const orderApi = useMutation({
-    mutationFn: () => orderService.getAll({ per_page: 100, product: product.id }),
-    mutationKey: [IKeys.PRODUCTS, { id: product.id }],
-    onError: onErrorFn,
-    onSuccess: ({ data }) => {
-      setIsOrders(data.length > 0);
-    }
-  });
-  const orders = orderApi.data?.data;
 
   const items = useMemo(() => {
     const elements: MenuProps['items'] = [
@@ -79,45 +85,62 @@ export const TeacherClass = observer(({ product }: TeacherClassProps) => {
     return elements;
   }, [deleteProduct, product.is_canceled, updateProduct]);
 
-  const columns: ColumnsType<IROrder> = [
+  const columns: ColumnsType<IUserWithStatus> = [
     {
       title: 'Name',
-      dataIndex: 'customer_name',
-      key: 'name'
+      key: 'name',
+      render: (_, el) => `${el.first_name} ${el.last_name}`
     },
     {
       title: 'Status',
       key: 'status',
-      render: (_, el) => {
-        const isConfirm = Array.isArray(product.confirm) && product.confirm.includes(el.customer_id);
-        const isCanceled = Array.isArray(product.cancel) && product.cancel.includes(el.customer_id);
-        if (isConfirm) {
+      dataIndex: 'status',
+      render: (el) => {
+        if (el === IStatus.CONFIRM) {
           return <Tag color="green">Confirmed</Tag>;
         }
-        if (isCanceled) {
+        if (el === IStatus.CANCEL) {
           return <Tag color="red">Canceled</Tag>;
         }
         return '';
       }
+    },
+    {
+      title: 'Paid',
+      key: 'paid',
+      dataIndex: 'paid',
+      render: (el) => el && '✅'
     }
   ];
 
-  const loadCustomers = () => {
-    if (isOrders) {
-      setIsOrders(false);
-    } else {
-      orderApi.mutate();
+  const updateCustomersStatus = (status: IStatus) => {
+    let newConfirm;
+    let newCancel;
+
+    if (status === IStatus.CONFIRM) {
+      newConfirm = new Set([...confirm, ...selectedRows]);
+      newCancel = cancel.filter(el => !selectedRows.includes(el));
     }
+
+    if (status === IStatus.CANCEL) {
+      newCancel = new Set([...cancel, ...selectedRows]);
+      newConfirm = confirm.filter(el => !selectedRows.includes(el));
+    }
+
+    updateProduct.mutate({
+      confirm: Array.from(newConfirm || []),
+      cancel: Array.from(newCancel || [])
+    });
   };
 
   return (
-    <Spin spinning={updateProduct.isLoading || orderApi.isLoading || deleteProduct.isLoading}>
+    <Spin spinning={updateProduct.isPending || deleteProduct.isPending}>
       <Row justify="space-between">
-        <Col onClick={() => loadCustomers()}>
+        <Col onClick={() => openCustomersTable(prev => !prev)}>
           <Space>
-            <CaretRightOutlined rotate={isOrders ? 90 : 0} />
+            {<CaretRightOutlined rotate={customersTable ? 90 : 0} />}
             <Typography>
-              {product.name}: {classTime.format('ha')} ({product.total_sales})
+              {product.name}: {classTime.format('ha')} ({customers.length})
             </Typography>
             {product.is_canceled && <Tag icon={<CloseCircleOutlined />} color="error">Canceled</Tag>}
           </Space>
@@ -134,19 +157,51 @@ export const TeacherClass = observer(({ product }: TeacherClassProps) => {
           </Col>
         )}
       </Row>
-      {isOrders && (
-        <Table
-          dataSource={orders}
-          rowKey={(el) => el.id}
-          size="small"
-          columns={columns}
-          pagination={false}
-        />
+      {customersTable && (
+        <Space direction="vertical" style={{ width: '100%' }}>
+          <Table
+            dataSource={customers}
+            rowKey={(el) => el.id}
+            size="small"
+            columns={columns}
+            pagination={false}
+            rowSelection={{
+              hideSelectAll: true,
+              selectedRowKeys: selectedRows,
+              onChange: (arr) => setSelectedRows(arr)
+            }}
+          />
+          {!!selectedRows.length && (
+            <Flex wrap="wrap" gap="small">
+              <Button
+                type="primary"
+                onClick={() => updateCustomersStatus(IStatus.CONFIRM)}
+              >Confirm</Button>
+              <Button
+                type="primary"
+                danger
+                onClick={() => updateCustomersStatus(IStatus.CANCEL)}
+              >Cancel</Button>
+            </Flex>
+          )}
+        </Space>
       )}
-      <Modal title="Edit class" open={modal} footer={false} onCancel={() => setModal(false)}>
-        <ProductForm onFinish={(values) => updateProduct.mutate(values)} isLoading={updateProduct.isLoading} initialValues={{ name: product.name, regular_price: product.price, date_time: classTime.format('YYYY-MM-DDTHH:MM') }} />
+      <Modal
+        title="Edit class"
+        open={modal}
+        footer={false}
+        onCancel={() => setModal(false)}
+      >
+        <ProductForm
+          onFinish={(values) => updateProduct.mutate(values)}
+          isPending={updateProduct.isPending}
+          initialValues={{
+            name: product.name,
+            regular_price: product.price,
+            date_time: classTime.format('YYYY-MM-DDTHH:MM')
+          }}
+        />
       </Modal>
-      {contextHolder}
     </Spin>
   );
 });

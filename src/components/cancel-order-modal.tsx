@@ -11,7 +11,7 @@ interface CancelOrderModalProps {
 }
 
 export const CancelOrderModal: React.FC<CancelOrderModalProps> = ({ open, setOpen, id, children, queryKey }) => {
-  const { contextHolder, isLoading, mutate } = useUpdateOrder(queryKey, () => { setOpen(false); });
+  const { contextHolder, isPending, mutate } = useUpdateOrder(queryKey, () => { setOpen(false); });
   return (
     <>
       <Modal
@@ -21,7 +21,7 @@ export const CancelOrderModal: React.FC<CancelOrderModalProps> = ({ open, setOpe
           data: { status: IOrderStatus.CANCELLED },
           id
         })}
-        confirmLoading={isLoading}
+        confirmLoading={isPending}
         cancelText="Close"
         onCancel={() => setOpen(false)}
         okButtonProps={{

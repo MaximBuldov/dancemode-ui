@@ -17,17 +17,12 @@ interface FilterOrdersFormProps {
 
 export const FilterOrdersForm = ({ setFilters }: FilterOrdersFormProps) => {
   const [form] = useForm();
-  const [customers, setCustomers] = useState<{ value: string, label: string }[]>([]);
   const [dateName, setDateName] = useState<string | number>(FILTERNAME.ORDER);
 
   const users = useQuery({
-    queryFn: userService.getCustomers,
+    queryFn: () => userService.getCustomers({ per_page: 100 }),
     queryKey: [IKeys.CUSTOMERS],
-    onSuccess: (data) => {
-      const res = data.data.map(el => ({ value: el.id, label: `${el.first_name} ${el.last_name}` }));
-      setCustomers(res);
-    },
-    enabled: customers.length === 0
+    select: ({ data }) => data.map(el => ({ value: el.id, label: `${el.first_name} ${el.last_name}` }))
   });
 
   return (
@@ -48,8 +43,8 @@ export const FilterOrdersForm = ({ setFilters }: FilterOrdersFormProps) => {
       <Item name="customer">
         <Select
           placeholder="Customers"
-          loading={users.isLoading}
-          options={customers}
+          loading={users.isPending}
+          options={users.data}
         />
       </Item>
       <Space>
@@ -68,7 +63,7 @@ export const FilterOrdersForm = ({ setFilters }: FilterOrdersFormProps) => {
         <Button
           type="primary"
           htmlType="submit"
-          loading={users.isLoading}
+          loading={users.isPending}
         >
           Submit
         </Button>

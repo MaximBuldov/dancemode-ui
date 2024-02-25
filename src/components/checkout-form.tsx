@@ -16,12 +16,11 @@ interface CheckoutFormProps {
 export const CheckoutForm = ({ paymentIntentId }: CheckoutFormProps) => {
   const stripe = useStripe();
   const elements = useElements();
-  const { onErrorFn, contextHolder, messageApi } = useError();
+  const { contextHolder, messageApi } = useError();
   const [stripeError, setStripeError] = useState(false);
 
   const order = useCreateOrder({
     paymentIntentId,
-    onErrorFn,
     onSuccess: () => payment.mutate(),
     payment_method: IPaymentMethod.STRIPE
   });
@@ -73,7 +72,7 @@ export const CheckoutForm = ({ paymentIntentId }: CheckoutFormProps) => {
       <Button
         disabled={!stripe || !elements}
         htmlType="submit"
-        loading={payment.isLoading || order.isLoading}
+        loading={payment.isPending || order.isPending}
         type="primary"
         block
         size="large"

@@ -3,8 +3,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { IKeys, IProduct, IStatus } from 'models';
 import { productService } from 'services';
 import { userStore } from 'stores';
-
-import { useError } from './useError';
+import { message } from 'antd';
 
 interface IUseProductStatusUpdate {
   day: dayjs.Dayjs,
@@ -14,17 +13,16 @@ interface IUseProductStatusUpdate {
 }
 
 export const useProductStatusUpdate = ({ day, product_id, onSuccess, isPaid }: IUseProductStatusUpdate) => {
-  const { onErrorFn, contextHolder, messageApi } = useError();
   const client = useQueryClient();
   const isDeadline = dayjs().isBefore(day.subtract(5, 'hour'));
+  const [messageApi, contextHolder] = message.useMessage();
 
-  const { mutate, isLoading } = useMutation({
+  const { mutate, isPending } = useMutation({
     mutationFn: ({ key }: { key: IStatus }) => productService.update({
       user_id: userStore.data?.id,
       field: key,
       isDeadline: isDeadline && isPaid
     }, product_id),
-    onError: onErrorFn,
     onSuccess: (data, value) => {
       client.setQueryData([IKeys.PRODUCTS, { month: day.format('YYYY-MM') }], (items: IProduct[] | undefined) => {
         if (items) {
@@ -52,5 +50,5 @@ export const useProductStatusUpdate = ({ day, product_id, onSuccess, isPaid }: I
     }
   });
 
-  return { mutate, isLoading, contextHolder };
+  return { mutate, isPending, contextHolder };
 };

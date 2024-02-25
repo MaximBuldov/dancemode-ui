@@ -4,13 +4,13 @@ import { useState } from 'react';
 
 interface CreateSingleProductFormProps {
   onFinish: (values: ICreateSingleProductsForm) => void,
-  isLoading: boolean,
+  isPending: boolean,
   initialValues?: ICreateSingleProductsForm
 }
 
 const { useForm, Item } = Form;
 
-export const ProductForm = ({ onFinish, isLoading, initialValues }: CreateSingleProductFormProps) => {
+export const ProductForm = ({ onFinish, isPending, initialValues }: CreateSingleProductFormProps) => {
   const [isCustomName, setCustomName] = useState(false);
   const [form] = useForm();
 
@@ -57,7 +57,7 @@ export const ProductForm = ({ onFinish, isLoading, initialValues }: CreateSingle
         <Input prefix="$" placeholder="100" style={{ width: '100%' }} />
       </Item>
       <Item>
-        <Button block htmlType="submit" type="primary" loading={isLoading}>Submit</Button>
+        <Button block htmlType="submit" type="primary" loading={isPending}>Submit</Button>
       </Item>
     </Form>
   );

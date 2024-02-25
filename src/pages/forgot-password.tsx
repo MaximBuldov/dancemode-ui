@@ -11,12 +11,11 @@ const { useForm, Item } = Form;
 
 export const ForgotPassword = () => {
   const [form] = useForm();
-  const { messageApi, contextHolder, onErrorFn } = useError();
+  const { messageApi, contextHolder } = useError();
   const navigate = useNavigate();
 
   const sendCode = useMutation({
     mutationFn: userService.sendCode,
-    onError: onErrorFn,
     onSuccess: ({ data }) => {
       messageApi.info(data.message);
     }
@@ -24,7 +23,6 @@ export const ForgotPassword = () => {
 
   const resetPassword = useMutation({
     mutationFn: userService.resetPassword,
-    onError: onErrorFn,
     onSuccess: ({ data }) => {
       messageApi.info(data.message);
       navigate('/login');
@@ -119,7 +117,7 @@ export const ForgotPassword = () => {
           type="primary"
           htmlType="submit"
           block
-          loading={sendCode.isLoading || resetPassword.isLoading}
+          loading={sendCode.isPending || resetPassword.isPending}
         >
           Submit
         </Button>

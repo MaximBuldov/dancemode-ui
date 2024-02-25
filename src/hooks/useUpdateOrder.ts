@@ -5,14 +5,13 @@ import { IROrder } from 'models';
 import { useError } from './useError';
 
 export const useUpdateOrder = (queryKey: any[], onSuccess?: () => void) => {
-  const { onErrorFn, contextHolder, messageApi } = useError();
+  const { contextHolder, messageApi } = useError();
   const client = useQueryClient();
-  const { mutate, isLoading } = useMutation({
+  const { mutate, isPending } = useMutation({
     mutationFn: (data: IUpdate) => orderService.update(data),
-    onError: onErrorFn,
     onSuccess: (data) => {
       onSuccess && onSuccess();
-      client.setQueriesData(
+      client.setQueryData(
         queryKey,
         (store: any) => {
           const newData = (arr: IROrder[]) => arr.map(el => el.id === data.id ? data : el);
@@ -26,5 +25,5 @@ export const useUpdateOrder = (queryKey: any[], onSuccess?: () => void) => {
     }
   });
 
-  return { mutate, isLoading, contextHolder };
+  return { mutate, isPending, contextHolder };
 };

@@ -1,4 +1,4 @@
-export interface IResponseError {
+export interface IResponseError extends Error {
   code: string;
   data: {
     status: number

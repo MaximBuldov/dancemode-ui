@@ -7,18 +7,15 @@ import { CheckoutForm } from 'components';
 import { IKeys } from 'models';
 import { orderService } from 'services';
 import { cartStore, userStore } from 'stores';
-import { useError } from 'hooks';
 
 const stripePromise = !userStore.isAdmin && loadStripe(process.env.REACT_APP_STRIPE_PUBLIC_KEY || '');
 
 export const Checkout = () => {
-  const { onErrorFn, contextHolder } = useError();
-  const { data, isLoading, isSuccess } = useQuery({
+  const { data, isPending, isSuccess } = useQuery({
     queryFn: () => orderService.stripe({
       total: (cartStore.total - cartStore.couponsTotal) * 100,
       customer: userStore.data?.id
     }),
-    onError: onErrorFn,
     queryKey: [IKeys.STRIPE]
   });
 
@@ -31,13 +28,12 @@ export const Checkout = () => {
 
   return (
     <>
-      {(isLoading) && <Skeleton active />}
+      {(isPending) && <Skeleton active />}
       {(isSuccess && stripePromise) && (
         <Elements options={options} stripe={stripePromise}>
           <CheckoutForm paymentIntentId={data.paymentIntentId} />
         </Elements>
       )}
-      {contextHolder}
     </>
   );
 };

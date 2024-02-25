@@ -5,10 +5,10 @@ import { IResponseError } from 'models';
 export const useError = () => {
   const [messageApi, contextHolder] = message.useMessage();
 
-  function onErrorFn(error: AxiosError<IResponseError>) {
+  function onErrorFn(error: AxiosError<IResponseError>, message?: string) {
     messageApi.open({
       type: 'error',
-      content: <div dangerouslySetInnerHTML={{ __html: error.response?.data.message || error.message }} />
+      content: message || <div dangerouslySetInnerHTML={{ __html: error.response?.data.message || error.message }} />
     });
   }
 

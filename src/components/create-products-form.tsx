@@ -18,10 +18,10 @@ export const CreateProductsForm = ({ closeModal }: CreateProductsFormProps) => {
   const maxMonth = useMemo(() => dayjs().add(6, 'month').format('YYYY-MM'), []);
   const [updatedMonth, setMinMonth] = useState(minMonth);
   const client = useQueryClient();
-  const { mutate, isLoading } = useMutation({
+  const { mutate, isPending } = useMutation({
     mutationFn: productService.createMany,
     onSuccess: ({ create }) => {
-      client.setQueriesData(
+      client.setQueryData(
         [IKeys.PRODUCTS],
         (products: IProduct[] | undefined) => (products && create) ? [...products, ...create] : products
       );
@@ -72,7 +72,7 @@ export const CreateProductsForm = ({ closeModal }: CreateProductsFormProps) => {
         />
       </Item>
       <Item>
-        <Button block htmlType="submit" type="primary" loading={isLoading}>Submit</Button>
+        <Button block htmlType="submit" type="primary" loading={isPending}>Submit</Button>
       </Item>
     </Form>
   );

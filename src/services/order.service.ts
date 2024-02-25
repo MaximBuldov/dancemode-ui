@@ -85,7 +85,7 @@ class OrderService {
     }
   }
 
-  async stripe(data: { total: number, customer?: string }) {
+  async stripe(data: { total: number, customer?: number }) {
     try {
       const res = await $api.post('/custom/v1/process-payment', data);
       return res.data;

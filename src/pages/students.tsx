@@ -18,7 +18,7 @@ export const Students = () => {
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState('');
   const debouncedSearch = useDebounce(search);
-  const { data, isLoading } = useQuery({
+  const { data, isPending } = useQuery({
     queryFn: () => userService.getCustomers({
       search: debouncedSearch,
       per_page: 100
@@ -44,7 +44,7 @@ export const Students = () => {
       <Table
         dataSource={data?.data}
         columns={columns}
-        loading={isLoading}
+        loading={isPending}
         rowKey={(line) => line.id}
         size="small"
         expandable={{

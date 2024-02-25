@@ -15,8 +15,7 @@ export const useProducts = (day: dayjs.Dayjs) => {
   const products = useQuery({
     queryKey: [IKeys.PRODUCTS, { month }],
     queryFn: () => productService.getAll({ month }),
-    enabled: userStore.isAuth,
-    onError: message.onErrorFn
+    enabled: userStore.isAuth
   });
 
   const groupedProducts = useMemo(() => groupByDate(products.data), [products]);

@@ -10,7 +10,7 @@ export const PromoCode = () => {
   const [form] = Form.useForm();
   const [messageApi, contextHolder] = message.useMessage();
 
-  const { mutate, isLoading } = useMutation({
+  const { mutate, isPending } = useMutation({
     mutationFn: (code: string) => couponService.getMy({ code }),
     onSuccess: ({ data }) => {
       if (!!data.length) {
@@ -80,7 +80,7 @@ export const PromoCode = () => {
                 </Form.Item>
               </Col>
               <Col>
-                <Form.Item style={{ marginBottom: 0 }}><Button loading={isLoading} type="primary" ghost htmlType="submit">Apply</Button></Form.Item>
+                <Form.Item style={{ marginBottom: 0 }}><Button loading={isPending} type="primary" ghost htmlType="submit">Apply</Button></Form.Item>
               </Col>
             </Row>
           </Form >

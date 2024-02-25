@@ -11,7 +11,7 @@ import { MoreOutlined, SyncOutlined } from '@ant-design/icons';
 export const Payments = () => {
   const [page, setPage] = useState(1);
   const [modal, setModal] = useState<number | boolean>(0);
-  const { data, isLoading } = useQuery({
+  const { data, isPending } = useQuery({
     queryFn: () => orderService.getMyAll(page),
     queryKey: [IKeys.ORDERS, { page }],
     staleTime: 1000 * 60
@@ -51,7 +51,7 @@ export const Payments = () => {
       <Table
         dataSource={data?.data}
         columns={columns}
-        loading={isLoading}
+        loading={isPending}
         rowKey={(line) => line.id}
         size="small"
         expandable={{

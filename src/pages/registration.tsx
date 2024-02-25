@@ -3,19 +3,16 @@ import { useNavigate } from 'react-router-dom';
 import { userService } from 'services';
 import { userStore } from 'stores';
 import { ProfileForm } from 'components';
-import { useError } from 'hooks';
 
 export const Registration = () => {
-  const { onErrorFn, contextHolder } = useError();
   const navigate = useNavigate();
 
-  const { mutate, isLoading } = useMutation({
+  const { mutate, isPending } = useMutation({
     mutationFn: userService.signup,
     onSuccess: (data) => {
       navigate('/');
       userStore.setUser(data);
-    },
-    onError: onErrorFn
+    }
   });
 
   return (
@@ -23,13 +20,12 @@ export const Registration = () => {
       <ProfileForm
         title="Welcome to Dance Mode 🫶"
         onSubmit={mutate}
-        isLoading={isLoading}
+        isPending={isPending}
         isLabels={false}
         submitButton="Signup"
         initialValues={null}
         isRequired={true}
       />
-      {contextHolder}
     </>
   );
 };

@@ -10,7 +10,7 @@ interface OrderModalActionsProps {
 }
 
 export const OrderModalActions = ({ setOpen, id, queryKey }: OrderModalActionsProps) => {
-  const { contextHolder, isLoading, mutate } = useUpdateOrder(queryKey, () => { setOpen(0); });
+  const { contextHolder, isPending, mutate } = useUpdateOrder(queryKey, () => { setOpen(0); });
   const [loading, setLoading] = useState<IOrderStatus>();
 
   const onClick = useCallback((status: IOrderStatus) => {
@@ -29,15 +29,15 @@ export const OrderModalActions = ({ setOpen, id, queryKey }: OrderModalActionsPr
           onClick: () => onClick(IOrderStatus.CANCELLED),
           danger: true,
           type: 'primary',
-          loading: isLoading && loading === IOrderStatus.CANCELLED,
-          disabled: isLoading && loading !== IOrderStatus.CANCELLED
+          loading: isPending && loading === IOrderStatus.CANCELLED,
+          disabled: isPending && loading !== IOrderStatus.CANCELLED
         }}
         okText="Confirm"
         okButtonProps={{
           onClick: () => onClick(IOrderStatus.COMPLETED),
           type: 'primary',
-          loading: isLoading && loading === IOrderStatus.COMPLETED,
-          disabled: isLoading && loading !== IOrderStatus.COMPLETED
+          loading: isPending && loading === IOrderStatus.COMPLETED,
+          disabled: isPending && loading !== IOrderStatus.COMPLETED
         }}
       />
       {contextHolder}

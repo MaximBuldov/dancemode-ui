@@ -12,8 +12,8 @@ export interface IProduct {
   cancel: number[];
   confirm: number[];
   stock_quantity: number;
-  paid?: number[];
-  pending?: number[];
+  paid: number[];
+  pending: number[];
 }
 
 export interface ICartProduct extends IProduct {

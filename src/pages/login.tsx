@@ -5,22 +5,19 @@ import { userService } from 'services';
 import { userStore } from 'stores';
 import { observer } from 'mobx-react-lite';
 import { Link, useNavigate } from 'react-router-dom';
-import { useError } from 'hooks';
 
 const { useForm, Item } = Form;
 
 export const Login = observer(() => {
   const [form] = useForm();
-  const { onErrorFn, contextHolder } = useError();
   const navigate = useNavigate();
 
-  const { mutate, isLoading } = useMutation({
+  const { mutate, isPending } = useMutation({
     mutationFn: userService.login,
     onSuccess: (data) => {
       navigate('/');
       userStore.setUser(data);
-    },
-    onError: onErrorFn
+    }
   });
 
   return (
@@ -54,14 +51,13 @@ export const Login = observer(() => {
           type="primary"
           htmlType="submit"
           block
-          loading={isLoading}
+          loading={isPending}
         >
           Login
         </Button>
       </Form>
       <Divider />
       <Typography.Paragraph>Don't have account yet? Please <Link to="/sign-up">signup</Link></Typography.Paragraph>
-      {contextHolder}
     </div>
   );
 });

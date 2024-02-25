@@ -7,7 +7,7 @@ import React from 'react';
 interface ProfileFormProps {
   title: string;
   onSubmit: (data: ISignupForm) => void;
-  isLoading: boolean;
+  isPending: boolean;
   isLabels: boolean;
   submitButton: string;
   initialValues: IUser | null;
@@ -27,7 +27,7 @@ const labelsConfig = {
   dob: 'Date of Birthday'
 };
 
-export const ProfileForm = ({ title, onSubmit, isLoading, isLabels, submitButton, initialValues, isRequired }: ProfileFormProps) => {
+export const ProfileForm = ({ title, onSubmit, isPending, isLabels, submitButton, initialValues, isRequired }: ProfileFormProps) => {
   const [form] = useForm();
 
   const label = (text: string) => {
@@ -164,7 +164,7 @@ export const ProfileForm = ({ title, onSubmit, isLoading, isLabels, submitButton
           type="primary"
           htmlType="submit"
           block
-          loading={isLoading}
+          loading={isPending}
         >
           {submitButton}
         </Button>

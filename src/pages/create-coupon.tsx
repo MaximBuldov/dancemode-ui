@@ -12,14 +12,13 @@ const style = { width: '100%' };
 
 export const CreateCoupon = () => {
   const [form] = useForm();
-  const { contextHolder, messageApi, onErrorFn } = useError();
+  const { contextHolder, messageApi } = useError();
   const couponApi = useMutation({
     mutationFn: couponService.create,
     onSuccess: () => {
       form.resetFields();
       messageApi.success('Coupon created');
-    },
-    onError: onErrorFn
+    }
   });
 
   const usersApi = useQuery({
@@ -55,7 +54,7 @@ export const CreateCoupon = () => {
           <Input type="number" prefix="$" />
         </Item>
         <Item name="allowed_users" label="Allowed users" style={style}>
-          {usersApi.isLoading ? <Spin spinning /> : (
+          {usersApi.isPending ? <Spin spinning /> : (
             <select
               multiple
               onChange={(e) => {
@@ -111,7 +110,7 @@ export const CreateCoupon = () => {
           type="primary"
           htmlType="submit"
           block
-          loading={couponApi.isLoading}
+          loading={couponApi.isPending}
         >
           Create
         </Button>
