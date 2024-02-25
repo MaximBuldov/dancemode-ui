@@ -3,13 +3,13 @@ import { IKeys, IROrder, IROrderProduct } from 'models';
 import type { ColumnsType } from 'antd/es/table';
 import dayjs from 'dayjs';
 import { useUpdateOrder } from 'hooks';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
+import { userStore } from 'stores';
 
 import { Price } from './ui';
 
 interface PaymentsProductsProps {
   order: IROrder;
-  info?: boolean;
 }
 
 const columns: ColumnsType<IROrderProduct> = [
@@ -24,47 +24,55 @@ const columns: ColumnsType<IROrderProduct> = [
   }
 ];
 
-export const PaymentsProducts = ({ order, info }: PaymentsProductsProps) => {
+export const PaymentsProducts = ({ order }: PaymentsProductsProps) => {
   const [note, setNote] = useState(order?.note);
   const { mutate, isLoading } = useUpdateOrder([IKeys.ORDERS, { id: order.id }]);
-  const items: DescriptionsProps['items'] = [
-    {
-      key: 'date',
-      label: 'Date',
-      children: dayjs(order.date_created).format('MMM D')
-    },
-    {
-      key: 'payment',
-      label: 'Payment',
-      children: order.payment_method
-    },
-    {
-      key: 'note',
-      label: 'Note',
-      children: <Typography.Paragraph
-        editable={{
-          onChange: (value) => {
-            setNote(value);
-            mutate({ id: order.id, data: { note: value } });
-          },
-          text: note,
-          triggerType: ['icon', 'text'],
-          enterIcon: null
-        }}
-      >{isLoading ? <Spin spinning /> : note}</Typography.Paragraph>
+  const items = useMemo(() => {
+    const arr: DescriptionsProps['items'] = [
+      {
+        key: 'date',
+        label: 'Date',
+        children: dayjs(order.date_created).format('MMM D')
+      },
+      {
+        key: 'payment',
+        label: 'Payment',
+        children: order.payment_method
+      }
+    ];
+    if (!!order.coupon_lines?.length) {
+      arr.push({
+        key: 'coupon',
+        label: 'Coupon',
+        children: order.coupon_lines.map(el => `${el.code} - ${el?.discount}`)
+      });
     }
-  ];
+    if (userStore.isAdmin) {
+      arr.push({
+        key: 'note',
+        label: 'Note',
+        children: <Typography.Paragraph
+          editable={{
+            onChange: (value) => {
+              setNote(value);
+              mutate({ id: order.id, data: { note: value } });
+            },
+            text: note,
+            triggerType: ['icon', 'text'],
+            enterIcon: null
+          }}
+        >{isLoading ? <Spin spinning /> : note}</Typography.Paragraph>
+      });
+    }
+    return arr;
+  }, [isLoading, mutate, note, order]);
   return (
     <>
-      {info && (
-        <>
-          <Descriptions
-            items={items}
-            size="small"
-          />
-          <Divider style={{ margin: 0 }} />
-        </>
-      )}
+      <Descriptions
+        items={items}
+        size="small"
+      />
+      <Divider style={{ margin: 0 }} />
       <Table
         dataSource={order.line_items}
         columns={columns}

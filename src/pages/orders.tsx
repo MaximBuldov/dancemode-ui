@@ -74,7 +74,7 @@ export const Orders = () => {
         rowKey={(line) => line.id}
         size="small"
         expandable={{
-          expandedRowRender: (record) => record && <PaymentsProducts info order={record} />,
+          expandedRowRender: (record) => record && <PaymentsProducts order={record} />,
           expandRowByClick: true
         }}
         pagination={{

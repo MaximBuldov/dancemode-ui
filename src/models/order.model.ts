@@ -3,7 +3,7 @@ export interface IOrder {
   line_items: IOrderProduct[];
   meta_data?: IMetaData[];
   payment_method?: IPaymentMethod;
-  coupon_lines?: { code: string }[];
+  coupon_lines?: { code: string, discount?: string }[];
   billing?: IBilling,
   shipping?: IBilling
 }
