@@ -1,4 +1,4 @@
-import { Descriptions, DescriptionsProps, Divider, Spin, Table, Typography } from 'antd';
+import { Descriptions, DescriptionsProps, Divider, Spin, Table, Tag, Typography } from 'antd';
 import { IKeys, IROrder, IROrderProduct } from 'models';
 import type { ColumnsType } from 'antd/es/table';
 import dayjs from 'dayjs';
@@ -44,7 +44,7 @@ export const PaymentsProducts = ({ order }: PaymentsProductsProps) => {
       arr.push({
         key: 'coupon',
         label: 'Coupon',
-        children: order.coupon_lines.map(el => `${el.code} - ${el?.discount}`)
+        children: order.coupon_lines.map(el => <><Tag>{el.code}</Tag> - ${el?.discount}</>)
       });
     }
     if (userStore.isAdmin) {
