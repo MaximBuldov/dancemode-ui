@@ -18,7 +18,7 @@ export const UnpaidClass = observer(({ product, isExpired }: UnpaidClassProps) =
       <Col>
         <Space>
           <Checkbox
-            disabled={isExpired || isOutOfStock}
+            // disabled={isExpired || isOutOfStock}
             checked={cartStore.isInCart(product)}
             onChange={() => cartStore.isInCart(product) ? cartStore.remove(product) : cartStore.add(product)}
           />

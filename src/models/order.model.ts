@@ -17,6 +17,7 @@ export interface IROrder extends IOrder {
   total: string;
   line_items: IROrderProduct[];
   note?: string;
+  group: string;
 }
 
 export interface IOrderProduct {
@@ -79,4 +80,16 @@ interface IBilling {
   email?: string,
   phone?: string,
   country?: string
+}
+
+export interface IReport {
+  group: string,
+  cash: number,
+  card: number,
+  coupon: number,
+  revenue: number,
+  profit: number,
+  beginners: number,
+  adv: number,
+  totalStudents: number
 }

@@ -62,7 +62,7 @@ export const CreateCoupon = () => {
                 form.setFieldValue('allowed_users', users);
               }}
             >
-              {usersApi.data?.data.map(el => <option value={el.id}>{el.first_name} {el.last_name}</option>)}
+              {usersApi.data?.data.map(el => <option key={el.id} value={el.id}>{el.first_name} {el.last_name}</option>)}
             </select>
           )}
 
