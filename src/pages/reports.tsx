@@ -7,11 +7,11 @@ import { createReport } from 'utils';
 
 const columns: TableProps<IReport>['columns'] = [
   {
-    title: 'Month',
     key: 'group',
     dataIndex: 'group',
     align: 'center',
-    render: (el) => dayjs(el).format('MMM YY')
+    fixed: 'left',
+    render: (el) => dayjs(el).format('MM/YY')
   },
   {
     title: 'Cash',
@@ -35,7 +35,7 @@ const columns: TableProps<IReport>['columns'] = [
     render: (el) => <b>${el}</b>
   },
   {
-    title: 'Profit',
+    title: 'Prof',
     key: 'profit',
     dataIndex: 'profit',
     align: 'center',
@@ -94,6 +94,10 @@ export const Reports = () => {
         rowKey={(el) => el.group}
         size="small"
         bordered
+        sticky
+        scroll={{
+          x: 500
+        }}
         summary={(pageData) => {
           let totalCash = 0;
           let totalCard = 0;
