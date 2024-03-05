@@ -22,7 +22,7 @@ export const CreateCoupon = () => {
   });
 
   const usersApi = useQuery({
-    queryFn: () => userService.getCustomers(),
+    queryFn: () => userService.getCustomers({ per_page: 100 }),
     queryKey: [IKeys.CUSTOMERS]
   });
 
