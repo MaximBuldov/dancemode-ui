@@ -9,7 +9,8 @@ import useDebounce from 'hooks/useDebounce';
 
 const columns: ColumnsType<IRUser> = [
   { title: 'Students', key: 'name', render: (_, el) => `${el.first_name} ${el.last_name}` },
-  { title: 'DOB', key: 'dob', dataIndex: ['acf', 'dob'], render: (el) => dayjs(el).format('MM/DD/YY') }
+  { title: 'DOB', key: 'dob', dataIndex: ['acf', 'dob'], render: (el) => dayjs(el).format('MM/DD/YY') },
+  { title: 'Reg', key: 'reg', dataIndex: ['date_created'], render: (el) => dayjs(el).format('MM/DD/YY') }
 ];
 
 const pageSize = 100;
