@@ -3,7 +3,7 @@ import { userStore } from 'stores';
 
 import { $api, $auth, $wc } from '../http';
 
-const _fields = 'id,role,acf,first_name,last_name,email';
+const _fields = 'id,role,acf,first_name,last_name,email,date_created';
 
 class UserService {
   async login(data: ILoginForm) {
