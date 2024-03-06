@@ -73,7 +73,10 @@ export const ProfileForm = ({ title, onSubmit, isPending, isLabels, submitButton
             placeholder={placeholder(lastName)}
           />
         </Item>
-        <Item name={['acf', 'dob']}>
+        <Item
+          name={['acf', 'dob']}
+          rules={[{ required: isRequired, message: 'Please input your date of birthday!' }]}
+        >
           <Input
             addonBefore="Date of Birthday"
             type="date"
@@ -108,7 +111,10 @@ export const ProfileForm = ({ title, onSubmit, isPending, isLabels, submitButton
             placeholder={placeholder(phone)}
           />
         </Item>
-        <Item name={['acf', 'instagram']}>
+        <Item
+          name={['acf', 'instagram']}
+          rules={[{ required: isRequired, message: 'Please input your instagram!' }]}
+        >
           <Input
             addonBefore={label(instagram)}
             prefix={<InstagramOutlined />}
