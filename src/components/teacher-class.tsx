@@ -140,7 +140,7 @@ export const TeacherClass = observer(({ product }: TeacherClassProps) => {
           <Space>
             {<CaretRightOutlined rotate={customersTable ? 90 : 0} />}
             <Typography>
-              {product.name}: {classTime.format('ha')} ({customers.length})
+              {product.name}: {classTime.format('ha')} ({confirm.length}/{customers.length})
             </Typography>
             {product.is_canceled && <Tag icon={<CloseCircleOutlined />} color="error">Canceled</Tag>}
           </Space>
