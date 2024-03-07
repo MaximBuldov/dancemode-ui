@@ -12,5 +12,6 @@ export enum IKeys {
   CUSTOMERS = 'customers',
   COUPONS = 'coupons',
   STRIPE = 'stripe',
-  PAYMENTS = 'payments'
+  PAYMENTS = 'payments',
+  REPORTS = 'reports'
 }

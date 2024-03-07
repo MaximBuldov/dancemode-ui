@@ -1,14 +1,14 @@
-import { useInfiniteQuery } from '@tanstack/react-query';
-import { Button, Divider, Table, TableProps } from 'antd';
+import { SearchOutlined } from '@ant-design/icons';
+import { Button, Form, Input, Space, Table, TableProps } from 'antd';
+import { ReportCosts, ReportCostsForm, ReportSummary } from 'components';
 import dayjs from 'dayjs';
-import { IKeys, IOrderStatus, IReport } from 'models';
-import { orderService } from 'services';
-import { createReport } from 'utils';
+import { useGetReports } from 'hooks/useGetReports';
+import { IReport } from 'models';
 
 const columns: TableProps<IReport>['columns'] = [
   {
-    key: 'group',
-    dataIndex: 'group',
+    key: 'date',
+    dataIndex: 'date',
     align: 'center',
     fixed: 'left',
     render: (el) => dayjs(el).format('MM/YY')
@@ -39,13 +39,13 @@ const columns: TableProps<IReport>['columns'] = [
     key: 'profit',
     dataIndex: 'profit',
     align: 'center',
-    render: (el) => <b>${el}</b>
+    render: (el) => el !== 0 ? <b>${el}</b> : 'N/A'
   },
   {
     title: 'Beg',
     key: 'beginners',
     align: 'center',
-    dataIndex: 'beginners'
+    dataIndex: 'beg'
   },
   {
     title: 'Adv',
@@ -56,91 +56,68 @@ const columns: TableProps<IReport>['columns'] = [
   {
     title: 'Total',
     key: 'total',
-    dataIndex: 'totalStudents',
+    dataIndex: 'students',
     align: 'center',
     render: (el) => <b>{el}</b>
   }
 ];
 
-const { Summary: { Row, Cell } } = Table;
+const minDate = dayjs().startOf('year').format('YYYY-MM');
+const maxDate = dayjs().format('YYYY-MM');
 
 export const Reports = () => {
-  const { data, isFetchingNextPage, fetchNextPage, hasNextPage, isPending } = useInfiniteQuery({
-    queryKey: [IKeys.ORDERS],
-    queryFn: ({ pageParam }) => orderService.getAll({
-      per_page: 100,
-      status: [IOrderStatus.PENDING, IOrderStatus.COMPLETED],
-      min_date: dayjs().subtract((pageParam + 3), 'month').format('YYYY-MM'),
-      max_date: dayjs().subtract(pageParam, 'month').format('YYYY-MM')
-    }),
-    select: (res) => {
-      return createReport(res.pages.flatMap(page => page.data));
-    },
-    initialPageParam: 0,
-    getNextPageParam: (lastPage, _, lastPageParam) => {
-      if (lastPage.data.length > 0) {
-        return lastPageParam + 3;
-      }
-    }
-  });
+  const [form] = Form.useForm();
+  const { data, isPending } = useGetReports({ from: minDate, to: maxDate });
 
   return (
     <>
+      <Form
+        form={form}
+        initialValues={{
+          from: minDate,
+          to: dayjs().format('YYYY-MM')
+        }}
+      >
+        <Space.Compact>
+          <Form.Item name="from">
+            <Input
+              type="month"
+              addonBefore="From"
+              min={minDate}
+              max={maxDate}
+            />
+          </Form.Item>
+          <Form.Item name="to">
+            <Input
+              type="month"
+              addonBefore="to"
+              min={minDate}
+              max={maxDate}
+            />
+          </Form.Item>
+          <Button type="primary" htmlType="submit" icon={<SearchOutlined />} />
+        </Space.Compact>
+      </Form>
       <Table
         dataSource={data}
         columns={columns}
         loading={isPending}
         pagination={false}
-        rowKey={(el) => el.group}
+        rowKey={(el) => el.date}
         size="small"
         bordered
         sticky
         scroll={{
-          x: 500
+          x: 600
         }}
-        summary={(pageData) => {
-          let totalCash = 0;
-          let totalCard = 0;
-          let totalRev = 0;
-          let totalProf = 0;
-          let totalBeg = 0;
-          let totalAdv = 0;
-          let totalStu = 0;
-
-          pageData.forEach(({ card, cash, profit, revenue, adv, beginners, totalStudents }) => {
-            totalCash += cash;
-            totalCard += card;
-            totalRev += revenue;
-            totalProf += profit;
-            totalBeg += beginners;
-            totalAdv += adv;
-            totalStu += totalStudents;
-          });
-
-          return (
-            <Row style={{ backgroundColor: '#fafafa' }}>
-              <Cell index={0}><b>Total:</b></Cell>
-              <Cell align="center" index={1}>${totalCash}</Cell>
-              <Cell align="center" index={2}>${totalCard}</Cell>
-              <Cell align="center" index={3}><b>${totalRev}</b></Cell>
-              <Cell align="center" index={4}><b>${totalProf}</b></Cell>
-              <Cell align="center" index={5}>{totalBeg}</Cell>
-              <Cell align="center" index={6}>{totalAdv}</Cell>
-              <Cell align="center" index={7}><b>{totalStu}</b></Cell>
-            </Row>
-          );
+        expandable={{
+          rowExpandable: () => true,
+          expandedRowRender: (record) => record.completed ?
+            <ReportCosts data={record.costs || []} /> :
+            <ReportCostsForm report={record} minDate={minDate} maxDate={maxDate} />
         }}
+        summary={(pageData) => <ReportSummary reports={pageData} />}
       />
-      <Divider />
-      <Button
-        block
-        type="primary"
-        loading={isFetchingNextPage}
-        onClick={() => fetchNextPage()}
-        disabled={!hasNextPage}
-      >
-        Load more
-      </Button>
     </>
   );
 };
