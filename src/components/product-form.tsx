@@ -56,6 +56,12 @@ export const ProductForm = ({ onFinish, isPending, initialValues }: CreateSingle
       >
         <Input prefix="$" placeholder="100" style={{ width: '100%' }} />
       </Item>
+      <Item
+        label="Quantity"
+        name="stock_quantity"
+      >
+        <Input placeholder="13" style={{ width: '100%' }} />
+      </Item>
       <Item>
         <Button block htmlType="submit" type="primary" loading={isPending}>Submit</Button>
       </Item>

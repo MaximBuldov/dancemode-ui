@@ -20,7 +20,8 @@ export interface ICreateSingleProductsForm {
   name?: string,
   regular_price?: string,
   category?: ICategoryOption,
-  categories?: { id?: number }[]
+  categories?: { id?: number }[],
+  stock_quantity?: number
 }
 
 export interface ICategoryOption {

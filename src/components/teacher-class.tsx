@@ -198,7 +198,8 @@ export const TeacherClass = observer(({ product }: TeacherClassProps) => {
           initialValues={{
             name: product.name,
             regular_price: product.price,
-            date_time: classTime.format('YYYY-MM-DDTHH:MM')
+            date_time: classTime.format('YYYY-MM-DDTHH:MM'),
+            stock_quantity: product.stock_quantity
           }}
         />
       </Modal>
