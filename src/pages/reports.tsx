@@ -4,6 +4,7 @@ import { ReportCosts, ReportCostsForm, ReportSummary } from 'components';
 import dayjs from 'dayjs';
 import { useGetReports } from 'hooks/useGetReports';
 import { IReport } from 'models';
+import { useState } from 'react';
 
 const columns: TableProps<IReport>['columns'] = [
   {
@@ -67,7 +68,9 @@ const maxDate = dayjs().format('YYYY-MM');
 
 export const Reports = () => {
   const [form] = Form.useForm();
-  const { data, isPending } = useGetReports({ from: minDate, to: maxDate });
+  const [from, setFrom] = useState(minDate);
+  const [to, setTo] = useState(maxDate);
+  const { data, isPending } = useGetReports({ from, to });
 
   return (
     <>
@@ -76,6 +79,10 @@ export const Reports = () => {
         initialValues={{
           from: minDate,
           to: dayjs().format('YYYY-MM')
+        }}
+        onFinish={({ from, to }) => {
+          setFrom(from);
+          setTo(to);
         }}
       >
         <Space.Compact>
@@ -95,7 +102,7 @@ export const Reports = () => {
               max={maxDate}
             />
           </Form.Item>
-          <Button type="primary" htmlType="submit" icon={<SearchOutlined />} />
+          <Button type="primary" htmlType="submit" size="small" icon={<SearchOutlined />} />
         </Space.Compact>
       </Form>
       <Table
