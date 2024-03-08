@@ -73,7 +73,7 @@ export const ReportCostsForm = ({ report, minDate, maxDate }: ReportCostsFormPrp
                       name={[name, 'sum']}
                       rules={[{ required: true }]}
                     >
-                      <InputNumber controls={false} min={0} placeholder="Sum" prefix="$" style={{ width: '80px' }} />
+                      <InputNumber controls={false} min={0} placeholder="Sum" prefix="$" style={{ width: '100px' }} />
                     </Item>
                     <Item
                       {...restField}
