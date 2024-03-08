@@ -29,6 +29,13 @@ const columns: TableProps<IReport>['columns'] = [
     render: (el) => `$${el}`
   },
   {
+    title: 'Coup',
+    key: 'coupons',
+    dataIndex: 'coupons',
+    align: 'center',
+    render: (el) => `$${el}`
+  },
+  {
     title: 'Rev',
     key: 'revenue',
     dataIndex: 'revenue',

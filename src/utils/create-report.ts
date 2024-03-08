@@ -12,7 +12,8 @@ export const createReport = (arr: IROrder[]): IReport[] => {
       beg: 0,
       adv: 0,
       students: 0,
-      stripe: 0
+      stripe: 0,
+      coupons: 0
     } as IReport;
 
     const cash = order.payment_method === IPaymentMethod.CASH ? Number(order.total) : 0;
@@ -20,7 +21,7 @@ export const createReport = (arr: IROrder[]): IReport[] => {
 
     acc[key].cash += cash;
     acc[key].card += card;
-    acc[key].coupons += acc[key].coupons + (order.payment_method === IPaymentMethod.COUPON ? Number(order.total) : 0);
+    acc[key].coupons += (order.payment_method === IPaymentMethod.COUPON ? Number(order.total) : 0) + (order.coupon_lines?.reduce((acc, el) => acc + Number(el.discount || 0), 0) || 0);
     acc[key].stripe = (acc[key].stripe || 0) + (order.payment_method === IPaymentMethod.STRIPE ? (+order.total * 0.029) + 0.3 : 0);
     acc[key].revenue = acc[key].cash + acc[key].card;
     acc[key].beg += order.line_items.filter(el => el.name === NameOfClass.BEGINNER).length;

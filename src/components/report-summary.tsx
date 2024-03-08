@@ -15,8 +15,9 @@ export const ReportSummary = ({ reports }: IReportSummaryProps) => {
   let totalBeg = 0;
   let totalAdv = 0;
   let totalStu = 0;
+  let totalCoup = 0;
 
-  reports.forEach(({ card, cash, profit, revenue, adv, beg, students }) => {
+  reports.forEach(({ card, cash, profit, revenue, adv, beg, students, coupons }) => {
     totalCash += cash;
     totalCard += card;
     totalRev += revenue;
@@ -24,6 +25,7 @@ export const ReportSummary = ({ reports }: IReportSummaryProps) => {
     totalBeg += beg;
     totalAdv += adv;
     totalStu += students;
+    totalCoup += coupons;
   });
 
   return (
@@ -32,11 +34,12 @@ export const ReportSummary = ({ reports }: IReportSummaryProps) => {
       <Cell index={1}><b>Total:</b></Cell>
       <Cell align="center" index={2}>${totalCash}</Cell>
       <Cell align="center" index={3}>${totalCard}</Cell>
-      <Cell align="center" index={4}><b>${totalRev}</b></Cell>
-      <Cell align="center" index={5}><b>${totalProf}</b></Cell>
-      <Cell align="center" index={6}>{totalBeg}</Cell>
-      <Cell align="center" index={7}>{totalAdv}</Cell>
-      <Cell align="center" index={8}><b>{totalStu}</b></Cell>
+      <Cell align="center" index={4}>${totalCoup}</Cell>
+      <Cell align="center" index={5}><b>${totalRev}</b></Cell>
+      <Cell align="center" index={6}><b>${totalProf}</b></Cell>
+      <Cell align="center" index={7}>{totalBeg}</Cell>
+      <Cell align="center" index={8}>{totalAdv}</Cell>
+      <Cell align="center" index={9}><b>{totalStu}</b></Cell>
     </Row>
   );
 };
