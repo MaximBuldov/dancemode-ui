@@ -109,7 +109,7 @@ export const Reports = () => {
               max={maxDate}
             />
           </Form.Item>
-          <Button type="primary" htmlType="submit" size="small" icon={<SearchOutlined />} />
+          <Button type="primary" htmlType="submit" icon={<SearchOutlined />} />
         </Space.Compact>
       </Form>
       <Table
