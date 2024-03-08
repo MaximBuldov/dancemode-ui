@@ -3,7 +3,7 @@ import { Button, Form, Input, Space, Table, TableProps } from 'antd';
 import { ReportCosts, ReportCostsForm, ReportSummary } from 'components';
 import dayjs from 'dayjs';
 import { useGetReports } from 'hooks/useGetReports';
-import { IReport } from 'models';
+import { IReport, IReportCost } from 'models';
 import { useState } from 'react';
 
 const columns: TableProps<IReport>['columns'] = [
@@ -13,6 +13,27 @@ const columns: TableProps<IReport>['columns'] = [
     align: 'center',
     fixed: 'left',
     render: (el) => dayjs(el).format('MM/YY')
+  },
+  {
+    title: 'Rev',
+    key: 'revenue',
+    dataIndex: 'revenue',
+    align: 'center',
+    render: (el) => <b>${el}</b>
+  },
+  {
+    title: 'Costs',
+    key: 'costs',
+    dataIndex: 'costs',
+    align: 'center',
+    render: (el: IReportCost[]) => <b>${Math.round(el.reduce((acc, item) => acc + Number(item.sum), 0))}</b>
+  },
+  {
+    title: 'Prof',
+    key: 'profit',
+    dataIndex: 'profit',
+    align: 'center',
+    render: (el) => el !== 0 ? <b>${el}</b> : 'N/A'
   },
   {
     title: 'Cash',
@@ -34,20 +55,6 @@ const columns: TableProps<IReport>['columns'] = [
     dataIndex: 'coupons',
     align: 'center',
     render: (el) => `$${el}`
-  },
-  {
-    title: 'Rev',
-    key: 'revenue',
-    dataIndex: 'revenue',
-    align: 'center',
-    render: (el) => <b>${el}</b>
-  },
-  {
-    title: 'Prof',
-    key: 'profit',
-    dataIndex: 'profit',
-    align: 'center',
-    render: (el) => el !== 0 ? <b>${el}</b> : 'N/A'
   },
   {
     title: 'Beg',
@@ -122,7 +129,7 @@ export const Reports = () => {
         bordered
         sticky
         scroll={{
-          x: 600
+          x: 700
         }}
         expandable={{
           rowExpandable: () => true,
