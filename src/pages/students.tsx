@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { Descriptions, Divider, Input, Table, Typography } from 'antd';
-import { IKeys, IRUser, IUser } from 'models';
+import { IKeys, IRUser } from 'models';
 import { useState } from 'react';
 import { userService } from 'services';
 import type { ColumnsType } from 'antd/es/table';
@@ -13,7 +13,7 @@ const columns: ColumnsType<IRUser> = [
   { title: 'Reg', key: 'reg', dataIndex: ['date_created'], render: (el) => dayjs(el).format('MM/DD/YY') }
 ];
 
-const pageSize = 100;
+const pageSize = 15;
 
 export const Students = () => {
   const [page, setPage] = useState(1);
@@ -24,12 +24,6 @@ export const Students = () => {
       search: debouncedSearch,
       per_page: 100
     }),
-    select: (data) => {
-      return {
-        ...data,
-        data: data.data.sort(compareBirthdays)
-      };
-    },
     queryKey: [IKeys.CUSTOMERS, { name: debouncedSearch }],
     staleTime: 1000 * 60
   });
@@ -68,16 +62,3 @@ export const Students = () => {
     </>
   );
 };
-
-function compareBirthdays(user1: IUser, user2: IRUser) {
-  const birthday1 = dayjs(user1.acf.dob);
-  const birthday2 = dayjs(user2.acf.dob);
-
-  if (birthday1.isBefore(birthday2, 'day')) {
-    return -1;
-  } else if (birthday1.isAfter(birthday2, 'day')) {
-    return 1;
-  } else {
-    return 0;
-  }
-}
