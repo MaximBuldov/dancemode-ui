@@ -3,7 +3,7 @@ import { useMutation } from '@tanstack/react-query';
 import { Button, Col, Form, Input, List, Row, Space, Tag, Typography, message } from 'antd';
 import { useState } from 'react';
 import { couponService } from 'services';
-import { cartStore } from 'stores';
+import { cartStore, userStore } from 'stores';
 
 export const PromoCode = () => {
   const [open, setOpen] = useState(false);
@@ -14,11 +14,12 @@ export const PromoCode = () => {
     mutationFn: (code: string) => couponService.getMy({ code }),
     onSuccess: ({ data }) => {
       if (!!data.length) {
-        if (cartStore.isExludedCat(data[0])) {
-          messageApi.error('You can not use this coupon');
-          form.resetFields();
-        } else {
+        const isValid = cartStore.checkCouponEligibility(userStore.data!.id, data[0]);
+        if (isValid.success) {
           cartStore.addCoupon(data[0]);
+        } else {
+          messageApi.error(isValid.message);
+          form.resetFields();
         }
       } else {
         messageApi.error('Coupon code is not valid');

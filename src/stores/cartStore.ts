@@ -57,6 +57,36 @@ class CartStore {
     return this.data.every(el => el.categories[0].id === coupon.excluded_product_categories[0]);
   };
 
+  checkCouponEligibility(userId: number, coupon: ICoupon) {
+    if (!coupon.allowed_users.includes(userId)) {
+      return { success: false, message: 'Coupon issued to another user' };
+    }
+
+    const totalCostExcluded = this.data.reduce((acc, el) => {
+      if (el.categories[0].id === coupon.excluded_product_categories[0]) {
+        return acc;
+      } else {
+        return acc += parseFloat(el.price);
+      }
+    }, 0);
+    if (totalCostExcluded < parseFloat(coupon.amount)) {
+      return { success: false, message: 'The total cost of classes in the cart is less than the coupon amount' };
+    }
+
+    // Шаг 4: Проверка на один купон с категориями исключения
+    if (coupon.excluded_product_categories.length > 0 && this.coupons.some(item => item.excluded_product_categories.length > 0)) {
+      return { success: false, message: 'You cannot use coupons for different groups at the same time' };
+    }
+
+    // Проверка даты истечения срока действия купона
+    const expiryDate = dayjs(coupon.date_expires);
+    if (expiryDate.isBefore(dayjs(), 'day')) {
+      return { success: false, message: 'Coupon has expired' };
+    }
+
+    return { success: true, message: 'Купон может быть применен' };
+  }
+
   get count() {
     return this.data.length;
   }

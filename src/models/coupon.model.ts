@@ -19,6 +19,7 @@ export interface ICoupon {
   excluded_product_categories: Categories[];
   email_restrictions: string[];
   used_by: number[];
+  allowed_users: number[];
 }
 
 export enum IDiscountType {
