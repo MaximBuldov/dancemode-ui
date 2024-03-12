@@ -1,10 +1,30 @@
-import { SearchOutlined } from '@ant-design/icons';
-import { Button, Form, Input, Space, Table, TableProps } from 'antd';
+import { FileTextOutlined, SearchOutlined } from '@ant-design/icons';
+import { Button, Divider, Drawer, Form, Input, Space, Table, TableProps } from 'antd';
 import { ReportCosts, ReportCostsForm, ReportSummary } from 'components';
 import dayjs from 'dayjs';
 import { useGetReports } from 'hooks/useGetReports';
 import { IReport, IReportCost } from 'models';
 import { useState } from 'react';
+
+const columnsCosts: TableProps<IReportCost>['columns'] = [
+  {
+    key: 'name',
+    dataIndex: 'name',
+    title: 'Name'
+  },
+  {
+    key: 'sum',
+    dataIndex: 'sum',
+    title: 'Sum',
+    render: (el) => `$${el}`
+  },
+  {
+    key: 'date',
+    dataIndex: 'date',
+    title: 'Date',
+    render: (el) => dayjs(el).format('MM/DD/YYYY')
+  }
+];
 
 const columns: TableProps<IReport>['columns'] = [
   {
@@ -84,7 +104,9 @@ export const Reports = () => {
   const [form] = Form.useForm();
   const [from, setFrom] = useState(minDate);
   const [to, setTo] = useState(maxDate);
+  const [costsDrawer, openCostsDrawer] = useState(false);
   const { data, isPending } = useGetReports({ from, to });
+  const costsTitle = `Costs ${from} - ${to}`;
 
   return (
     <>
@@ -139,6 +161,40 @@ export const Reports = () => {
         }}
         summary={(pageData) => <ReportSummary reports={pageData} />}
       />
+      <Divider />
+      <Button
+        onClick={() => openCostsDrawer(true)}
+        type="primary"
+        icon={<FileTextOutlined />}
+        block
+        size="large"
+      >
+        {costsTitle}
+      </Button>
+      <Drawer
+        title={costsTitle}
+        onClose={() => openCostsDrawer(false)}
+        open={costsDrawer}
+        size="large"
+      >
+        <Table
+          dataSource={data?.flatMap(el => el.costs || [])}
+          columns={columnsCosts}
+          pagination={false}
+          loading={isPending}
+          rowKey={el => el.name + el.sum + el.date}
+          summary={(tableData) => {
+            let totalCosts = tableData.reduce((acc, el) => acc += Number(el.sum), 0);
+
+            return (
+              <Table.Summary.Row style={{ backgroundColor: '#fafafa' }}>
+                <Table.Summary.Cell index={0}><b>Total:</b></Table.Summary.Cell>
+                <Table.Summary.Cell colSpan={2} index={1}>${totalCosts.toFixed(2)}</Table.Summary.Cell>
+              </Table.Summary.Row>
+            );
+          }}
+        />
+      </Drawer>
     </>
   );
 };
