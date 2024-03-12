@@ -88,6 +88,15 @@ class OrderService {
     }
   }
 
+  async delete(id: string | number) {
+    try {
+      const res = await $wc.delete(`/wc/v3/orders/${id}`);
+      return res.data as IROrder;
+    } catch (error) {
+      throw error;
+    }
+  }
+
   async stripe(data: { total: number, customer?: number }) {
     try {
       const res = await $api.post('/custom/v1/process-payment', data);

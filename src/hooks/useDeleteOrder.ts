@@ -1,23 +1,23 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { IUpdate, orderService } from 'services';
+import { orderService } from 'services';
 import { IROrder } from 'models';
 
-export const useUpdateOrder = (queryKey: any[], onSuccess?: () => void) => {
+export const useDeleteOrder = (id: number | string, queryKey: any[], onSuccess?: () => void) => {
   const client = useQueryClient();
   const mutation = useMutation({
-    mutationFn: (data: IUpdate) => orderService.update(data),
+    mutationFn: () => orderService.delete(id),
     onSuccess: (data) => {
-      onSuccess && onSuccess();
       client.setQueryData(
         queryKey,
         (store: any) => {
-          const newData = (arr: IROrder[]) => arr.map(el => el.id === data.id ? data : el);
+          const newData = (arr: IROrder[]) => arr.filter(el => el.id !== data.id);
           if (Array.isArray(store)) {
             return newData(store);
           } else {
             return { ...store, data: newData(store.data) };
           }
         });
+      onSuccess && onSuccess();
     }
   });
 

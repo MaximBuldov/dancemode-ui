@@ -167,7 +167,6 @@ export const Reports = () => {
         type="primary"
         icon={<FileTextOutlined />}
         block
-        size="large"
       >
         {costsTitle}
       </Button>

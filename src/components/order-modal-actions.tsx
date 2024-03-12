@@ -1,5 +1,5 @@
-import { Modal } from 'antd';
-import { useUpdateOrder } from 'hooks';
+import { Button, Modal, message } from 'antd';
+import { useDeleteOrder, useUpdateOrder } from 'hooks';
 import { IOrderStatus } from 'models';
 import { useCallback, useState } from 'react';
 
@@ -10,13 +10,20 @@ interface OrderModalActionsProps {
 }
 
 export const OrderModalActions = ({ setOpen, id, queryKey }: OrderModalActionsProps) => {
-  const { contextHolder, isPending, mutate } = useUpdateOrder(queryKey, () => { setOpen(0); });
+  const [messageApi, contextHolder] = message.useMessage();
+  const onSuccessAction = useCallback(() => {
+    setOpen(0);
+    messageApi.success('Done!');
+  }, [messageApi, setOpen]);
+
+  const updateOrder = useUpdateOrder(queryKey, onSuccessAction);
+  const deleteOrder = useDeleteOrder(id, queryKey, onSuccessAction);
   const [loading, setLoading] = useState<IOrderStatus>();
 
   const onClick = useCallback((status: IOrderStatus) => {
-    mutate({ data: { status }, id });
+    updateOrder.mutate({ data: { status }, id });
     setLoading(status);
-  }, [id, mutate]);
+  }, [id, updateOrder]);
 
   return (
     <>
@@ -25,20 +32,37 @@ export const OrderModalActions = ({ setOpen, id, queryKey }: OrderModalActionsPr
         open={!!id}
         destroyOnClose
         onCancel={() => setOpen(0)}
-        cancelButtonProps={{
-          onClick: () => onClick(IOrderStatus.CANCELLED),
-          danger: true,
-          type: 'primary',
-          loading: isPending && loading === IOrderStatus.CANCELLED,
-          disabled: isPending && loading !== IOrderStatus.CANCELLED
-        }}
-        okText="Confirm"
-        okButtonProps={{
-          onClick: () => onClick(IOrderStatus.COMPLETED),
-          type: 'primary',
-          loading: isPending && loading === IOrderStatus.COMPLETED,
-          disabled: isPending && loading !== IOrderStatus.COMPLETED
-        }}
+        footer={() => (
+          <>
+            <Button
+              onClick={() => onClick(IOrderStatus.COMPLETED)}
+              type="primary"
+              loading={updateOrder.isPending && loading === IOrderStatus.COMPLETED}
+              disabled={updateOrder.isPending && loading !== IOrderStatus.COMPLETED}
+            >
+              Confirm
+            </Button>
+            <Button
+              onClick={() => onClick(IOrderStatus.CANCELLED)}
+              type="primary"
+              loading={updateOrder.isPending && loading === IOrderStatus.CANCELLED}
+              disabled={updateOrder.isPending && loading !== IOrderStatus.CANCELLED}
+              ghost
+              danger
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={() => deleteOrder.mutate()}
+              type="primary"
+              loading={deleteOrder.isPending}
+              disabled={updateOrder.isPending}
+              danger
+            >
+              Delete
+            </Button>
+          </>
+        )}
       />
       {contextHolder}
     </>

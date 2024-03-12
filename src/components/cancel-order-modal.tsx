@@ -1,4 +1,4 @@
-import { Modal, Typography } from 'antd';
+import { Modal, Typography, message } from 'antd';
 import { useUpdateOrder } from 'hooks';
 import { IOrderStatus } from 'models';
 
@@ -11,7 +11,11 @@ interface CancelOrderModalProps {
 }
 
 export const CancelOrderModal: React.FC<CancelOrderModalProps> = ({ open, setOpen, id, children, queryKey }) => {
-  const { contextHolder, isPending, mutate } = useUpdateOrder(queryKey, () => { setOpen(false); });
+  const [messageApi, contextHolder] = message.useMessage();
+  const { isPending, mutate } = useUpdateOrder(queryKey, () => {
+    setOpen(false);
+    messageApi.success('Done!');
+  });
   return (
     <>
       <Modal

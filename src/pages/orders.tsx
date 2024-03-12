@@ -58,8 +58,8 @@ export const Orders = () => {
       }
     },
     {
-      dataIndex: 'status', key: 'actions',
-      render: (el, order) => el === IOrderStatus.PENDING && <MoreOutlined onClick={() => setModal(order.id)} />
+      dataIndex: 'id', key: 'actions',
+      render: (el) => <MoreOutlined onClick={() => setModal(el)} />
     }
   ];
 
