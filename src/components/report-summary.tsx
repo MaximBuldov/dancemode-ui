@@ -34,15 +34,15 @@ export const ReportSummary = ({ reports }: IReportSummaryProps) => {
     <Row style={{ backgroundColor: '#fafafa' }}>
       <Cell index={0} />
       <Cell index={1}><b>Total:</b></Cell>
-      <Cell align="center" index={2}><b>${totalRev}</b></Cell>
+      <Cell align="center" index={2}>${totalRev}</Cell>
       <Cell align="center" index={3}>${Math.round(totalCosts)}</Cell>
-      <Cell align="center" index={4}><b>${totalProf}</b></Cell>
-      <Cell align="center" index={5}>${totalCash}</Cell>
-      <Cell align="center" index={6}>${totalCard}</Cell>
-      <Cell align="center" index={7}>${totalCoup}</Cell>
-      <Cell align="center" index={8}>{totalBeg}</Cell>
-      <Cell align="center" index={9}>{totalAdv}</Cell>
-      <Cell align="center" index={10}><b>{totalStu}</b></Cell>
+      <Cell align="center" index={4}>${totalProf}</Cell>
+      <Cell align="center" index={5}>{totalStu}</Cell>
+      <Cell align="center" index={6}>${totalCash}</Cell>
+      <Cell align="center" index={7}>${totalCard}</Cell>
+      <Cell align="center" index={8}>${totalCoup}</Cell>
+      <Cell align="center" index={9}>{totalBeg}</Cell>
+      <Cell align="center" index={10}>{totalAdv}</Cell>
     </Row>
   );
 };

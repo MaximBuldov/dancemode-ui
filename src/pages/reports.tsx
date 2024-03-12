@@ -19,7 +19,7 @@ const columns: TableProps<IReport>['columns'] = [
     key: 'revenue',
     dataIndex: 'revenue',
     align: 'center',
-    render: (el) => <b>${el}</b>
+    render: (el) => <>${el}</>
   },
   {
     title: 'Costs',
@@ -29,11 +29,18 @@ const columns: TableProps<IReport>['columns'] = [
     render: (el: IReportCost[]) => <b>${Math.round(el.reduce((acc, item) => acc + Number(item.sum), 0))}</b>
   },
   {
+    title: 'Stud',
+    key: 'students',
+    dataIndex: 'students',
+    align: 'center',
+    render: (el) => <>{el}</>
+  },
+  {
     title: 'Prof',
     key: 'profit',
     dataIndex: 'profit',
     align: 'center',
-    render: (el) => el !== 0 ? <b>${el}</b> : 'N/A'
+    render: (el) => el !== 0 ? <>${el}</> : 'N/A'
   },
   {
     title: 'Cash',
@@ -67,13 +74,6 @@ const columns: TableProps<IReport>['columns'] = [
     key: 'adv',
     align: 'center',
     dataIndex: 'adv'
-  },
-  {
-    title: 'Total',
-    key: 'total',
-    dataIndex: 'students',
-    align: 'center',
-    render: (el) => <b>{el}</b>
   }
 ];
 
