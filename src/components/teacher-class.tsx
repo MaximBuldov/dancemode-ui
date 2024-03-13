@@ -16,7 +16,7 @@ interface TeacherClassProps {
 }
 
 export const TeacherClass = observer(({ product }: TeacherClassProps) => {
-  const { date_time, paid, cancel, pending, confirm } = product;
+  const { date_time, paid, cancel, pending, confirm, wait_list } = product;
   const classTime = dayjs(date_time);
   const isExpired = dayjs().isAfter(classTime, 'day');
   const client = useQueryClient();
@@ -26,19 +26,22 @@ export const TeacherClass = observer(({ product }: TeacherClassProps) => {
   const allCustomers = client.getQueryData<AxiosResponse<IRUser[]>>([IKeys.CUSTOMERS])?.data;
 
   const customers = useMemo(() => {
-    const paidCustomersId = [...paid, ...pending];
+    const paidCustomersId = [...paid, ...pending, ...wait_list];
     return allCustomers?.reduce((res: IUserWithStatus[], customer) => {
       const id = customer.id;
       if (paidCustomersId.includes(id)) {
         res.push({
           ...customer,
           paid: paid.includes(id),
-          status: confirm.includes(id) ? IStatus.CONFIRM : cancel.includes(id) ? IStatus.CANCEL : undefined
+          status: confirm.includes(id) ? IStatus.CONFIRM :
+            cancel.includes(id) ? IStatus.CANCEL :
+              wait_list.includes(id) ? IStatus.WAIT_LIST :
+                undefined
         });
       }
       return res;
     }, []) || [];
-  }, [allCustomers, cancel, confirm, paid, pending]);
+  }, [allCustomers, cancel, confirm, paid, pending, wait_list]);
 
   const updateProduct = useMutation({
     mutationFn: (data: any) => productService.update(data, product.id),
@@ -101,6 +104,9 @@ export const TeacherClass = observer(({ product }: TeacherClassProps) => {
         }
         if (el === IStatus.CANCEL) {
           return <Tag color="red">Canceled</Tag>;
+        }
+        if (el === IStatus.WAIT_LIST) {
+          return <Tag color="red">Wait list</Tag>;
         }
         return '';
       }

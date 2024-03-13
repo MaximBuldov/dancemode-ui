@@ -14,6 +14,7 @@ export interface IProduct {
   stock_quantity: number;
   paid: number[];
   pending: number[];
+  wait_list: number[];
 }
 
 export interface ICartProduct extends IProduct {

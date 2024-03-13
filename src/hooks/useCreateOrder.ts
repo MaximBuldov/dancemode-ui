@@ -1,5 +1,5 @@
 import { useMutation } from '@tanstack/react-query';
-import { IKeys, IPaymentMethod } from 'models';
+import { IKeys, IOrderStatus, IPaymentMethod } from 'models';
 import { orderService } from 'services';
 import { cartStore, userStore } from 'stores';
 
@@ -16,6 +16,7 @@ export const useCreateOrder = ({ paymentIntentId, onSuccess, payment_method }: I
       line_items: cartStore.preparedData,
       coupon_lines: cartStore.preparedCoupons,
       payment_method,
+      status: IOrderStatus.PROCESSING,
       billing: {
         first_name: userStore.data?.first_name,
         last_name: userStore.data?.last_name,

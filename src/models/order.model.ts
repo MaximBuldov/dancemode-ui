@@ -5,13 +5,13 @@ export interface IOrder {
   payment_method?: IPaymentMethod;
   coupon_lines?: { code: string, discount?: string }[];
   billing?: IBilling,
-  shipping?: IBilling
+  shipping?: IBilling,
+  status: IOrderStatus;
 }
 
 export interface IROrder extends IOrder {
   id: number;
   customer_name: string;
-  status: IOrderStatus;
   date: string;
   date_created: string;
   total: string;
@@ -42,13 +42,15 @@ export interface IMetaData {
 
 export enum IStatus {
   CONFIRM = 'confirm',
-  CANCEL = 'cancel'
+  CANCEL = 'cancel',
+  WAIT_LIST = 'wait_list'
 }
 
 export enum IOrderStatus {
   COMPLETED = 'completed',
   PENDING = 'pending',
-  CANCELLED = 'cancelled'
+  CANCELLED = 'cancelled',
+  PROCESSING = 'processing'
 }
 
 export enum IStatusValue {

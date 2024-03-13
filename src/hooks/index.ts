@@ -6,3 +6,4 @@ export * from './useProductStatusUpdate';
 export * from './useCreateOrder';
 export * from './useUpdateOrder';
 export * from './useDeleteOrder';
+export * from './useUpdateProduct';

@@ -9,7 +9,7 @@ export interface IUpdate {
   id: string | number
 }
 
-export interface IFilters extends Partial<IOrder> {
+export interface IFilters {
   page?: number,
   per_page?: number,
   customer_id?: number,
@@ -22,7 +22,7 @@ export interface IFilters extends Partial<IOrder> {
 const _fields = 'id,status,date_created,total,customer_id,line_items,customer_name,payment_method,note,coupon_lines,group';
 
 class OrderService {
-  async create(data: IOrder) {
+  async create(data: Partial<IOrder>) {
     try {
       const res = await $wc.post('/wc/v3/orders', data, { params: { _fields } });
       return res.data as IROrder;
