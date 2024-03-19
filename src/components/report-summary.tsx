@@ -30,19 +30,36 @@ export const ReportSummary = ({ reports }: IReportSummaryProps) => {
     totalCosts += costs?.reduce((acc, item) => acc + Number(item.sum), 0) || 0;
   });
 
+  const repCount = reports.length;
+
   return (
-    <Row style={{ backgroundColor: '#fafafa' }}>
-      <Cell index={0} />
-      <Cell index={1}><b>Total:</b></Cell>
-      <Cell align="center" index={2}>${totalRev}</Cell>
-      <Cell align="center" index={3}>${Math.round(totalCosts)}</Cell>
-      <Cell align="center" index={4}>${totalProf}</Cell>
-      <Cell align="center" index={5}>{totalStu}</Cell>
-      <Cell align="center" index={6}>${totalCash}</Cell>
-      <Cell align="center" index={7}>${totalCard}</Cell>
-      <Cell align="center" index={8}>${totalCoup}</Cell>
-      <Cell align="center" index={9}>{totalBeg}</Cell>
-      <Cell align="center" index={10}>{totalAdv}</Cell>
-    </Row>
+    <>
+      <Row key={1} style={{ backgroundColor: '#fafafa' }}>
+        <Cell index={0} />
+        <Cell index={1}><b>Total:</b></Cell>
+        <Cell align="center" index={2}>${totalRev}</Cell>
+        <Cell align="center" index={3}>${Math.round(totalCosts)}</Cell>
+        <Cell align="center" index={4}>{totalStu}</Cell>
+        <Cell align="center" index={5}>${totalProf}</Cell>
+        <Cell align="center" index={6}>${totalCash}</Cell>
+        <Cell align="center" index={7}>${totalCard}</Cell>
+        <Cell align="center" index={8}>${totalCoup}</Cell>
+        <Cell align="center" index={9}>{totalBeg}</Cell>
+        <Cell align="center" index={10}>{totalAdv}</Cell>
+      </Row>
+      <Row key={2} style={{ backgroundColor: '#fafafa' }}>
+        <Cell index={0} />
+        <Cell index={1}><b>Average:</b></Cell>
+        <Cell align="center" index={2}>${totalRev / repCount}</Cell>
+        <Cell align="center" index={3}>${Math.round(totalCosts) / repCount}</Cell>
+        <Cell align="center" index={4}>{totalStu / repCount}</Cell>
+        <Cell align="center" index={5}>${totalProf / repCount}</Cell>
+        <Cell align="center" index={6}>${totalCash / repCount}</Cell>
+        <Cell align="center" index={7}>${totalCard / repCount}</Cell>
+        <Cell align="center" index={8}>${totalCoup / repCount}</Cell>
+        <Cell align="center" index={9}>{totalBeg / repCount}</Cell>
+        <Cell align="center" index={10}>{totalAdv / repCount}</Cell>
+      </Row>
+    </>
   );
 };
