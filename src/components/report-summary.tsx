@@ -49,7 +49,7 @@ export const ReportSummary = ({ reports }: IReportSummaryProps) => {
       </Row>
       <Row key={2} style={{ backgroundColor: '#fafafa' }}>
         <Cell index={0} />
-        <Cell index={1}><b>Average:</b></Cell>
+        <Cell index={1}><b>Avg:</b></Cell>
         <Cell align="center" index={2}>${totalRev / repCount}</Cell>
         <Cell align="center" index={3}>${Math.round(totalCosts) / repCount}</Cell>
         <Cell align="center" index={4}>{totalStu / repCount}</Cell>
