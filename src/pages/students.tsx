@@ -13,7 +13,7 @@ const columns: ColumnsType<IRUser> = [
   { title: 'Reg', key: 'reg', dataIndex: ['date_created'], render: (el) => dayjs(el).format('MM/DD/YY') }
 ];
 
-const pageSize = 13;
+const pageSize = 10;
 
 export const Students = () => {
   const [page, setPage] = useState(1);

@@ -11,7 +11,7 @@ import { orderService } from 'services';
 
 const enum PERPAGE {
   FULL = 100,
-  SMALL = 13
+  SMALL = 10
 };
 
 export const Orders = () => {
