@@ -51,7 +51,7 @@ export const ReportSummary = ({ reports }: IReportSummaryProps) => {
         <Cell index={0} />
         <Cell index={1}><b>Avg:</b></Cell>
         <Cell align="center" index={2}>${Math.round(totalRev / repCount)}</Cell>
-        <Cell align="center" index={3}>${Math.round(totalCosts) / repCount}</Cell>
+        <Cell align="center" index={3}>${Math.round(totalCosts / repCount)}</Cell>
         <Cell align="center" index={4}>{Math.round(totalStu / repCount)}</Cell>
         <Cell align="center" index={5}>${Math.round(totalProf / repCount)}</Cell>
         <Cell align="center" index={6}>${Math.round(totalCash / repCount)}</Cell>
