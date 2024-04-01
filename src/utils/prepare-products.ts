@@ -1,13 +1,10 @@
 import { ICreateProductsForm, NameOfClass } from 'models';
 import dayjs from 'dayjs';
 
-import { getAllMondaysInRange } from './get-all-mondays';
-
 export function prepareProducts(values: ICreateProductsForm) {
-  const allMondays = getAllMondaysInRange(values.startMonth, values.endMonth);
   const products = [];
 
-  for (const date of allMondays) {
+  for (const date of values.dates) {
     for (const el of values.classes) {
       products.push({
         name: el.label,

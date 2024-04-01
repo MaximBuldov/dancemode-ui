@@ -18,20 +18,3 @@ export function getAllMondaysOfMonth(currentDate: Dayjs) {
 
   return mondays;
 }
-
-export function getAllMondaysInRange(startMonth: string, endMonth: string) {
-  const mondaysInRange = [];
-  const start = dayjs(startMonth);
-  const end = dayjs(endMonth);
-
-  if (start.isSame(end)) {
-    mondaysInRange.push(...getAllMondaysOfMonth(start));
-  } else {
-    for (let month = start; month.isSame(end, 'month') || month.isBefore(end, 'month'); month = month.add(1, 'month')) {
-      const mondaysInMonth = getAllMondaysOfMonth(month);
-      mondaysInRange.push(...mondaysInMonth);
-    }
-  }
-
-  return mondaysInRange;
-}

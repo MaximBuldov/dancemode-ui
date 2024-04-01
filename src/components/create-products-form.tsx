@@ -1,8 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { Button, Form, Input, Select } from 'antd';
+import { Button, DatePicker, Form, Select } from 'antd';
 import dayjs from 'dayjs';
 import { IKeys, IProduct, catOptions } from 'models';
-import { useMemo, useState } from 'react';
 import { productService } from 'services';
 import { prepareProducts } from 'utils';
 
@@ -14,9 +13,6 @@ const { useForm, Item } = Form;
 
 export const CreateProductsForm = ({ closeModal }: CreateProductsFormProps) => {
   const [form] = useForm();
-  const minMonth = useMemo(() => dayjs().format('YYYY-MM'), []);
-  const maxMonth = useMemo(() => dayjs().add(6, 'month').format('YYYY-MM'), []);
-  const [updatedMonth, setMinMonth] = useState(minMonth);
   const client = useQueryClient();
   const { mutate, isPending } = useMutation({
     mutationFn: productService.createMany,
@@ -37,26 +33,13 @@ export const CreateProductsForm = ({ closeModal }: CreateProductsFormProps) => {
     >
 
       <Item
-        label="Start month"
-        name="startMonth"
+        label="Dates"
+        name="dates"
       >
-        <Input
-          type="month"
+        <DatePicker
           placeholder="Start month"
-          min={minMonth}
-          max={maxMonth}
-          onChange={(event) => setMinMonth(event.target.value)}
-        />
-      </Item>
-      <Item
-        label="End month"
-        name="endMonth"
-      >
-        <Input
-          type="month"
-          placeholder="End month"
-          min={updatedMonth}
-          max={maxMonth}
+          minDate={dayjs()}
+          multiple
         />
       </Item>
       <Item

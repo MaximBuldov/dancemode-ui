@@ -1,4 +1,4 @@
-import dayjs from 'dayjs';
+import { Dayjs } from 'dayjs';
 
 import { IUser } from './user.model';
 
@@ -10,13 +10,12 @@ export interface ILoginForm {
 export type ISignupForm = IUser & ILoginForm & { confirm: string };
 
 export interface ICreateProductsForm {
-  startMonth: string;
-  endMonth: string;
+  dates: Dayjs[];
   classes: ICategoryOption[];
 }
 
 export interface ICreateSingleProductsForm {
-  date_time?: dayjs.Dayjs | string,
+  date_time?: Dayjs | string,
   name?: string,
   regular_price?: string,
   category?: ICategoryOption,
