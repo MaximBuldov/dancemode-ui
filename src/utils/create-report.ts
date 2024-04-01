@@ -27,6 +27,7 @@ export const createReport = (arr: IROrder[]): IReport[] => {
     acc[key].beg += order.line_items.filter(el => el.name === NameOfClass.BEGINNER).length;
     acc[key].adv += order.line_items.filter(el => el.name === NameOfClass.ADV).length;
     acc[key].students = acc[key].adv + acc[key].beg;
+    acc[key].costs = [];
 
     return acc;
   }, {}));
