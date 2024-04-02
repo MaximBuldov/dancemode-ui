@@ -41,6 +41,11 @@ export const DayCard = observer(({ day, classes }: DayCardProps) => {
   );
 
   function renderTitle() {
-    return <Typography.Text delete={isExpired} disabled={isJaneCanceled}>{dayjs(day).format('MMMM D')}</Typography.Text>;
+    return <Typography.Text
+      delete={isExpired}
+      disabled={isJaneCanceled}
+    >
+      {dayjs(day).format('MMMM D - dddd')}
+    </Typography.Text>;
   }
 });

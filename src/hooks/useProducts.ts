@@ -14,7 +14,7 @@ export const useProducts = (day: dayjs.Dayjs) => {
 
   const products = useQuery({
     queryKey: [IKeys.PRODUCTS, { month }],
-    queryFn: () => productService.getAll({ month }),
+    queryFn: () => productService.getAll({ month, per_page: 20 }),
     enabled: userStore.isAuth
   });
 

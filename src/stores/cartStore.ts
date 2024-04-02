@@ -1,8 +1,7 @@
-import dayjs from 'dayjs';
+import dayjs, { Dayjs } from 'dayjs';
 import { makeAutoObservable } from 'mobx';
 import { makePersistable } from 'mobx-persist-store';
 import { ICoupon, IProduct } from 'models';
-import { getAllMondaysOfMonth } from 'utils';
 
 class CartStore {
   data: IProduct[] = [];
@@ -141,12 +140,12 @@ class CartStore {
   }
 
   private checkSale(data: IProduct, action: boolean) {
-    const mondays = getAllMondaysOfMonth(dayjs(data.date_time));
+    const allDaysInMonth = this.getAllDaysOfMonth(dayjs(data.date_time));
     const classes = action ? [...this.data, data] : this.data;
-    const isWholeMonth = mondays.every(mon => classes.some(cls => cls.name === data.name && dayjs(cls.date_time).isSame(mon, 'day')));
+    const isWholeMonth = allDaysInMonth.every(day => classes.some(cls => cls.name === data.name && dayjs(cls.date_time).isSame(day, 'day')));
 
     if (action && isWholeMonth) {
-      this.data = classes.map(el => el.name === data.name && dayjs(el.date_time).isSame(data.date_time, 'month') ? ({
+      this.data = classes.map(el => el.name === data.name && dayjs(el.date_time).isSame(data.date_time, 'month') && dayjs(el.date_time).day() === dayjs(data.date_time).day() ? ({
         ...el,
         total: '20'
       }) : el);
@@ -155,7 +154,7 @@ class CartStore {
 
     if (!action && !isWholeMonth) {
       this.data = classes.map(el => {
-        if (el.name === data.name && dayjs(el.date_time).isSame(data.date_time, 'month')) {
+        if (el.name === data.name && dayjs(el.date_time).isSame(data.date_time, 'month') && dayjs(el.date_time).day() === dayjs(data.date_time).day()) {
           const { total, ...rest } = el;
           return rest;
         } else {
@@ -173,6 +172,26 @@ class CartStore {
       const price = el[prop] ? Number(el[prop]) : Number((el as IProduct).price);
       return acc + price;
     }, 0);
+  }
+
+  private getAllDaysOfMonth(currentDate: Dayjs) {
+    const dayOfWeek = currentDate.day();
+    const firstDayOfMonth = currentDate.startOf('month');
+
+    let firstDay = firstDayOfMonth.day(dayOfWeek);
+
+    if (firstDay.month() !== firstDayOfMonth.month()) {
+      firstDay = firstDay.add(7, 'day');
+    }
+
+    const days = [];
+
+    while (firstDay.month() === currentDate.month()) {
+      days.push(firstDay);
+      firstDay = firstDay.add(7, 'day');
+    }
+
+    return days;
   }
 
 }
