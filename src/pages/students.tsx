@@ -27,7 +27,7 @@ export const Students = () => {
       order: 'desc',
       page
     }),
-    queryKey: [IKeys.CUSTOMERS, { name: debouncedSearch }],
+    queryKey: [IKeys.CUSTOMERS, { name: debouncedSearch, page }],
     staleTime: 1000 * 60
   });
 
