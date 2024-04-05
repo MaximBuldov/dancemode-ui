@@ -1,11 +1,11 @@
 import { Button, Form, Input, Select } from 'antd';
-import { Categories, ICreateSingleProductsForm, catOptions } from 'models';
+import { Categories, IProduct, catOptions } from 'models';
 import { useState } from 'react';
 
 interface CreateSingleProductFormProps {
-  onFinish: (values: ICreateSingleProductsForm) => void,
+  onFinish: (values: Partial<IProduct>) => void,
   isPending: boolean,
-  initialValues?: ICreateSingleProductsForm
+  initialValues?: Partial<IProduct>
 }
 
 const { useForm, Item } = Form;
@@ -15,7 +15,7 @@ export const ProductForm = ({ onFinish, isPending, initialValues }: CreateSingle
   const [form] = useForm();
 
   return (
-    <Form<ICreateSingleProductsForm>
+    <Form<Partial<IProduct>>
       form={form}
       onFinish={(values) => {
         onFinish(values);

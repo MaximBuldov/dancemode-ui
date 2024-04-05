@@ -10,19 +10,12 @@ export interface ILoginForm {
 export type ISignupForm = IUser & ILoginForm & { confirm: string };
 
 export interface ICreateProductsForm {
-  dates: Dayjs[];
-  classes: ICategoryOption[];
-}
-
-export interface ICreateSingleProductsForm {
-  date_time?: Dayjs | string,
+  dates: Dayjs[],
+  classes: ICategoryOption[],
   name?: string,
   regular_price?: string,
-  category?: ICategoryOption,
-  categories?: { id?: number }[],
-  stock_quantity?: number
+  stock_quantity?: string
 }
-
 export interface ICategoryOption {
   label: string,
   value: number

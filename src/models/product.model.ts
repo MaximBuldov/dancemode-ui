@@ -15,6 +15,7 @@ export interface IProduct {
   paid: number[];
   pending: number[];
   wait_list: number[];
+  regular_price?: string;
 }
 
 export interface ICartProduct extends IProduct {
