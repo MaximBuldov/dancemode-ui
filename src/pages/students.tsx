@@ -22,7 +22,9 @@ export const Students = () => {
   const { data, isPending } = useQuery({
     queryFn: () => userService.getCustomers({
       search: debouncedSearch,
-      per_page: 100
+      per_page: pageSize,
+      orderby: 'registered_date',
+      order: 'desc'
     }),
     queryKey: [IKeys.CUSTOMERS, { name: debouncedSearch }],
     staleTime: 1000 * 60
