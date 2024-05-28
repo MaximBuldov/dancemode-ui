@@ -76,7 +76,7 @@ export const CreateCoupon = () => {
           <Input type="date" min={dayjs().format('YYYY-MM-DD')} />
         </Item>
         <Item
-          name="excluded_product_categories"
+          name="exc_cat"
           style={style}
           label="Exclude categories"
         >

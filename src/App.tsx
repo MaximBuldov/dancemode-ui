@@ -3,7 +3,7 @@ import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import { userStore } from 'stores';
 import { ErrorPage, Home } from 'pages';
 import { useSwipeable } from 'react-swipeable';
-import { QueryCache, QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { MutationCache, QueryCache, QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useError } from 'hooks';
 import { AxiosError } from 'axios';
 import { IResponseError } from 'models';
@@ -22,6 +22,11 @@ const App = observer(() => {
     queryCache: new QueryCache({
       onError: (error, query) => {
         onErrorFn(error as AxiosError<IResponseError>, query.meta?.errorMessage as string);
+      }
+    }),
+    mutationCache: new MutationCache({
+      onError: (error) => {
+        onErrorFn(error as AxiosError<IResponseError>);
       }
     })
   });

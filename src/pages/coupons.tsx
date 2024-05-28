@@ -11,7 +11,7 @@ const columns: ColumnsType<ICoupon> = [
     title: 'Coupon', key: 'coupon', dataIndex: 'code',
     render: (el: string) => <Typography.Text copyable>{el.toUpperCase()}</Typography.Text>
   },
-  { title: 'Ex. groups', key: 'groups', dataIndex: 'excluded_product_categories', render: (el) => getCatName(el).map(group => <Tag key={group} color="purple">{group}</Tag>) },
+  { title: 'Ex. groups', key: 'groups', dataIndex: 'exc_cat', render: (el) => getCatName(el).map(group => <Tag key={group} color="purple">{group}</Tag>) },
   { title: 'Expiry day', dataIndex: 'date_expires', key: 'date_expires', render: (el) => dayjs(el).format('MMM D') }
 ];
 

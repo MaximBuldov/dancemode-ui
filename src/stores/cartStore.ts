@@ -53,7 +53,7 @@ class CartStore {
   };
 
   isExludedCat(coupon: ICoupon) {
-    return this.data.every(el => el.categories[0].id === coupon.excluded_product_categories[0]);
+    return this.data.every(el => el.categories[0].id === coupon.exc_cat[0]);
   };
 
   checkCouponEligibility(userId: number, coupon: ICoupon) {
@@ -62,7 +62,7 @@ class CartStore {
     }
 
     const totalCostExcluded = this.data.reduce((acc, el) => {
-      if (el.categories[0].id === coupon.excluded_product_categories[0]) {
+      if (el.categories[0].id === coupon.exc_cat[0]) {
         return acc;
       } else {
         return acc += parseFloat(el.price);
@@ -73,7 +73,7 @@ class CartStore {
     }
 
     // Шаг 4: Проверка на один купон с категориями исключения
-    if (coupon.excluded_product_categories.length > 0 && this.coupons.some(item => item.excluded_product_categories.length > 0)) {
+    if (coupon.exc_cat.length > 0 && this.coupons.some(item => item.exc_cat.length > 0)) {
       return { success: false, message: 'You cannot use coupons for different groups at the same time' };
     }
 
