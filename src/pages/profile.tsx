@@ -13,7 +13,6 @@ export const Profile = () => {
   const { mutate, isPending } = useMutation({
     mutationFn: userService.update,
     onSuccess: (_, values) => {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { password, confirm, ...data } = values;
       userStore.updateUser(data);
       messageApi.open({

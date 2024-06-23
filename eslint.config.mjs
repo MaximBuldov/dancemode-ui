@@ -47,6 +47,7 @@ export default tseslint.config(
       'prefer-const': 'error',
       'no-console': 'warn',
       'prettier/prettier': ['warn', { endOfLine: 'auto' }],
+      '@typescript-eslint/no-unused-vars': 'off',
       '@typescript-eslint/no-explicit-any': 'off',
       'no-useless-catch': 'off'
     }

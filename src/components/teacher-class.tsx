@@ -7,10 +7,10 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   Button,
   Col,
+  Drawer,
   Dropdown,
   Flex,
   MenuProps,
-  Modal,
   Row,
   Space,
   Spin,
@@ -230,11 +230,11 @@ export const TeacherClass = observer(({ product }: TeacherClassProps) => {
           )}
         </Space>
       )}
-      <Modal
+      <Drawer
         title="Edit class"
         open={modal}
         footer={false}
-        onCancel={() => setModal(false)}
+        onClose={() => setModal(false)}
       >
         <ProductForm
           onFinish={(values) => updateProduct.mutate(values)}
@@ -246,7 +246,7 @@ export const TeacherClass = observer(({ product }: TeacherClassProps) => {
             stock_quantity: product.stock_quantity
           }}
         />
-      </Modal>
+      </Drawer>
     </Spin>
   );
 });

@@ -188,7 +188,6 @@ class CartStore {
           dayjs(el.date_time).isSame(data.date_time, 'month') &&
           dayjs(el.date_time).day() === dayjs(data.date_time).day()
         ) {
-          // eslint-disable-next-line @typescript-eslint/no-unused-vars
           const { total, ...rest } = el;
           return rest;
         } else {
