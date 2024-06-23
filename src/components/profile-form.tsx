@@ -1,8 +1,13 @@
-import { InstagramOutlined, LockOutlined, MailOutlined, PhoneOutlined, UserOutlined } from '@ant-design/icons';
+import {
+  InstagramOutlined,
+  LockOutlined,
+  MailOutlined,
+  PhoneOutlined,
+  UserOutlined
+} from '@ant-design/icons';
 import { Button, Form, Input, Typography } from 'antd';
 import dayjs from 'dayjs';
 import { ISignupForm, IUser } from 'models';
-import React from 'react';
 
 interface ProfileFormProps {
   title: string;
@@ -27,7 +32,15 @@ const labelsConfig = {
   dob: 'Date of Birthday'
 };
 
-export const ProfileForm = ({ title, onSubmit, isPending, isLabels, submitButton, initialValues, isRequired }: ProfileFormProps) => {
+export const ProfileForm = ({
+  title,
+  onSubmit,
+  isPending,
+  isLabels,
+  submitButton,
+  initialValues,
+  isRequired
+}: ProfileFormProps) => {
   const [form] = useForm();
 
   const label = (text: string) => {
@@ -38,7 +51,16 @@ export const ProfileForm = ({ title, onSubmit, isPending, isLabels, submitButton
     return !isLabels ? text : '';
   };
 
-  const { firstName, lastName, email, phone, instagram, password, confirmPassword, dob } = labelsConfig;
+  const {
+    firstName,
+    lastName,
+    email,
+    phone,
+    instagram,
+    password,
+    confirmPassword,
+    dob
+  } = labelsConfig;
 
   return (
     <>
@@ -48,14 +70,23 @@ export const ProfileForm = ({ title, onSubmit, isPending, isLabels, submitButton
         name="signup"
         onFinish={onSubmit}
         layout="vertical"
-        initialValues={initialValues ?
-          { ...initialValues, acf: { ...initialValues.acf, dob: dayjs(initialValues.acf.dob).format('YYYY-MM-DD') } } :
-          undefined
+        initialValues={
+          initialValues
+            ? {
+                ...initialValues,
+                acf: {
+                  ...initialValues.acf,
+                  dob: dayjs(initialValues.acf.dob).format('YYYY-MM-DD')
+                }
+              }
+            : undefined
         }
       >
         <Item
           name="first_name"
-          rules={[{ required: isRequired, message: 'Please input your first name!' }]}
+          rules={[
+            { required: isRequired, message: 'Please input your first name!' }
+          ]}
         >
           <Input
             addonBefore={label(firstName)}
@@ -65,7 +96,9 @@ export const ProfileForm = ({ title, onSubmit, isPending, isLabels, submitButton
         </Item>
         <Item
           name="last_name"
-          rules={[{ required: isRequired, message: 'Please input your last name!' }]}
+          rules={[
+            { required: isRequired, message: 'Please input your last name!' }
+          ]}
         >
           <Input
             addonBefore={label(lastName)}
@@ -75,7 +108,12 @@ export const ProfileForm = ({ title, onSubmit, isPending, isLabels, submitButton
         </Item>
         <Item
           name={['acf', 'dob']}
-          rules={[{ required: isRequired, message: 'Please input your date of birthday!' }]}
+          rules={[
+            {
+              required: isRequired,
+              message: 'Please input your date of birthday!'
+            }
+          ]}
         >
           <Input
             addonBefore="Date of Birthday"
@@ -99,10 +137,13 @@ export const ProfileForm = ({ title, onSubmit, isPending, isLabels, submitButton
         </Item>
         <Item
           name={['acf', 'billing_phone']}
-          rules={[{ required: isRequired, message: 'Please input your phone!' }, {
-            min: 10,
-            message: 'Please enter correct phone number'
-          }]}
+          rules={[
+            { required: isRequired, message: 'Please input your phone!' },
+            {
+              min: 10,
+              message: 'Please enter correct phone number'
+            }
+          ]}
         >
           <Input
             maxLength={10}
@@ -113,7 +154,9 @@ export const ProfileForm = ({ title, onSubmit, isPending, isLabels, submitButton
         </Item>
         <Item
           name={['acf', 'instagram']}
-          rules={[{ required: isRequired, message: 'Please input your instagram!' }]}
+          rules={[
+            { required: isRequired, message: 'Please input your instagram!' }
+          ]}
         >
           <Input
             addonBefore={label(instagram)}
@@ -155,7 +198,9 @@ export const ProfileForm = ({ title, onSubmit, isPending, isLabels, submitButton
                 if (!value || getFieldValue('password') === value) {
                   return Promise.resolve();
                 }
-                return Promise.reject(new Error('The new password that you entered do not match!'));
+                return Promise.reject(
+                  new Error('The new password that you entered do not match!')
+                );
               }
             })
           ]}
@@ -166,12 +211,7 @@ export const ProfileForm = ({ title, onSubmit, isPending, isLabels, submitButton
             prefix={<LockOutlined />}
           />
         </Item>
-        <Button
-          type="primary"
-          htmlType="submit"
-          block
-          loading={isPending}
-        >
+        <Button type="primary" htmlType="submit" block loading={isPending}>
           {submitButton}
         </Button>
       </Form>

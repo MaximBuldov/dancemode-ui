@@ -12,7 +12,7 @@ const enum FILTERNAME {
 }
 
 interface FilterOrdersFormProps {
-  setFilters: (data: IFilters) => void
+  setFilters: (data: IFilters) => void;
 }
 
 export const FilterOrdersForm = ({ setFilters }: FilterOrdersFormProps) => {
@@ -22,7 +22,11 @@ export const FilterOrdersForm = ({ setFilters }: FilterOrdersFormProps) => {
   const users = useQuery({
     queryFn: () => userService.getCustomers({ per_page: 100 }),
     queryKey: [IKeys.CUSTOMERS],
-    select: ({ data }) => data.map(el => ({ value: el.id, label: `${el.first_name} ${el.last_name}` }))
+    select: ({ data }) =>
+      data.map((el) => ({
+        value: el.id,
+        label: `${el.first_name} ${el.last_name}`
+      }))
   });
 
   return (
@@ -30,8 +34,12 @@ export const FilterOrdersForm = ({ setFilters }: FilterOrdersFormProps) => {
       form={form}
       onFinish={(values) => {
         if (values?.month) {
-          values['before'] = values.month.endOf('month').format('YYYY-MM-DDTHH:mm:ss');
-          values['after'] = values.month.startOf('month').format('YYYY-MM-DDTHH:mm:ss');
+          values['before'] = values.month
+            .endOf('month')
+            .format('YYYY-MM-DDTHH:mm:ss');
+          values['after'] = values.month
+            .startOf('month')
+            .format('YYYY-MM-DDTHH:mm:ss');
           delete values.month;
         }
         if (values?.date) {
@@ -60,11 +68,7 @@ export const FilterOrdersForm = ({ setFilters }: FilterOrdersFormProps) => {
         </Item>
       </Space>
       <Space>
-        <Button
-          type="primary"
-          htmlType="submit"
-          loading={users.isPending}
-        >
+        <Button type="primary" htmlType="submit" loading={users.isPending}>
           Submit
         </Button>
         <Button
@@ -77,6 +81,6 @@ export const FilterOrdersForm = ({ setFilters }: FilterOrdersFormProps) => {
           Reset
         </Button>
       </Space>
-    </Form >
+    </Form>
   );
 };

@@ -12,11 +12,7 @@ export const Price = (props: PriceProps) => {
 
   return (
     <>
-      <Typography.Link
-        strong={!isSale}
-        delete={!!isSale}
-        disabled={!!isSale}
-      >
+      <Typography.Link strong={!isSale} delete={!!isSale} disabled={!!isSale}>
         ${subtotal}
       </Typography.Link>
       {!!isSale && (

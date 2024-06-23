@@ -1,13 +1,30 @@
-import { CaretRightOutlined, CloseCircleOutlined, MoreOutlined } from '@ant-design/icons';
+import {
+  CaretRightOutlined,
+  CloseCircleOutlined,
+  MoreOutlined
+} from '@ant-design/icons';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { MenuProps, Typography, Dropdown, Col, Row, Spin, Tag, Space, Modal, Table, Flex, Button } from 'antd';
+import {
+  Button,
+  Col,
+  Dropdown,
+  Flex,
+  MenuProps,
+  Modal,
+  Row,
+  Space,
+  Spin,
+  Table,
+  Tag,
+  Typography
+} from 'antd';
+import { ColumnsType } from 'antd/es/table';
+import { AxiosResponse } from 'axios';
 import dayjs from 'dayjs';
 import { observer } from 'mobx-react-lite';
 import { IKeys, IProduct, IRUser, IStatus, IUserWithStatus } from 'models';
 import { Key, useMemo, useState } from 'react';
 import { productService } from 'services';
-import { ColumnsType } from 'antd/es/table';
-import { AxiosResponse } from 'axios';
 
 import { ProductForm } from './product-form';
 
@@ -23,24 +40,31 @@ export const TeacherClass = observer(({ product }: TeacherClassProps) => {
   const [modal, setModal] = useState(false);
   const [customersTable, openCustomersTable] = useState(false);
   const [selectedRows, setSelectedRows] = useState<Key[]>([]);
-  const allCustomers = client.getQueryData<AxiosResponse<IRUser[]>>([IKeys.CUSTOMERS])?.data;
+  const allCustomers = client.getQueryData<AxiosResponse<IRUser[]>>([
+    IKeys.CUSTOMERS
+  ])?.data;
 
   const customers = useMemo(() => {
     const paidCustomersId = [...paid, ...pending, ...wait_list];
-    return allCustomers?.reduce((res: IUserWithStatus[], customer) => {
-      const id = customer.id;
-      if (paidCustomersId.includes(id)) {
-        res.push({
-          ...customer,
-          paid: paid.includes(id),
-          status: confirm.includes(id) ? IStatus.CONFIRM :
-            cancel.includes(id) ? IStatus.CANCEL :
-              wait_list.includes(id) ? IStatus.WAIT_LIST :
-                undefined
-        });
-      }
-      return res;
-    }, []) || [];
+    return (
+      allCustomers?.reduce((res: IUserWithStatus[], customer) => {
+        const id = customer.id;
+        if (paidCustomersId.includes(id)) {
+          res.push({
+            ...customer,
+            paid: paid.includes(id),
+            status: confirm.includes(id)
+              ? IStatus.CONFIRM
+              : cancel.includes(id)
+                ? IStatus.CANCEL
+                : wait_list.includes(id)
+                  ? IStatus.WAIT_LIST
+                  : undefined
+          });
+        }
+        return res;
+      }, []) || []
+    );
   }, [allCustomers, cancel, confirm, paid, pending, wait_list]);
 
   const updateProduct = useMutation({
@@ -48,7 +72,10 @@ export const TeacherClass = observer(({ product }: TeacherClassProps) => {
     onSuccess: (data) => {
       client.setQueryData(
         [IKeys.PRODUCTS, { month: classTime.format('YYYY-MM') }],
-        (products: IProduct[] | undefined) => products ? products.map(el => el.id === data.id ? data : el) : products
+        (products: IProduct[] | undefined) =>
+          products
+            ? products.map((el) => (el.id === data.id ? data : el))
+            : products
       );
       setModal(false);
       setSelectedRows([]);
@@ -60,7 +87,8 @@ export const TeacherClass = observer(({ product }: TeacherClassProps) => {
     onSuccess: (data) => {
       client.setQueryData(
         [IKeys.PRODUCTS, { month: classTime.format('YYYY-MM') }],
-        (products: IProduct[] | undefined) => products ? products.filter(el => el.id !== data.id) : products
+        (products: IProduct[] | undefined) =>
+          products ? products.filter((el) => el.id !== data.id) : products
       );
       setModal(false);
     }
@@ -71,7 +99,8 @@ export const TeacherClass = observer(({ product }: TeacherClassProps) => {
       {
         label: product.is_canceled ? 'Undo cancel' : 'Cancel',
         key: 'cancel',
-        onClick: () => updateProduct.mutate({ is_canceled: !product.is_canceled })
+        onClick: () =>
+          updateProduct.mutate({ is_canceled: !product.is_canceled })
       },
       {
         label: 'Edit',
@@ -125,12 +154,12 @@ export const TeacherClass = observer(({ product }: TeacherClassProps) => {
 
     if (status === IStatus.CONFIRM) {
       newConfirm = new Set([...confirm, ...selectedRows]);
-      newCancel = cancel.filter(el => !selectedRows.includes(el));
+      newCancel = cancel.filter((el) => !selectedRows.includes(el));
     }
 
     if (status === IStatus.CANCEL) {
       newCancel = new Set([...cancel, ...selectedRows]);
-      newConfirm = confirm.filter(el => !selectedRows.includes(el));
+      newConfirm = confirm.filter((el) => !selectedRows.includes(el));
     }
 
     updateProduct.mutate({
@@ -142,13 +171,18 @@ export const TeacherClass = observer(({ product }: TeacherClassProps) => {
   return (
     <Spin spinning={updateProduct.isPending || deleteProduct.isPending}>
       <Row justify="space-between">
-        <Col onClick={() => openCustomersTable(prev => !prev)}>
+        <Col onClick={() => openCustomersTable((prev) => !prev)}>
           <Space>
             {<CaretRightOutlined rotate={customersTable ? 90 : 0} />}
             <Typography>
-              {product.name}: {classTime.format('ha')} ({confirm.length}/{customers.length})
+              {product.name}: {classTime.format('ha')} ({confirm.length}/
+              {customers.length})
             </Typography>
-            {product.is_canceled && <Tag icon={<CloseCircleOutlined />} color="error">Canceled</Tag>}
+            {product.is_canceled && (
+              <Tag icon={<CloseCircleOutlined />} color="error">
+                Canceled
+              </Tag>
+            )}
           </Space>
         </Col>
         {!isExpired && (
@@ -182,12 +216,16 @@ export const TeacherClass = observer(({ product }: TeacherClassProps) => {
               <Button
                 type="primary"
                 onClick={() => updateCustomersStatus(IStatus.CONFIRM)}
-              >Confirm</Button>
+              >
+                Confirm
+              </Button>
               <Button
                 type="primary"
                 danger
                 onClick={() => updateCustomersStatus(IStatus.CANCEL)}
-              >Cancel</Button>
+              >
+                Cancel
+              </Button>
             </Flex>
           )}
         </Space>

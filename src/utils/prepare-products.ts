@@ -1,5 +1,5 @@
-import { ICreateProductsForm, NameOfClass } from 'models';
 import dayjs from 'dayjs';
+import { ICreateProductsForm, NameOfClass } from 'models';
 
 export function prepareProducts(values: ICreateProductsForm) {
   const products = [];
@@ -13,7 +13,10 @@ export function prepareProducts(values: ICreateProductsForm) {
         meta_data: [
           {
             key: 'date_time',
-            value: dayjs(date).hour(el.label === NameOfClass.BEGINNER ? 19 : 20).minute(0).format('YYYY-MM-DD HH:mm')
+            value: dayjs(date)
+              .hour(el.label === NameOfClass.BEGINNER ? 19 : 20)
+              .minute(0)
+              .format('YYYY-MM-DD HH:mm')
           }
         ]
       });

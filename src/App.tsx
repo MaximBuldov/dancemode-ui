@@ -1,15 +1,20 @@
-import { observer } from 'mobx-react-lite';
-import { RouterProvider, createBrowserRouter } from 'react-router-dom';
-import { userStore } from 'stores';
-import { ErrorPage, Home } from 'pages';
-import { useSwipeable } from 'react-swipeable';
-import { MutationCache, QueryCache, QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { useError } from 'hooks';
+import {
+  MutationCache,
+  QueryCache,
+  QueryClient,
+  QueryClientProvider
+} from '@tanstack/react-query';
 import { AxiosError } from 'axios';
+import { useError } from 'hooks';
+import { observer } from 'mobx-react-lite';
 import { IResponseError } from 'models';
+import { ErrorPage, Home } from 'pages';
+import { RouterProvider, createBrowserRouter } from 'react-router-dom';
+import { useSwipeable } from 'react-swipeable';
+import { userStore } from 'stores';
 
-import { adminRoutes, publicRoutes, userRoutes } from './routes';
 import { Template } from './components';
+import { adminRoutes, publicRoutes, userRoutes } from './routes';
 
 const App = observer(() => {
   const { onErrorFn, contextHolder } = useError();
@@ -21,7 +26,10 @@ const App = observer(() => {
     },
     queryCache: new QueryCache({
       onError: (error, query) => {
-        onErrorFn(error as AxiosError<IResponseError>, query.meta?.errorMessage as string);
+        onErrorFn(
+          error as AxiosError<IResponseError>,
+          query.meta?.errorMessage as string
+        );
       }
     }),
     mutationCache: new MutationCache({
@@ -31,9 +39,11 @@ const App = observer(() => {
     })
   });
 
-  const routes = userStore.isAuth ?
-    userStore.isAdmin ? adminRoutes : userRoutes :
-    publicRoutes;
+  const routes = userStore.isAuth
+    ? userStore.isAdmin
+      ? adminRoutes
+      : userRoutes
+    : publicRoutes;
   const router = createBrowserRouter([
     {
       path: '/',
@@ -64,4 +74,3 @@ const App = observer(() => {
 });
 
 export default App;
-

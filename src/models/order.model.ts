@@ -3,9 +3,9 @@ export interface IOrder {
   line_items: IOrderProduct[];
   meta_data?: IMetaData[];
   payment_method?: IPaymentMethod;
-  coupon_lines?: { code: string, discount?: string }[];
-  billing?: IBilling,
-  shipping?: IBilling,
+  coupon_lines?: { code: string; discount?: string }[];
+  billing?: IBilling;
+  shipping?: IBilling;
   status: IOrderStatus;
 }
 
@@ -64,8 +64,8 @@ export interface IPaymentIntent {
 }
 
 export interface IStripeResponse {
-  intent: IPaymentIntent,
-  order_id: number
+  intent: IPaymentIntent;
+  order_id: number;
 }
 
 export enum IPaymentMethod {
@@ -75,11 +75,11 @@ export enum IPaymentMethod {
 }
 
 interface IBilling {
-  first_name?: string,
-  last_name?: string,
-  city?: string,
-  state?: string,
-  email?: string,
-  phone?: string,
-  country?: string
+  first_name?: string;
+  last_name?: string;
+  city?: string;
+  state?: string;
+  email?: string;
+  phone?: string;
+  country?: string;
 }

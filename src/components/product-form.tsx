@@ -3,14 +3,18 @@ import { Categories, IProduct, catOptions } from 'models';
 import { useState } from 'react';
 
 interface CreateSingleProductFormProps {
-  onFinish: (values: Partial<IProduct>) => void,
-  isPending: boolean,
-  initialValues?: Partial<IProduct>
+  onFinish: (values: Partial<IProduct>) => void;
+  isPending: boolean;
+  initialValues?: Partial<IProduct>;
 }
 
 const { useForm, Item } = Form;
 
-export const ProductForm = ({ onFinish, isPending, initialValues }: CreateSingleProductFormProps) => {
+export const ProductForm = ({
+  onFinish,
+  isPending,
+  initialValues
+}: CreateSingleProductFormProps) => {
   const [isCustomName, setCustomName] = useState(false);
   const [form] = useForm();
 
@@ -23,18 +27,11 @@ export const ProductForm = ({ onFinish, isPending, initialValues }: CreateSingle
       }}
       initialValues={initialValues}
     >
-
-      <Item
-        label="Day"
-        name="date_time"
-      >
+      <Item label="Day" name="date_time">
         <Input type="datetime-local" />
       </Item>
       {!initialValues && (
-        <Item
-          label="Class name"
-          name="category"
-        >
+        <Item label="Class name" name="category">
           <Select
             labelInValue
             options={catOptions}
@@ -43,27 +40,20 @@ export const ProductForm = ({ onFinish, isPending, initialValues }: CreateSingle
         </Item>
       )}
       {(isCustomName || !!initialValues) && (
-        <Item
-          name="name"
-          label={!!initialValues && 'Class name'}
-        >
+        <Item name="name" label={!!initialValues && 'Class name'}>
           <Input placeholder="Class name" />
         </Item>
       )}
-      <Item
-        label="Price"
-        name="regular_price"
-      >
+      <Item label="Price" name="regular_price">
         <Input prefix="$" placeholder="100" style={{ width: '100%' }} />
       </Item>
-      <Item
-        label="Quantity"
-        name="stock_quantity"
-      >
+      <Item label="Quantity" name="stock_quantity">
         <Input placeholder="13" style={{ width: '100%' }} />
       </Item>
       <Item>
-        <Button block htmlType="submit" type="primary" loading={isPending}>Submit</Button>
+        <Button block htmlType="submit" type="primary" loading={isPending}>
+          Submit
+        </Button>
       </Item>
     </Form>
   );

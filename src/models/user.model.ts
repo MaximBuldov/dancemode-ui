@@ -14,7 +14,7 @@ export interface IUser {
     instagram: string;
     dob: string;
     billing_phone: string;
-  }
+  };
 }
 
 export interface IRUser extends IUser {
@@ -34,7 +34,7 @@ export enum IUserRoles {
 
 export interface IRResetPassword {
   data: {
-    status: number
+    status: number;
   };
   message: string;
 }

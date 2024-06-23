@@ -1,11 +1,16 @@
-import React, { FormEvent, useState } from 'react';
-import { LinkAuthenticationElement, PaymentElement, useElements, useStripe } from '@stripe/react-stripe-js';
+import {
+  LinkAuthenticationElement,
+  PaymentElement,
+  useElements,
+  useStripe
+} from '@stripe/react-stripe-js';
 import { StripeError, StripePaymentElementOptions } from '@stripe/stripe-js';
 import { useMutation } from '@tanstack/react-query';
 import { Button, Divider } from 'antd';
-import { IKeys, IPaymentMethod } from 'models';
-import { cartStore, userStore } from 'stores';
 import { useCreateOrder, useError } from 'hooks';
+import { IKeys, IPaymentMethod } from 'models';
+import { FormEvent, useState } from 'react';
+import { cartStore, userStore } from 'stores';
 
 import { SuccessPage } from './success-page';
 
@@ -26,10 +31,11 @@ export const CheckoutForm = ({ paymentIntentId }: CheckoutFormProps) => {
   });
 
   const payment = useMutation({
-    mutationFn: () => stripe!.confirmPayment({
-      elements: elements!,
-      redirect: 'if_required'
-    }),
+    mutationFn: () =>
+      stripe!.confirmPayment({
+        elements: elements!,
+        redirect: 'if_required'
+      }),
     mutationKey: [IKeys.PAYMENTS],
     onSuccess: (data) => {
       messageApi.error(JSON.stringify(data));
@@ -63,7 +69,7 @@ export const CheckoutForm = ({ paymentIntentId }: CheckoutFormProps) => {
     }
   };
 
-  return (stripeError && order.isSuccess) ? (
+  return stripeError && order.isSuccess ? (
     <SuccessPage order={order.data} />
   ) : (
     <form id="payment-form" onSubmit={handleSubmit}>

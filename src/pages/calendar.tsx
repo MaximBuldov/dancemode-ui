@@ -25,18 +25,14 @@ export const Calendar = () => {
   return (
     <Spin spinning={products.isPending || customersApi.isPending}>
       <Space direction="vertical" size={12} style={{ width: '100%' }}>
-        <Button block type="primary" onClick={() => setModal(true)}>Add class</Button>
+        <Button block type="primary" onClick={() => setModal(true)}>
+          Add class
+        </Button>
         <MonthStepper month={month} setMonth={setMonth} />
-        {customersApi.isSuccess && Object.keys(groupedProducts).map((el) => {
-          return (
-            <DayCard
-              day={el}
-              key={el}
-              classes={groupedProducts[el]}
-            />
-          );
-        }
-        )}
+        {customersApi.isSuccess &&
+          Object.keys(groupedProducts).map((el) => {
+            return <DayCard day={el} key={el} classes={groupedProducts[el]} />;
+          })}
       </Space>
       <AddClassModal isOpen={modal} closeModal={onSuccess} />
       {message.contextHolder}

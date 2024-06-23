@@ -9,7 +9,11 @@ interface OrderModalActionsProps {
   queryKey: any[];
 }
 
-export const OrderModalActions = ({ setOpen, id, queryKey }: OrderModalActionsProps) => {
+export const OrderModalActions = ({
+  setOpen,
+  id,
+  queryKey
+}: OrderModalActionsProps) => {
   const [messageApi, contextHolder] = message.useMessage();
   const onSuccessAction = useCallback(() => {
     setOpen(0);
@@ -20,10 +24,13 @@ export const OrderModalActions = ({ setOpen, id, queryKey }: OrderModalActionsPr
   const deleteOrder = useDeleteOrder(id, queryKey, onSuccessAction);
   const [loading, setLoading] = useState<IOrderStatus>();
 
-  const onClick = useCallback((status: IOrderStatus) => {
-    updateOrder.mutate({ data: { status }, id });
-    setLoading(status);
-  }, [id, updateOrder]);
+  const onClick = useCallback(
+    (status: IOrderStatus) => {
+      updateOrder.mutate({ data: { status }, id });
+      setLoading(status);
+    },
+    [id, updateOrder]
+  );
 
   return (
     <>
@@ -37,16 +44,24 @@ export const OrderModalActions = ({ setOpen, id, queryKey }: OrderModalActionsPr
             <Button
               onClick={() => onClick(IOrderStatus.COMPLETED)}
               type="primary"
-              loading={updateOrder.isPending && loading === IOrderStatus.COMPLETED}
-              disabled={updateOrder.isPending && loading !== IOrderStatus.COMPLETED}
+              loading={
+                updateOrder.isPending && loading === IOrderStatus.COMPLETED
+              }
+              disabled={
+                updateOrder.isPending && loading !== IOrderStatus.COMPLETED
+              }
             >
               Confirm
             </Button>
             <Button
               onClick={() => onClick(IOrderStatus.CANCELLED)}
               type="primary"
-              loading={updateOrder.isPending && loading === IOrderStatus.CANCELLED}
-              disabled={updateOrder.isPending && loading !== IOrderStatus.CANCELLED}
+              loading={
+                updateOrder.isPending && loading === IOrderStatus.CANCELLED
+              }
+              disabled={
+                updateOrder.isPending && loading !== IOrderStatus.CANCELLED
+              }
               ghost
               danger
             >

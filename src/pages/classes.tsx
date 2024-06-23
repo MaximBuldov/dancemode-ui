@@ -6,7 +6,11 @@ import { useState } from 'react';
 
 export const Classes = () => {
   const [month, setMonth] = useState(dayjs());
-  const { message: { contextHolder }, groupedProducts, products: productsApi } = useProducts(month);
+  const {
+    message: { contextHolder },
+    groupedProducts,
+    products: productsApi
+  } = useProducts(month);
 
   const products = Object.keys(groupedProducts);
 
@@ -16,15 +20,11 @@ export const Classes = () => {
         <MonthStepper month={month} setMonth={setMonth} />
         {products.length > 0 ? (
           products.map((el) => {
-            return (
-              <DayCard
-                day={el}
-                key={el}
-                classes={groupedProducts[el]}
-              />
-            );
-          }
-          )) : <Empty />}
+            return <DayCard day={el} key={el} classes={groupedProducts[el]} />;
+          })
+        ) : (
+          <Empty />
+        )}
       </Space>
       {contextHolder}
     </Spin>

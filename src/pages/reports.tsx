@@ -1,5 +1,14 @@
 import { FileTextOutlined, SearchOutlined } from '@ant-design/icons';
-import { Button, Divider, Drawer, Form, Input, Space, Table, TableProps } from 'antd';
+import {
+  Button,
+  Divider,
+  Drawer,
+  Form,
+  Input,
+  Space,
+  Table,
+  TableProps
+} from 'antd';
 import { ReportCosts, ReportCostsForm, ReportSummary } from 'components';
 import dayjs from 'dayjs';
 import { useGetReports } from 'hooks/useGetReports';
@@ -46,7 +55,11 @@ const columns: TableProps<IReport>['columns'] = [
     key: 'costs',
     dataIndex: 'costs',
     align: 'center',
-    render: (el?: IReportCost[]) => <>${Math.round(el?.reduce((acc, item) => acc + Number(item.sum), 0) || 0)}</>
+    render: (el?: IReportCost[]) => (
+      <>
+        ${Math.round(el?.reduce((acc, item) => acc + Number(item.sum), 0) || 0)}
+      </>
+    )
   },
   {
     title: 'Stud',
@@ -60,7 +73,7 @@ const columns: TableProps<IReport>['columns'] = [
     key: 'profit',
     dataIndex: 'profit',
     align: 'center',
-    render: (el) => el !== 0 ? <>${el}</> : 'N/A'
+    render: (el) => (el !== 0 ? <>${el}</> : 'N/A')
   },
   {
     title: 'Cash',
@@ -131,12 +144,7 @@ export const Reports = () => {
             />
           </Form.Item>
           <Form.Item name="to">
-            <Input
-              type="month"
-              addonBefore="to"
-              min={minDate}
-              max={maxDate}
-            />
+            <Input type="month" addonBefore="to" min={minDate} max={maxDate} />
           </Form.Item>
           <Button type="primary" htmlType="submit" icon={<SearchOutlined />} />
         </Space.Compact>
@@ -155,9 +163,16 @@ export const Reports = () => {
         }}
         expandable={{
           rowExpandable: () => true,
-          expandedRowRender: (record) => record.completed ?
-            <ReportCosts data={record.costs || []} /> :
-            <ReportCostsForm report={record} minDate={minDate} maxDate={maxDate} />
+          expandedRowRender: (record) =>
+            record.completed ? (
+              <ReportCosts data={record.costs || []} />
+            ) : (
+              <ReportCostsForm
+                report={record}
+                minDate={minDate}
+                maxDate={maxDate}
+              />
+            )
         }}
         summary={(pageData) => <ReportSummary reports={pageData} />}
       />
@@ -177,18 +192,25 @@ export const Reports = () => {
         size="large"
       >
         <Table
-          dataSource={data?.flatMap(el => el.costs || [])}
+          dataSource={data?.flatMap((el) => el.costs || [])}
           columns={columnsCosts}
           pagination={false}
           loading={isPending}
-          rowKey={el => el.name + el.sum + el.date}
+          rowKey={(el) => el.name + el.sum + el.date}
           summary={(tableData) => {
-            let totalCosts = tableData.reduce((acc, el) => acc += Number(el.sum), 0);
+            const totalCosts = tableData.reduce(
+              (acc, el) => (acc += Number(el.sum)),
+              0
+            );
 
             return (
               <Table.Summary.Row style={{ backgroundColor: '#fafafa' }}>
-                <Table.Summary.Cell index={0}><b>Total:</b></Table.Summary.Cell>
-                <Table.Summary.Cell colSpan={2} index={1}>${totalCosts.toFixed(2)}</Table.Summary.Cell>
+                <Table.Summary.Cell index={0}>
+                  <b>Total:</b>
+                </Table.Summary.Cell>
+                <Table.Summary.Cell colSpan={2} index={1}>
+                  ${totalCosts.toFixed(2)}
+                </Table.Summary.Cell>
               </Table.Summary.Row>
             );
           }}

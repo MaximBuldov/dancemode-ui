@@ -1,12 +1,12 @@
+import { MoreOutlined, SyncOutlined } from '@ant-design/icons';
 import { useQuery } from '@tanstack/react-query';
 import { Table } from 'antd';
+import type { ColumnsType } from 'antd/es/table';
+import { CancelOrderModal, PaymentsProducts } from 'components';
+import dayjs from 'dayjs';
 import { IKeys, IOrderStatus, IROrder } from 'models';
 import { useState } from 'react';
 import { orderService } from 'services';
-import type { ColumnsType } from 'antd/es/table';
-import dayjs from 'dayjs';
-import { CancelOrderModal, PaymentsProducts } from 'components';
-import { MoreOutlined, SyncOutlined } from '@ant-design/icons';
 
 export const Payments = () => {
   const [page, setPage] = useState(1);
@@ -19,14 +19,28 @@ export const Payments = () => {
 
   const columns: ColumnsType<IROrder> = [
     { title: 'ID', dataIndex: 'id', key: 'id' },
-    { title: 'Date', dataIndex: 'date_created', key: 'date', render: (el) => dayjs(el).format('MMM D') },
-    { title: 'Count', key: 'count', render: (_, record) => record.line_items.length, align: 'center' },
     {
-      title: 'Total', dataIndex: 'total', key: 'total',
+      title: 'Date',
+      dataIndex: 'date_created',
+      key: 'date',
+      render: (el) => dayjs(el).format('MMM D')
+    },
+    {
+      title: 'Count',
+      key: 'count',
+      render: (_, record) => record.line_items.length,
+      align: 'center'
+    },
+    {
+      title: 'Total',
+      dataIndex: 'total',
+      key: 'total',
       render: (el) => el !== '0' && `$${el}`
     },
     {
-      title: 'Status', dataIndex: 'status', key: 'status',
+      title: 'Status',
+      dataIndex: 'status',
+      key: 'status',
       render: (el) => {
         switch (el) {
           case IOrderStatus.COMPLETED:
@@ -41,8 +55,12 @@ export const Payments = () => {
       }
     },
     {
-      dataIndex: 'status', key: 'status',
-      render: (el, order) => el === IOrderStatus.PENDING && <MoreOutlined onClick={() => setModal(order.id)} />
+      dataIndex: 'status',
+      key: 'status',
+      render: (el, order) =>
+        el === IOrderStatus.PENDING && (
+          <MoreOutlined onClick={() => setModal(order.id)} />
+        )
     }
   ];
 

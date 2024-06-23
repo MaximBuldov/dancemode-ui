@@ -8,7 +8,13 @@ export const useError = () => {
   function onErrorFn(error: AxiosError<IResponseError>, message?: string) {
     messageApi.open({
       type: 'error',
-      content: message || <div dangerouslySetInnerHTML={{ __html: error.response?.data.message || error.message }} />
+      content: message || (
+        <div
+          dangerouslySetInnerHTML={{
+            __html: error.response?.data.message || error.message
+          }}
+        />
+      )
     });
   }
 

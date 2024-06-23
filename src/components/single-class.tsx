@@ -3,8 +3,8 @@ import { IProduct, IROrder } from 'models';
 import { userStore } from 'stores';
 
 import { PaidClass } from './paid-class';
-import { UnpaidClass } from './unpaid-class';
 import { TeacherClass } from './teacher-class';
+import { UnpaidClass } from './unpaid-class';
 
 interface SingleClassProps {
   product: IProduct;

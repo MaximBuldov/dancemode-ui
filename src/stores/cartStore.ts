@@ -9,7 +9,11 @@ class CartStore {
 
   constructor() {
     makeAutoObservable(this);
-    makePersistable(this, { name: 'cart', properties: ['data', 'coupons'], storage: window.localStorage });
+    makePersistable(this, {
+      name: 'cart',
+      properties: ['data', 'coupons'],
+      storage: window.localStorage
+    });
   }
 
   add(data: IProduct) {
@@ -26,11 +30,11 @@ class CartStore {
   }
 
   isInCart(product: IProduct) {
-    return !!this.data.find(el => el.id === product.id);
+    return !!this.data.find((el) => el.id === product.id);
   }
 
   remove(product: IProduct) {
-    const index = this.data.findIndex(el => el.id === product.id);
+    const index = this.data.findIndex((el) => el.id === product.id);
     if (index !== -1) {
       this.data.splice(index, 1);
     }
@@ -42,19 +46,21 @@ class CartStore {
   }
 
   removeCoupon(id: number) {
-    const index = this.coupons.findIndex(el => el.id === id);
+    const index = this.coupons.findIndex((el) => el.id === id);
     if (index !== -1) {
       this.coupons.splice(index, 1);
     }
   }
 
   isCouponAdded(code: string) {
-    return this.coupons.some(el => el.code.toLocaleLowerCase() === code.toLocaleLowerCase());
-  };
+    return this.coupons.some(
+      (el) => el.code.toLocaleLowerCase() === code.toLocaleLowerCase()
+    );
+  }
 
   isExludedCat(coupon: ICoupon) {
-    return this.data.every(el => el.categories[0].id === coupon.exc_cat[0]);
-  };
+    return this.data.every((el) => el.categories[0].id === coupon.exc_cat[0]);
+  }
 
   checkCouponEligibility(userId: number, coupon: ICoupon) {
     if (!coupon.allowed_users.includes(userId)) {
@@ -65,16 +71,26 @@ class CartStore {
       if (el.categories[0].id === coupon.exc_cat[0]) {
         return acc;
       } else {
-        return acc += parseFloat(el.price);
+        return (acc += parseFloat(el.price));
       }
     }, 0);
     if (totalCostExcluded < parseFloat(coupon.amount)) {
-      return { success: false, message: 'The total cost of classes in the cart is less than the coupon amount' };
+      return {
+        success: false,
+        message:
+          'The total cost of classes in the cart is less than the coupon amount'
+      };
     }
 
     // Шаг 4: Проверка на один купон с категориями исключения
-    if (coupon.exc_cat.length > 0 && this.coupons.some(item => item.exc_cat.length > 0)) {
-      return { success: false, message: 'You cannot use coupons for different groups at the same time' };
+    if (
+      coupon.exc_cat.length > 0 &&
+      this.coupons.some((item) => item.exc_cat.length > 0)
+    ) {
+      return {
+        success: false,
+        message: 'You cannot use coupons for different groups at the same time'
+      };
     }
 
     // Проверка даты истечения срока действия купона
@@ -115,11 +131,13 @@ class CartStore {
   }
 
   get orderDates() {
-    return Array.from(new Set(this.data.map(obj => dayjs(obj.date_time).format('YYYY-MM')))).join(',');
+    return Array.from(
+      new Set(this.data.map((obj) => dayjs(obj.date_time).format('YYYY-MM')))
+    ).join(',');
   }
 
   get preparedData() {
-    return this.data.map(el => ({
+    return this.data.map((el) => ({
       product_id: el.id,
       quantity: 1,
       subtotal: el.price,
@@ -128,7 +146,7 @@ class CartStore {
   }
 
   get preparedCoupons() {
-    return this.coupons.map(el => ({ code: el.code }));
+    return this.coupons.map((el) => ({ code: el.code }));
   }
 
   get discount() {
@@ -142,19 +160,35 @@ class CartStore {
   private checkSale(data: IProduct, action: boolean) {
     const allDaysInMonth = this.getAllDaysOfMonth(dayjs(data.date_time));
     const classes = action ? [...this.data, data] : this.data;
-    const isWholeMonth = allDaysInMonth.every(day => classes.some(cls => cls.name === data.name && dayjs(cls.date_time).isSame(day, 'day')));
+    const isWholeMonth = allDaysInMonth.every((day) =>
+      classes.some(
+        (cls) =>
+          cls.name === data.name && dayjs(cls.date_time).isSame(day, 'day')
+      )
+    );
 
     if (action && isWholeMonth) {
-      this.data = classes.map(el => el.name === data.name && dayjs(el.date_time).isSame(data.date_time, 'month') && dayjs(el.date_time).day() === dayjs(data.date_time).day() ? ({
-        ...el,
-        total: '20'
-      }) : el);
+      this.data = classes.map((el) =>
+        el.name === data.name &&
+        dayjs(el.date_time).isSame(data.date_time, 'month') &&
+        dayjs(el.date_time).day() === dayjs(data.date_time).day()
+          ? {
+              ...el,
+              total: '20'
+            }
+          : el
+      );
       return false;
     }
 
     if (!action && !isWholeMonth) {
-      this.data = classes.map(el => {
-        if (el.name === data.name && dayjs(el.date_time).isSame(data.date_time, 'month') && dayjs(el.date_time).day() === dayjs(data.date_time).day()) {
+      this.data = classes.map((el) => {
+        if (
+          el.name === data.name &&
+          dayjs(el.date_time).isSame(data.date_time, 'month') &&
+          dayjs(el.date_time).day() === dayjs(data.date_time).day()
+        ) {
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
           const { total, ...rest } = el;
           return rest;
         } else {
@@ -169,7 +203,9 @@ class CartStore {
 
   private calculateTotal<T>(arr: T[], prop: keyof T) {
     return arr.reduce((acc, el) => {
-      const price = el[prop] ? Number(el[prop]) : Number((el as IProduct).price);
+      const price = el[prop]
+        ? Number(el[prop])
+        : Number((el as IProduct).price);
       return acc + price;
     }, 0);
   }
@@ -193,7 +229,6 @@ class CartStore {
 
     return days;
   }
-
 }
 
 export const cartStore = new CartStore();

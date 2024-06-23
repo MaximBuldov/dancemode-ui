@@ -10,7 +10,13 @@ interface CancelOrderModalProps {
   children?: React.ReactNode;
 }
 
-export const CancelOrderModal: React.FC<CancelOrderModalProps> = ({ open, setOpen, id, children, queryKey }) => {
+export const CancelOrderModal: React.FC<CancelOrderModalProps> = ({
+  open,
+  setOpen,
+  id,
+  children,
+  queryKey
+}) => {
   const [messageApi, contextHolder] = message.useMessage();
   const { isPending, mutate } = useUpdateOrder(queryKey, () => {
     setOpen(false);
@@ -21,10 +27,12 @@ export const CancelOrderModal: React.FC<CancelOrderModalProps> = ({ open, setOpe
       <Modal
         title="Order cancellation"
         open={open}
-        onOk={() => mutate({
-          data: { status: IOrderStatus.CANCELLED },
-          id
-        })}
+        onOk={() =>
+          mutate({
+            data: { status: IOrderStatus.CANCELLED },
+            id
+          })
+        }
         confirmLoading={isPending}
         cancelText="Close"
         onCancel={() => setOpen(false)}
@@ -33,7 +41,9 @@ export const CancelOrderModal: React.FC<CancelOrderModalProps> = ({ open, setOpe
         }}
         okText="Cancel order"
       >
-        <Typography.Paragraph>Are you sure you want to cancel this order?</Typography.Paragraph>
+        <Typography.Paragraph>
+          Are you sure you want to cancel this order?
+        </Typography.Paragraph>
         {children}
       </Modal>
       {contextHolder}

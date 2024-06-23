@@ -12,13 +12,16 @@ import { orderService } from 'services';
 const enum PERPAGE {
   FULL = 100,
   SMALL = 10
-};
+}
 
 export const Orders = () => {
   const [page, setPage] = useState(1);
   const [filters, setFilters] = useState({});
   const [modal, setModal] = useState(0);
-  const per_page = useMemo(() => Object.keys(filters).length > 0 ? PERPAGE.FULL : PERPAGE.SMALL, [filters]);
+  const per_page = useMemo(
+    () => (Object.keys(filters).length > 0 ? PERPAGE.FULL : PERPAGE.SMALL),
+    [filters]
+  );
 
   const queryKey = [IKeys.ORDERS, { page, ...filters }];
   const orders = useQuery({
@@ -39,11 +42,15 @@ export const Orders = () => {
     { title: 'ID', dataIndex: 'id', key: 'id' },
     { title: 'Customer', dataIndex: 'customer_name', key: 'customer' },
     {
-      title: 'Total', dataIndex: 'total', key: 'total',
+      title: 'Total',
+      dataIndex: 'total',
+      key: 'total',
       render: (el) => el !== '0' && `$${Math.round(Number(el))}`
     },
     {
-      title: 'Status', dataIndex: 'status', key: 'status',
+      title: 'Status',
+      dataIndex: 'status',
+      key: 'status',
       render: (el) => {
         switch (el) {
           case IOrderStatus.COMPLETED:
@@ -58,7 +65,8 @@ export const Orders = () => {
       }
     },
     {
-      dataIndex: 'id', key: 'actions',
+      dataIndex: 'id',
+      key: 'actions',
       render: (el) => <MoreOutlined onClick={() => setModal(el)} />
     }
   ];
@@ -74,7 +82,8 @@ export const Orders = () => {
         rowKey={(line) => line.id}
         size="small"
         expandable={{
-          expandedRowRender: (record) => record && <PaymentsProducts order={record} />,
+          expandedRowRender: (record) =>
+            record && <PaymentsProducts order={record} />,
           expandRowByClick: true
         }}
         pagination={{
@@ -84,11 +93,7 @@ export const Orders = () => {
           onChange: (number) => setPage(number)
         }}
       />
-      <OrderModalActions
-        setOpen={setModal}
-        id={modal}
-        queryKey={queryKey}
-      />
+      <OrderModalActions setOpen={setModal} id={modal} queryKey={queryKey} />
     </>
   );
 };

@@ -1,30 +1,33 @@
+import { AxiosResponse } from 'axios';
 import { IOrder, IOrderStatus, IROrder } from 'models';
 import { userStore } from 'stores';
-import { AxiosResponse } from 'axios';
 
 import { $api, $wc } from '../http';
 
 export interface IUpdate {
-  data: Partial<IROrder>,
-  id: string | number
+  data: Partial<IROrder>;
+  id: string | number;
 }
 
 export interface IFilters {
-  page?: number,
-  per_page?: number,
-  customer_id?: number,
-  product?: number,
-  status?: IOrderStatus[],
-  min_date?: string,
-  max_date?: string
+  page?: number;
+  per_page?: number;
+  customer_id?: number;
+  product?: number;
+  status?: IOrderStatus[];
+  min_date?: string;
+  max_date?: string;
 }
 
-const _fields = 'id,status,date_created,total,customer_id,line_items,customer_name,payment_method,note,coupon_lines,group';
+const _fields =
+  'id,status,date_created,total,customer_id,line_items,customer_name,payment_method,note,coupon_lines,group';
 
 class OrderService {
   async create(data: Partial<IOrder>) {
     try {
-      const res = await $wc.post('/wc/v3/orders', data, { params: { _fields } });
+      const res = await $wc.post('/wc/v3/orders', data, {
+        params: { _fields }
+      });
       return res.data as IROrder;
     } catch (error) {
       throw error;
@@ -97,7 +100,7 @@ class OrderService {
     }
   }
 
-  async stripe(data: { total: number, customer?: number }) {
+  async stripe(data: { total: number; customer?: number }) {
     try {
       const res = await $api.post('/custom/v1/process-payment', data);
       return res.data;

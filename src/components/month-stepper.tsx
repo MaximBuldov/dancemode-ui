@@ -1,11 +1,10 @@
 import { ArrowLeftOutlined, ArrowRightOutlined } from '@ant-design/icons';
 import { Button, Space } from 'antd';
 import dayjs from 'dayjs';
-import React from 'react';
 
 interface MonthStepperProps {
   month: dayjs.Dayjs;
-  setMonth: (n: dayjs.Dayjs) => void
+  setMonth: (n: dayjs.Dayjs) => void;
 }
 
 export const MonthStepper = ({ month, setMonth }: MonthStepperProps) => {
@@ -18,18 +17,10 @@ export const MonthStepper = ({ month, setMonth }: MonthStepperProps) => {
       >
         <ArrowLeftOutlined /> {month.subtract(1, 'M').format('MMMM')}
       </Button>
-      <Button
-        type="primary"
-        ghost
-        block
-      >
+      <Button type="primary" ghost block>
         {month.format('MMMM')}
       </Button>
-      <Button
-        type="primary"
-        block
-        onClick={() => setMonth(month.add(1, 'M'))}
-      >
+      <Button type="primary" block onClick={() => setMonth(month.add(1, 'M'))}>
         {month.add(1, 'M').format('MMMM')} <ArrowRightOutlined />
       </Button>
     </Space.Compact>

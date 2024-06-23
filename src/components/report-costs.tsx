@@ -4,10 +4,12 @@ import dayjs from 'dayjs';
 import { IReportCost } from 'models';
 
 interface ReportCostsProps {
-  data: IReportCost[]
+  data: IReportCost[];
 }
 
-const { Summary: { Row, Cell } } = Table;
+const {
+  Summary: { Row, Cell }
+} = Table;
 
 const columns: ColumnsType<IReportCost> = [
   {
@@ -41,14 +43,18 @@ export const ReportCosts = ({ data }: ReportCostsProps) => {
       rowKey={(el) => el.name + el.sum + el.date}
       summary={(tableData) => {
         let total = 0;
-        tableData.forEach(el => {
+        tableData.forEach((el) => {
           total += +el.sum;
         });
 
         return (
           <Row style={{ backgroundColor: '#fafafa' }}>
-            <Cell index={0}><b>Total:</b></Cell>
-            <Cell align="center" index={1}>${total}</Cell>
+            <Cell index={0}>
+              <b>Total:</b>
+            </Cell>
+            <Cell align="center" index={1}>
+              ${total}
+            </Cell>
           </Row>
         );
       }}

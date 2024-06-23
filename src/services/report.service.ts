@@ -3,8 +3,8 @@ import { IReport } from 'models';
 import { $api } from '../http';
 
 interface ReportParams {
-  from?: string,
-  to?: string
+  from?: string;
+  to?: string;
 }
 
 class ReportService {
@@ -19,14 +19,18 @@ class ReportService {
 
   async create(data: Partial<IReport>) {
     try {
-      const res = await $api.post('/wp/v2/reports', { acf: data, title: data.date, status: 'publish' });
+      const res = await $api.post('/wp/v2/reports', {
+        acf: data,
+        title: data.date,
+        status: 'publish'
+      });
       return res.data as IReport;
     } catch (error) {
       throw error;
     }
   }
 
-  async update({ data, id }: { data: Partial<IReport>, id: number }) {
+  async update({ data, id }: { data: Partial<IReport>; id: number }) {
     try {
       const res = await $api.post(`/wp/v2/reports/${id}`, { acf: data });
       return res.data as IReport;
@@ -34,6 +38,6 @@ class ReportService {
       throw error;
     }
   }
-};
+}
 
 export const reportService = new ReportService();

@@ -1,5 +1,13 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { Button, Form, Input, InputNumber, Select, Spin, Typography } from 'antd';
+import {
+  Button,
+  Form,
+  Input,
+  InputNumber,
+  Select,
+  Spin,
+  Typography
+} from 'antd';
 import dayjs from 'dayjs';
 import { useError } from 'hooks';
 import { IKeys, catOptions } from 'models';
@@ -29,11 +37,7 @@ export const CreateCoupon = () => {
   return (
     <>
       <Typography.Title level={4}>Create coupon</Typography.Title>
-      <Form
-        form={form}
-        onFinish={couponApi.mutate}
-        layout="inline"
-      >
+      <Form form={form} onFinish={couponApi.mutate} layout="inline">
         <Item
           name="code"
           label="Code"
@@ -45,7 +49,9 @@ export const CreateCoupon = () => {
           type="primary"
           ghost
           onClick={() => form.setFieldValue('code', generatePromoCode())}
-        >Generate</Button>
+        >
+          Generate
+        </Button>
         <Item
           name="amount"
           label="Amount"
@@ -54,18 +60,25 @@ export const CreateCoupon = () => {
           <Input type="number" prefix="$" />
         </Item>
         <Item name="allowed_users" label="Allowed users" style={style}>
-          {usersApi.isPending ? <Spin spinning /> : (
+          {usersApi.isPending ? (
+            <Spin spinning />
+          ) : (
             <select
               multiple
               onChange={(e) => {
-                const users = Array.from(e.target.options).filter(el => el.selected).map(el => el.value);
+                const users = Array.from(e.target.options)
+                  .filter((el) => el.selected)
+                  .map((el) => el.value);
                 form.setFieldValue('allowed_users', users);
               }}
             >
-              {usersApi.data?.data.map(el => <option key={el.id} value={el.id}>{el.first_name} {el.last_name}</option>)}
+              {usersApi.data?.data.map((el) => (
+                <option key={el.id} value={el.id}>
+                  {el.first_name} {el.last_name}
+                </option>
+              ))}
             </select>
           )}
-
         </Item>
         <Item
           name="date_expires"
@@ -75,15 +88,8 @@ export const CreateCoupon = () => {
         >
           <Input type="date" min={dayjs().format('YYYY-MM-DD')} />
         </Item>
-        <Item
-          name="exc_cat"
-          style={style}
-          label="Exclude categories"
-        >
-          <Select
-            options={catOptions}
-            mode="multiple"
-          />
+        <Item name="exc_cat" style={style} label="Exclude categories">
+          <Select options={catOptions} mode="multiple" />
         </Item>
         <Item
           name="usage_limit"
@@ -99,11 +105,7 @@ export const CreateCoupon = () => {
         >
           <InputNumber />
         </Item>
-        <Item
-          name="description"
-          label="Note"
-          style={style}
-        >
+        <Item name="description" label="Note" style={style}>
           <Input />
         </Item>
         <Button

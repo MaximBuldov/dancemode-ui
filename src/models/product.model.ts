@@ -31,13 +31,13 @@ export interface ICreateProduct {
 }
 
 export interface IBatchProducts {
-  create?: IProduct[],
-  update?: IProduct[],
-  delete?: number[]
+  create?: IProduct[];
+  update?: IProduct[];
+  delete?: number[];
 }
 
 export interface ICategory {
-  id: number | Categories,
+  id: number | Categories;
   name?: string;
   slug?: string;
 }

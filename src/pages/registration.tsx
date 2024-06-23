@@ -1,8 +1,8 @@
 import { useMutation } from '@tanstack/react-query';
+import { ProfileForm } from 'components';
 import { useNavigate } from 'react-router-dom';
 import { userService } from 'services';
 import { userStore } from 'stores';
-import { ProfileForm } from 'components';
 
 export const Registration = () => {
   const navigate = useNavigate();

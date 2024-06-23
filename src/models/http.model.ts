@@ -1,7 +1,7 @@
 export interface IResponseError extends Error {
   code: string;
   data: {
-    status: number
+    status: number;
   };
   message: string;
 }

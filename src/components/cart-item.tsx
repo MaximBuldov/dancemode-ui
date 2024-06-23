@@ -3,11 +3,10 @@ import { Button, Col, Row } from 'antd';
 import { Price } from 'components';
 import dayjs from 'dayjs';
 import { IProduct } from 'models';
-import React from 'react';
 import { cartStore } from 'stores';
 
 interface CartItemProps {
-  item: IProduct
+  item: IProduct;
 }
 
 export const CartItem = ({ item }: CartItemProps) => {

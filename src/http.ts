@@ -25,7 +25,7 @@ const authInterceptor = (config: any) => {
 
 $api.interceptors.request.use(authInterceptor);
 $api.interceptors.response.use(
-  response => response,
+  (response) => response,
   (error) => {
     if (error?.response?.data?.code === 'jwt_auth_invalid_token') {
       userStore.logout();
@@ -36,7 +36,7 @@ $api.interceptors.response.use(
 );
 
 //wc
-const $wc = axios.create({ ...axiosInstance.defaults });;
+const $wc = axios.create({ ...axiosInstance.defaults });
 const wcInterceptor = (config: any) => {
   const creds = `${process.env.REACT_APP_WC_KEY}:${process.env.REACT_APP_WC_SECRET}`;
   config.headers.authorization = `Basic ${btoa(creds)}`;
@@ -45,8 +45,4 @@ const wcInterceptor = (config: any) => {
 };
 $wc.interceptors.request.use(wcInterceptor);
 
-export {
-  $api,
-  $auth,
-  $wc
-};
+export { $api, $auth, $wc };
