@@ -3,7 +3,7 @@ import { Dayjs } from 'dayjs';
 import { IUser } from './user.model';
 
 export interface ILoginForm {
-  username: string;
+  email: string;
   password: string;
 }
 

@@ -59,7 +59,7 @@ class CartStore {
   }
 
   isExludedCat(coupon: ICoupon) {
-    return this.data.every((el) => el.categories[0].id === coupon.exc_cat[0]);
+    return this.data.every((el) => el.category_id === coupon.exc_cat[0]);
   }
 
   checkCouponEligibility(userId: number, coupon: ICoupon) {
@@ -68,10 +68,11 @@ class CartStore {
     }
 
     const totalCostExcluded = this.data.reduce((acc, el) => {
-      if (el.categories[0].id === coupon.exc_cat[0]) {
+      if (el.category_id === coupon.exc_cat[0]) {
         return acc;
       } else {
-        return (acc += parseFloat(el.price));
+        // return (acc += parseFloat(el.price));
+        return acc;
       }
     }, 0);
     if (totalCostExcluded < parseFloat(coupon.amount)) {
@@ -119,7 +120,7 @@ class CartStore {
   }
 
   get total() {
-    return this.calculateTotal(this.data, 'total');
+    return this.calculateTotal(this.data, 'price'); //total
   }
 
   get subtotal() {
@@ -141,7 +142,7 @@ class CartStore {
       product_id: el.id,
       quantity: 1,
       subtotal: el.price,
-      total: el?.total || el.price
+      total: el.price // el.total || el.price
     }));
   }
 
@@ -188,8 +189,8 @@ class CartStore {
           dayjs(el.date_time).isSame(data.date_time, 'month') &&
           dayjs(el.date_time).day() === dayjs(data.date_time).day()
         ) {
-          const { total, ...rest } = el;
-          return rest;
+          // const { total, ...rest } = el;
+          return el;
         } else {
           return el;
         }

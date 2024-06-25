@@ -1,5 +1,6 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
 import {
+  App,
   Button,
   Form,
   Input,
@@ -9,7 +10,6 @@ import {
   Typography
 } from 'antd';
 import dayjs from 'dayjs';
-import { useError } from 'hooks';
 import { IKeys, catOptions } from 'models';
 import { couponService, userService } from 'services';
 import { generatePromoCode } from 'utils';
@@ -20,12 +20,13 @@ const style = { width: '100%' };
 
 export const CreateCoupon = () => {
   const [form] = useForm();
-  const { contextHolder, messageApi } = useError();
+  const { message } = App.useApp();
+
   const couponApi = useMutation({
     mutationFn: couponService.create,
     onSuccess: () => {
       form.resetFields();
-      messageApi.success('Coupon created');
+      message.success('Coupon created');
     }
   });
 
@@ -117,7 +118,6 @@ export const CreateCoupon = () => {
           Create
         </Button>
       </Form>
-      {contextHolder}
     </>
   );
 };

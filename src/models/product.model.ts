@@ -1,21 +1,18 @@
 export interface IProduct {
   id: number;
   name: string | NameOfClass;
-  price: string;
-  time: string;
-  date_time: string;
-  total?: string;
+  price: number;
+  date_time: Date;
   is_canceled: boolean;
-  total_sales: number;
   stock_status: IStockStatus;
-  categories: ICategory[];
+  category: ICategory;
+  category_id: Categories;
   cancel: number[];
   confirm: number[];
   stock_quantity: number;
   paid: number[];
   pending: number[];
   wait_list: number[];
-  regular_price?: string;
 }
 
 export interface ICartProduct extends IProduct {
@@ -49,9 +46,9 @@ export enum NameOfClass {
 }
 
 export enum Categories {
-  BEGINNER = 16,
-  ADV = 23,
-  CUSTOM = 24
+  BEGINNER = 1,
+  ADV = 2,
+  CUSTOM = 3
 }
 
 export enum IStockStatus {

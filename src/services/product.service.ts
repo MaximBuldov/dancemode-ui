@@ -1,36 +1,34 @@
-import { IBatchProducts, IProduct } from 'models';
+import { IProduct } from 'models';
 
-import { $wc } from '../http';
+import { $api } from '../http';
+
+interface IProductParams {
+  month?: string;
+}
 
 class ProductService {
-  async getAll(params?: any) {
+  async getAll(params?: IProductParams) {
     try {
-      const res = await $wc.get('/wc/v3/products', {
-        params: {
-          _fields:
-            'id,name,price,date_time,is_canceled,total_sales,stock_status,cancel,confirm,categories,paid,pending,stock_quantity,wait_list',
-          ...params
-        }
-      });
+      const res = await $api.get('/products', { params });
       return res.data as IProduct[];
     } catch (error) {
       throw error;
     }
   }
 
-  async createOne(data: any) {
+  async createOne(data: IProduct) {
     try {
-      const res = await $wc.post('/wc/v3/products', data);
+      const res = await $api.post('/products', data);
       return res.data as IProduct;
     } catch (error) {
       throw error;
     }
   }
 
-  async createMany(data: any) {
+  async createMany(data: Partial<IProduct>[]) {
     try {
-      const res = await $wc.post('/wc/v3/products/batch', data);
-      return res.data as IBatchProducts;
+      const res = await $api.post<IProduct[]>('/products/batch', data);
+      return res.data;
     } catch (error) {
       throw error;
     }
@@ -38,7 +36,7 @@ class ProductService {
 
   async update(data: any, id: number) {
     try {
-      const res = await $wc.post(`/wc/v3/products/${id}`, data);
+      const res = await $api.patch(`/products/${id}`, data);
       return res.data as IProduct;
     } catch (error) {
       throw error;
@@ -47,7 +45,7 @@ class ProductService {
 
   async delete(id: number) {
     try {
-      const res = await $wc.delete(`/wc/v3/products/${id}`);
+      const res = await $api.delete(`/products/${id}`);
       return res.data as IProduct;
     } catch (error) {
       throw error;

@@ -1,7 +1,5 @@
 import axios from 'axios';
-import { redirect } from 'react-router-dom';
-import { userStore } from 'stores';
-import { secureLs } from 'utils';
+import { deleteTokensStorage, errorCatch, getNewToken, secureLs } from 'utils';
 
 const axiosInstance = axios.create({
   headers: {
@@ -19,30 +17,37 @@ const $auth = axios.create({
 //api
 const $api = axios.create({ ...axiosInstance.defaults });
 const authInterceptor = (config: any) => {
-  config.headers.authorization = `Bearer ${secureLs.get('token')}`;
+  const accessToken = secureLs.get('accessToken');
+
+  if (config.headers && accessToken)
+    config.headers.Authorization = `Bearer ${accessToken}`;
+
   return config;
 };
 
 $api.interceptors.request.use(authInterceptor);
 $api.interceptors.response.use(
   (response) => response,
-  (error) => {
-    if (error?.response?.data?.code === 'jwt_auth_invalid_token') {
-      userStore.logout();
-      redirect('/');
+  async (error) => {
+    const originalRequest = error.config;
+    if (
+      (error.response.status === 401 ||
+        errorCatch(error) === 'jwt expired' ||
+        errorCatch(error) === 'jwt must be provided') &&
+      error.config &&
+      !error.config._isRetry
+    ) {
+      originalRequest._isRetry = true;
+      try {
+        await getNewToken($auth);
+        return $api.request(originalRequest);
+      } catch (error) {
+        if (errorCatch(error) === 'jwt expired') deleteTokensStorage();
+      }
     }
-    return Promise.reject(error);
+
+    throw error;
   }
 );
 
-//wc
-const $wc = axios.create({ ...axiosInstance.defaults });
-const wcInterceptor = (config: any) => {
-  const creds = `${process.env.REACT_APP_WC_KEY}:${process.env.REACT_APP_WC_SECRET}`;
-  config.headers.authorization = `Basic ${btoa(creds)}`;
-
-  return config;
-};
-$wc.interceptors.request.use(wcInterceptor);
-
-export { $api, $auth, $wc };
+export { $api, $auth };

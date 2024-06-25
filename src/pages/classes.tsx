@@ -6,11 +6,7 @@ import { useState } from 'react';
 
 export const Classes = () => {
   const [month, setMonth] = useState(dayjs());
-  const {
-    message: { contextHolder },
-    groupedProducts,
-    products: productsApi
-  } = useProducts(month);
+  const { groupedProducts, products: productsApi } = useProducts(month);
 
   const products = Object.keys(groupedProducts);
 
@@ -26,7 +22,6 @@ export const Classes = () => {
           <Empty />
         )}
       </Space>
-      {contextHolder}
     </Spin>
   );
 };

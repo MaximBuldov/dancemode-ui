@@ -27,18 +27,18 @@ export const AddClassModal = ({ isOpen, closeModal }: AddClassModalProps) => {
   const client = useQueryClient();
   const { mutate, isPending } = useMutation({
     mutationFn: productService.createMany,
-    onSuccess: ({ create }) => {
+    onSuccess: (data) => {
       const monthsToUpdate = new Set(
-        create?.map((product) => dayjs(product.date_time).format('YYYY-MM'))
+        data?.map((product) => dayjs(product.date_time).format('YYYY-MM'))
       );
       monthsToUpdate.forEach((month) => {
         client.setQueryData(
           [IKeys.PRODUCTS, { month }],
           (products: IProduct[] | undefined) =>
-            products && create
+            products && data
               ? [
                   ...products,
-                  ...create.filter(
+                  ...data.filter(
                     (el) => dayjs(el.date_time).format('YYYY-MM') === month
                   )
                 ]
@@ -70,7 +70,9 @@ export const AddClassModal = ({ isOpen, closeModal }: AddClassModalProps) => {
     >
       <Form<ICreateProductsForm>
         form={form}
-        onFinish={(values) => mutate(prepareProducts(values))}
+        onFinish={(values) => {
+          mutate(prepareProducts(values));
+        }}
         size="large"
       >
         <Item

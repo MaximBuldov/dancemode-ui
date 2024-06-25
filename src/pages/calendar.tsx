@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { Button, Space, Spin } from 'antd';
+import { App, Button, Space, Spin } from 'antd';
 import { AddClassModal, DayCard, MonthStepper } from 'components';
 import dayjs from 'dayjs';
 import { useProducts } from 'hooks';
@@ -10,15 +10,16 @@ import { userService } from 'services';
 export const Calendar = () => {
   const [modal, setModal] = useState(false);
   const [month, setMonth] = useState(dayjs());
-  const { groupedProducts, message, products } = useProducts(month);
+  const { message } = App.useApp();
+  const { groupedProducts, products } = useProducts(month);
   const onSuccess = (isSuccess: boolean) => {
     setModal(false);
     if (isSuccess) {
-      message.messageApi.success('Success!');
+      message.success('Success!');
     }
   };
   const customersApi = useQuery({
-    queryFn: () => userService.getCustomers({ per_page: 100 }),
+    queryFn: () => userService.getCustomers(),
     queryKey: [IKeys.CUSTOMERS]
   });
 
@@ -35,7 +36,6 @@ export const Calendar = () => {
           })}
       </Space>
       <AddClassModal isOpen={modal} closeModal={onSuccess} />
-      {message.contextHolder}
     </Spin>
   );
 };

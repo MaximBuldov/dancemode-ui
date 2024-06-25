@@ -28,7 +28,7 @@ export const useCreateOrder = ({
           city: 'San Diego',
           state: 'CA',
           email: userStore.data?.email,
-          phone: userStore.data?.acf.billing_phone,
+          phone: userStore.data?.billing_phone,
           country: 'US'
         },
         meta_data: [

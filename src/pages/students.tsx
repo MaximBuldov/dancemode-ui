@@ -65,15 +65,15 @@ export const Students = () => {
             el && (
               <Descriptions size="small">
                 <Descriptions.Item label="Phone">
-                  <Typography.Link href={`tel:${el.acf.billing_phone}`}>
-                    {el.acf.billing_phone}
+                  <Typography.Link href={`tel:${el.billing_phone}`}>
+                    {el.billing_phone}
                   </Typography.Link>
                 </Descriptions.Item>
                 <Descriptions.Item label="Insta">
                   <Typography.Link
-                    href={`https://instagram.com/${el.acf.instagram}`}
+                    href={`https://instagram.com/${el.instagram}`}
                   >
-                    {el.acf.instagram}
+                    {el.instagram}
                   </Typography.Link>
                 </Descriptions.Item>
                 <Descriptions.Item label="Email">

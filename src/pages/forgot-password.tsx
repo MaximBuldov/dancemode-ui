@@ -4,8 +4,7 @@ import {
   UserOutlined
 } from '@ant-design/icons';
 import { useMutation } from '@tanstack/react-query';
-import { Button, Form, Input, Typography } from 'antd';
-import { useError } from 'hooks';
+import { App, Button, Form, Input, Typography } from 'antd';
 import { IResetPassword } from 'models';
 import { useNavigate } from 'react-router-dom';
 import { userService } from 'services';
@@ -13,21 +12,22 @@ import { userService } from 'services';
 const { useForm, Item } = Form;
 
 export const ForgotPassword = () => {
-  const [form] = useForm();
-  const { messageApi, contextHolder } = useError();
+  const [form] = useForm<IResetPassword>();
+  const { message } = App.useApp();
+
   const navigate = useNavigate();
 
   const sendCode = useMutation({
     mutationFn: userService.sendCode,
     onSuccess: ({ data }) => {
-      messageApi.info(data.message);
+      message.info(data.message);
     }
   });
 
   const resetPassword = useMutation({
     mutationFn: userService.resetPassword,
     onSuccess: ({ data }) => {
-      messageApi.info(data.message);
+      message.info(data.message);
       navigate('/login');
     }
   });
@@ -54,7 +54,7 @@ export const ForgotPassword = () => {
         onFinish={(data) => sendForm(data)}
         size="large"
       >
-        <Item
+        <Item<IResetPassword>
           name="email"
           rules={[{ required: true, message: 'Please input your email!' }]}
         >
@@ -62,7 +62,7 @@ export const ForgotPassword = () => {
         </Item>
         {sendCode.isSuccess && (
           <>
-            <Item
+            <Item<IResetPassword>
               name="code"
               rules={[
                 { required: true, message: 'Please input verification code!' }
@@ -73,7 +73,7 @@ export const ForgotPassword = () => {
                 placeholder="Verification code"
               />
             </Item>
-            <Item
+            <Item<IResetPassword>
               name="password"
               hasFeedback
               rules={[
@@ -131,7 +131,6 @@ export const ForgotPassword = () => {
           Submit
         </Button>
       </Form>
-      {contextHolder}
     </>
   );
 };

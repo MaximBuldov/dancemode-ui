@@ -1,13 +1,12 @@
 import { useMutation } from '@tanstack/react-query';
-import { Button, Divider } from 'antd';
+import { App, Button, Divider } from 'antd';
 import { ProfileForm } from 'components';
-import { useError } from 'hooks';
 import { useNavigate } from 'react-router-dom';
 import { userService } from 'services';
 import { cartStore, userStore } from 'stores';
 
 export const Profile = () => {
-  const { contextHolder, messageApi } = useError();
+  const { message } = App.useApp();
   const navigate = useNavigate();
 
   const { mutate, isPending } = useMutation({
@@ -15,7 +14,7 @@ export const Profile = () => {
     onSuccess: (_, values) => {
       const { password, confirm, ...data } = values;
       userStore.updateUser(data);
-      messageApi.open({
+      message.open({
         type: 'success',
         content: 'Information successfully updated 🥳'
       });
@@ -45,7 +44,6 @@ export const Profile = () => {
       >
         Log out
       </Button>
-      {contextHolder}
     </>
   );
 };

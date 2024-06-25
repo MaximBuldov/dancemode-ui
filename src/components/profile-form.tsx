@@ -41,7 +41,7 @@ export const ProfileForm = ({
   initialValues,
   isRequired
 }: ProfileFormProps) => {
-  const [form] = useForm();
+  const [form] = useForm<ISignupForm>();
 
   const label = (text: string) => {
     return isLabels ? text : '';
@@ -65,7 +65,7 @@ export const ProfileForm = ({
   return (
     <>
       <Typography.Title level={4}>{title}</Typography.Title>
-      <Form
+      <Form<ISignupForm>
         form={form}
         name="signup"
         onFinish={onSubmit}
@@ -74,15 +74,12 @@ export const ProfileForm = ({
           initialValues
             ? {
                 ...initialValues,
-                acf: {
-                  ...initialValues.acf,
-                  dob: dayjs(initialValues.acf.dob).format('YYYY-MM-DD')
-                }
+                dob: dayjs(initialValues.dob).format('YYYY-MM-DD')
               }
             : undefined
         }
       >
-        <Item
+        <Item<ISignupForm>
           name="first_name"
           rules={[
             { required: isRequired, message: 'Please input your first name!' }
@@ -94,7 +91,7 @@ export const ProfileForm = ({
             placeholder={placeholder(firstName)}
           />
         </Item>
-        <Item
+        <Item<ISignupForm>
           name="last_name"
           rules={[
             { required: isRequired, message: 'Please input your last name!' }
@@ -106,8 +103,8 @@ export const ProfileForm = ({
             placeholder={placeholder(lastName)}
           />
         </Item>
-        <Item
-          name={['acf', 'dob']}
+        <Item<ISignupForm>
+          name="dob"
           rules={[
             {
               required: isRequired,
@@ -122,7 +119,7 @@ export const ProfileForm = ({
             style={{ width: '100%' }}
           />
         </Item>
-        <Item
+        <Item<ISignupForm>
           name="email"
           rules={[
             { required: isRequired, message: 'Please input your email!' },
@@ -135,8 +132,8 @@ export const ProfileForm = ({
             placeholder={placeholder(email)}
           />
         </Item>
-        <Item
-          name={['acf', 'billing_phone']}
+        <Item<ISignupForm>
+          name="billing_phone"
           rules={[
             { required: isRequired, message: 'Please input your phone!' },
             {
@@ -152,8 +149,8 @@ export const ProfileForm = ({
             placeholder={placeholder(phone)}
           />
         </Item>
-        <Item
-          name={['acf', 'instagram']}
+        <Item<ISignupForm>
+          name="instagram"
           rules={[
             { required: isRequired, message: 'Please input your instagram!' }
           ]}
@@ -164,7 +161,7 @@ export const ProfileForm = ({
             placeholder={`${placeholder(instagram)} @dancemode`}
           />
         </Item>
-        <Item
+        <Item<ISignupForm>
           name="password"
           hasFeedback
           rules={[
@@ -184,7 +181,7 @@ export const ProfileForm = ({
             placeholder={placeholder(password)}
           />
         </Item>
-        <Item
+        <Item<ISignupForm>
           name="confirm"
           dependencies={['password']}
           hasFeedback

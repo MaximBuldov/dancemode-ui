@@ -2,7 +2,7 @@ import { AxiosResponse } from 'axios';
 import { IOrder, IOrderStatus, IROrder } from 'models';
 import { userStore } from 'stores';
 
-import { $api, $wc } from '../http';
+import { $api } from '../http';
 
 export interface IUpdate {
   data: Partial<IROrder>;
@@ -25,7 +25,7 @@ const _fields =
 class OrderService {
   async create(data: Partial<IOrder>) {
     try {
-      const res = await $wc.post('/wc/v3/orders', data, {
+      const res = await $api.post('/order', data, {
         params: { _fields }
       });
       return res.data as IROrder;
@@ -36,7 +36,7 @@ class OrderService {
 
   async getByYear(date: string) {
     try {
-      const res = await $wc.get('/wc/v3/orders', {
+      const res = await $api.get('/order', {
         params: {
           _fields,
           customer: userStore.data?.id,
@@ -52,7 +52,7 @@ class OrderService {
 
   async getMyAll(page: number) {
     try {
-      const res = await $wc.get('/wc/v3/orders', {
+      const res = await $api.get('/order', {
         params: {
           _fields,
           customer: userStore.data?.id,
@@ -69,7 +69,7 @@ class OrderService {
 
   async getAll(values: IFilters) {
     try {
-      const res = await $wc.get<IROrder[]>('/wc/v3/orders', {
+      const res = await $api.get<IROrder[]>('/order', {
         params: {
           _fields,
           dp: 0,
@@ -84,7 +84,7 @@ class OrderService {
 
   async update({ data, id }: IUpdate) {
     try {
-      const res = await $wc.put(`/wc/v3/orders/${id}`, data);
+      const res = await $api.patch(`/order/${id}`, data);
       return res.data as IROrder;
     } catch (error) {
       throw error;
@@ -93,7 +93,7 @@ class OrderService {
 
   async delete(id: string | number) {
     try {
-      const res = await $wc.delete(`/wc/v3/orders/${id}`);
+      const res = await $api.delete(`/order/${id}`);
       return res.data as IROrder;
     } catch (error) {
       throw error;
@@ -102,7 +102,7 @@ class OrderService {
 
   async stripe(data: { total: number; customer?: number }) {
     try {
-      const res = await $api.post('/custom/v1/process-payment', data);
+      const res = await $api.post('/order/process-payment', data);
       return res.data;
     } catch (error) {
       throw error;

@@ -16,7 +16,8 @@ export const CartItem = ({ item }: CartItemProps) => {
         <b>{item.name}:</b> {dayjs(item.date_time).format('MMMM DD - dd')}
       </Col>
       <Col span={6}>
-        <Price total={item.total || item.price} subtotal={item.price} />
+        <Price total={item.price} subtotal={item.price} />
+        {/* <Price total={item.total || item.price} subtotal={item.price} /> */}
       </Col>
       <Col span={4} style={{ textAlign: 'right' }}>
         <Button

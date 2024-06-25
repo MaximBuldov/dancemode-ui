@@ -14,7 +14,7 @@ export interface IROrder extends IOrder {
   customer_name: string;
   date: string;
   date_created: string;
-  total: string;
+  total: number;
   line_items: IROrderProduct[];
   note?: string;
   group: string;
@@ -22,8 +22,8 @@ export interface IROrder extends IOrder {
 
 export interface IOrderProduct {
   product_id: number;
-  subtotal: string;
-  total: string;
+  subtotal: number;
+  total: number;
   meta_data?: IMetaData[];
 }
 

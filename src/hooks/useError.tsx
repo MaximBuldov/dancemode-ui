@@ -1,22 +1,18 @@
-import { message } from 'antd';
+import { App } from 'antd';
 import { AxiosError } from 'axios';
 import { IResponseError } from 'models';
+import { errorCatch } from 'utils';
 
 export const useError = () => {
-  const [messageApi, contextHolder] = message.useMessage();
+  const { message } = App.useApp();
 
-  function onErrorFn(error: AxiosError<IResponseError>, message?: string) {
-    messageApi.open({
+  function onErrorFn(error: AxiosError<IResponseError>, text?: string) {
+    const content = errorCatch(error);
+    message.open({
       type: 'error',
-      content: message || (
-        <div
-          dangerouslySetInnerHTML={{
-            __html: error.response?.data.message || error.message
-          }}
-        />
-      )
+      content: text || content
     });
   }
 
-  return { onErrorFn, contextHolder, messageApi };
+  return { onErrorFn };
 };

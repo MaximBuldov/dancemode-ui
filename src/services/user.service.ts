@@ -8,14 +8,12 @@ import {
 } from 'models';
 import { userStore } from 'stores';
 
-import { $api, $auth, $wc } from '../http';
-
-const _fields = 'id,role,acf,first_name,last_name,email,date_created';
+import { $api, $auth } from '../http';
 
 class UserService {
   async login(data: ILoginForm) {
     try {
-      const res = await $auth<IUserResponse>('/jwt-auth/v1/token', { data });
+      const res = await $auth<IUserResponse>('/auth/login', { data });
       return res.data;
     } catch (error) {
       throw error;
@@ -24,7 +22,7 @@ class UserService {
 
   async signup(data: ISignupForm) {
     try {
-      const res = await $auth('/custom/v1/register', { data });
+      const res = await $auth('/auth/register', { data });
       return res.data as IUserResponse;
     } catch (error) {
       throw error;
@@ -33,7 +31,7 @@ class UserService {
 
   async update(data: ISignupForm) {
     try {
-      const res = await $api.post(`/wp/v2/users/${userStore.data?.id}`, data);
+      const res = await $api.patch(`/users/${userStore.data?.id}`, data);
       return res.data as IUserResponse;
     } catch (error) {
       throw error;
@@ -42,9 +40,7 @@ class UserService {
 
   async getCustomers(params?: any) {
     try {
-      const res = await $wc.get<IRUser[]>('/wc/v3/customers', {
-        params: { ...params, _fields }
-      });
+      const res = await $api.get<IRUser[]>('/users', { params });
       return res;
     } catch (error) {
       throw error;
@@ -53,7 +49,7 @@ class UserService {
 
   async sendCode(data: IResetPassword) {
     try {
-      const res = await $auth<IRResetPassword>('/bdpwr/v1/reset-password', {
+      const res = await $auth<IRResetPassword>('/auth/reset-password', {
         data
       });
       return res;
@@ -64,7 +60,7 @@ class UserService {
 
   async resetPassword(data: IResetPassword) {
     try {
-      const res = await $auth<IRResetPassword>('/bdpwr/v1/set-password', {
+      const res = await $auth<IRResetPassword>('/auth/set-password', {
         data
       });
       return res;

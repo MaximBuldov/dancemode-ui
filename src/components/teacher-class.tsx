@@ -241,9 +241,10 @@ export const TeacherClass = observer(({ product }: TeacherClassProps) => {
           isPending={updateProduct.isPending}
           initialValues={{
             name: product.name,
-            regular_price: product.price,
-            date_time: classTime.format('YYYY-MM-DDTHH:MM'),
-            stock_quantity: product.stock_quantity
+            price: product.price,
+            date_time: classTime.toDate(),
+            stock_quantity: product.stock_quantity,
+            category_id: product.category_id
           }}
         />
       </Drawer>

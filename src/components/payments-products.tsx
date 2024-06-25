@@ -33,11 +33,7 @@ const columns: ColumnsType<IROrderProduct> = [
     dataIndex: 'name',
     key: 'name',
     render: (_, el) =>
-      el.total !== '0' ? (
-        <Price total={el.total} subtotal={el.subtotal} />
-      ) : (
-        '$0'
-      )
+      el.total !== 0 ? <Price total={el.total} subtotal={el.subtotal} /> : '$0'
   }
 ];
 

@@ -2,6 +2,7 @@ import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { useMutation } from '@tanstack/react-query';
 import { Button, Divider, Form, Input, Typography } from 'antd';
 import { observer } from 'mobx-react-lite';
+import { ILoginForm } from 'models';
 import { Link, useNavigate } from 'react-router-dom';
 import { userService } from 'services';
 import { userStore } from 'stores';
@@ -9,7 +10,7 @@ import { userStore } from 'stores';
 const { useForm, Item } = Form;
 
 export const Login = observer(() => {
-  const [form] = useForm();
+  const [form] = useForm<ILoginForm>();
   const navigate = useNavigate();
 
   const { mutate, isPending } = useMutation({
@@ -29,13 +30,13 @@ export const Login = observer(() => {
         onFinish={(data) => mutate(data)}
         size="large"
       >
-        <Item
-          name="username"
+        <Item<ILoginForm>
+          name="email"
           rules={[{ required: true, message: 'Please input your email!' }]}
         >
           <Input prefix={<UserOutlined />} placeholder="Your email" />
         </Item>
-        <Item
+        <Item<ILoginForm>
           name="password"
           rules={[{ required: true, message: 'Please input your password!' }]}
         >

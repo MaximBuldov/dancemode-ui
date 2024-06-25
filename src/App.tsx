@@ -13,11 +13,12 @@ import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import { useSwipeable } from 'react-swipeable';
 import { userStore } from 'stores';
 
+import { App as AppProvider } from 'antd';
 import { Template } from './components';
 import { adminRoutes, publicRoutes, userRoutes } from './routes';
 
 const App = observer(() => {
-  const { onErrorFn, contextHolder } = useError();
+  const { onErrorFn } = useError();
   const queryClient = new QueryClient({
     defaultOptions: {
       queries: {
@@ -64,12 +65,13 @@ const App = observer(() => {
   });
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <div {...handlers} className="app-container">
-        <RouterProvider router={router} />
-        {contextHolder}
-      </div>
-    </QueryClientProvider>
+    <AppProvider>
+      <QueryClientProvider client={queryClient}>
+        <div {...handlers} className="app-container">
+          <RouterProvider router={router} />
+        </div>
+      </QueryClientProvider>
+    </AppProvider>
   );
 });
 

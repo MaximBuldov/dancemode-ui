@@ -1,7 +1,7 @@
 import { makeAutoObservable } from 'mobx';
 import { makePersistable } from 'mobx-persist-store';
 import { IRUser, IUser, IUserResponse, IUserRoles } from 'models';
-import { secureLs } from 'utils';
+import { saveTokensStorage } from 'utils';
 
 class User {
   data: IRUser | null = null;
@@ -17,7 +17,7 @@ class User {
 
   setUser(data: IUserResponse) {
     this.data = data.user;
-    secureLs.set('token', data.token);
+    saveTokensStorage(data.accessToken, data.refreshToken);
   }
 
   updateUser(data: IUser) {
@@ -34,7 +34,7 @@ class User {
   }
 
   get isAdmin() {
-    return this.data?.role.includes(IUserRoles.ADMIN);
+    return this.data?.role === IUserRoles.ADMIN;
   }
 
   get isAuth() {

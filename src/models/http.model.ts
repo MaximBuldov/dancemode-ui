@@ -15,3 +15,8 @@ export enum IKeys {
   PAYMENTS = 'payments',
   REPORTS = 'reports'
 }
+
+export enum SecureStore {
+  ACCESS_TOKEN = 'accessToken',
+  REFRESH_TOKEN = 'refreshToken'
+}

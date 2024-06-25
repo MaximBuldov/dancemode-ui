@@ -1,27 +1,25 @@
 import dayjs from 'dayjs';
-import { ICreateProductsForm, NameOfClass } from 'models';
+import { ICreateProductsForm, IProduct, NameOfClass } from 'models';
 
 export function prepareProducts(values: ICreateProductsForm) {
-  const products = [];
+  const products: Pick<
+    IProduct,
+    'name' | 'price' | 'category_id' | 'date_time'
+  >[] = [];
 
   for (const date of values.dates) {
     for (const el of values.classes) {
       products.push({
         name: el.label,
-        regular_price: '25',
-        categories: [{ id: el.value }],
-        meta_data: [
-          {
-            key: 'date_time',
-            value: dayjs(date)
-              .hour(el.label === NameOfClass.BEGINNER ? 19 : 20)
-              .minute(0)
-              .format('YYYY-MM-DD HH:mm')
-          }
-        ]
+        price: 25,
+        category_id: el.value,
+        date_time: dayjs(date)
+          .hour(el.label === NameOfClass.BEGINNER ? 19 : 20)
+          .minute(0)
+          .toDate()
       });
     }
   }
 
-  return { create: products };
+  return products;
 }

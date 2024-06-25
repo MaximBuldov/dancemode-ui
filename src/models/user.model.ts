@@ -1,7 +1,8 @@
 import { IStatus } from './order.model';
 
 export interface IUserResponse {
-  token: string;
+  accessToken: string;
+  refreshToken: string;
   user: IRUser;
 }
 
@@ -9,17 +10,15 @@ export interface IUser {
   email: string;
   first_name: string;
   last_name: string;
-  date_created: string;
-  acf: {
-    instagram: string;
-    dob: string;
-    billing_phone: string;
-  };
+  created_at: string;
+  instagram: string;
+  dob: string;
+  billing_phone: string;
 }
 
 export interface IRUser extends IUser {
   id: number;
-  role: IUserRoles[];
+  role: IUserRoles;
 }
 
 export interface IUserWithStatus extends IRUser {

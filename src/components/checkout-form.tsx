@@ -6,8 +6,8 @@ import {
 } from '@stripe/react-stripe-js';
 import { StripeError, StripePaymentElementOptions } from '@stripe/stripe-js';
 import { useMutation } from '@tanstack/react-query';
-import { Button, Divider } from 'antd';
-import { useCreateOrder, useError } from 'hooks';
+import { App, Button, Divider } from 'antd';
+import { useCreateOrder } from 'hooks';
 import { IKeys, IPaymentMethod } from 'models';
 import { FormEvent, useState } from 'react';
 import { cartStore, userStore } from 'stores';
@@ -21,7 +21,7 @@ interface CheckoutFormProps {
 export const CheckoutForm = ({ paymentIntentId }: CheckoutFormProps) => {
   const stripe = useStripe();
   const elements = useElements();
-  const { contextHolder, messageApi } = useError();
+  const { message } = App.useApp();
   const [stripeError, setStripeError] = useState(false);
 
   const order = useCreateOrder({
@@ -38,16 +38,16 @@ export const CheckoutForm = ({ paymentIntentId }: CheckoutFormProps) => {
       }),
     mutationKey: [IKeys.PAYMENTS],
     onSuccess: (data) => {
-      messageApi.error(JSON.stringify(data));
+      message.error(JSON.stringify(data));
       if (data.error) {
-        messageApi.error(data.error.message);
+        message.error(data.error.message);
       } else {
         setStripeError(true);
         cartStore.clear();
       }
     },
     onError: (error: StripeError) => {
-      messageApi.error(error.message);
+      message.error(error.message);
     }
   });
 
@@ -58,7 +58,7 @@ export const CheckoutForm = ({ paymentIntentId }: CheckoutFormProps) => {
       return;
     }
     elements.submit().then((res) => {
-      res.error ? messageApi.error(res.error.message) : order.mutate();
+      res.error ? message.error(res.error.message) : order.mutate();
     });
   };
 
@@ -86,7 +86,6 @@ export const CheckoutForm = ({ paymentIntentId }: CheckoutFormProps) => {
       >
         Pay now
       </Button>
-      {contextHolder}
     </form>
   );
 };
