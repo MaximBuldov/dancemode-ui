@@ -10,7 +10,7 @@ interface ReportParams {
 class ReportService {
   async getAll(params?: ReportParams) {
     try {
-      const res = await $api.get('/wp/v2/reports', { params });
+      const res = await $api.get('/reports', { params });
       return res.data as IReport[];
     } catch (error) {
       throw error;

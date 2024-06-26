@@ -25,7 +25,6 @@ export const useGetReports = ({ from, to }: UseGetReports) => {
     queryKey: [IKeys.ORDERS],
     queryFn: () =>
       orderService.getAll({
-        per_page: 100,
         status: [IOrderStatus.PENDING, IOrderStatus.COMPLETED],
         min_date: lastReport?.completed
           ? dayjs(lastReport?.date).add(1, 'month').format('YYYY-MM')

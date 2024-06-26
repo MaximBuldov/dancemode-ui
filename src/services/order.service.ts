@@ -1,4 +1,3 @@
-import { AxiosResponse } from 'axios';
 import { IOrder, IOrderStatus, IROrder } from 'models';
 import { userStore } from 'stores';
 
@@ -19,16 +18,10 @@ export interface IFilters {
   max_date?: string;
 }
 
-const _fields =
-  'id,status,date_created,total,customer_id,line_items,customer_name,payment_method,note,coupon_lines,group';
-
 class OrderService {
   async create(data: Partial<IOrder>) {
     try {
-      const res = await $api.post('/order', data, {
-        params: { _fields }
-      });
-      return res.data as IROrder;
+      return (await $api.post<IROrder>('/orders', data)).data;
     } catch (error) {
       throw error;
     }
@@ -36,15 +29,14 @@ class OrderService {
 
   async getByYear(date: string) {
     try {
-      const res = await $api.get('/order', {
+      const res = await $api.get<IROrder[]>('/orders', {
         params: {
-          _fields,
           customer: userStore.data?.id,
           date,
           status: ['completed', 'pending']
         }
       });
-      return res.data as IROrder[];
+      return res.data;
     } catch (error) {
       throw error;
     }
@@ -52,31 +44,21 @@ class OrderService {
 
   async getMyAll(page: number) {
     try {
-      const res = await $api.get('/order', {
+      return await $api.get<IROrder[]>('/orders', {
         params: {
-          _fields,
           customer: userStore.data?.id,
           per_page: 10,
-          dp: 0,
           page
         }
       });
-      return res as AxiosResponse<IROrder[]>;
     } catch (error) {
       throw error;
     }
   }
 
-  async getAll(values: IFilters) {
+  async getAll(params: IFilters) {
     try {
-      const res = await $api.get<IROrder[]>('/order', {
-        params: {
-          _fields,
-          dp: 0,
-          ...values
-        }
-      });
-      return res as AxiosResponse<IROrder[]>;
+      return await $api.get<IROrder[]>('/orders', { params });
     } catch (error) {
       throw error;
     }
@@ -84,8 +66,8 @@ class OrderService {
 
   async update({ data, id }: IUpdate) {
     try {
-      const res = await $api.patch(`/order/${id}`, data);
-      return res.data as IROrder;
+      const res = await $api.patch<IROrder>(`/orders/${id}`, data);
+      return res.data;
     } catch (error) {
       throw error;
     }
@@ -93,8 +75,8 @@ class OrderService {
 
   async delete(id: string | number) {
     try {
-      const res = await $api.delete(`/order/${id}`);
-      return res.data as IROrder;
+      const res = await $api.delete<IROrder>(`/orders/${id}`);
+      return res.data;
     } catch (error) {
       throw error;
     }
@@ -102,7 +84,7 @@ class OrderService {
 
   async stripe(data: { total: number; customer?: number }) {
     try {
-      const res = await $api.post('/order/process-payment', data);
+      const res = await $api.post('/orders/process-payment', data);
       return res.data;
     } catch (error) {
       throw error;

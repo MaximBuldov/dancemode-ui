@@ -16,13 +16,13 @@ const columns: ColumnsType<IRUser> = [
   {
     title: 'DOB',
     key: 'dob',
-    dataIndex: ['acf', 'dob'],
+    dataIndex: 'dob',
     render: (el) => dayjs(el).format('MM/DD/YY')
   },
   {
     title: 'Reg',
     key: 'reg',
-    dataIndex: ['date_created'],
+    dataIndex: 'created_at',
     render: (el) => dayjs(el).format('MM/DD/YY')
   }
 ];
@@ -38,8 +38,6 @@ export const Students = () => {
       userService.getCustomers({
         search: debouncedSearch,
         per_page: pageSize,
-        orderby: 'registered_date',
-        order: 'desc',
         page
       }),
     queryKey: [IKeys.CUSTOMERS, { name: debouncedSearch, page }],
@@ -88,7 +86,7 @@ export const Students = () => {
         pagination={{
           current: page,
           pageSize,
-          total: data?.headers['x-wp-total'],
+          total: data?.headers['total'],
           onChange: (number) => setPage(number)
         }}
       />

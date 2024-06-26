@@ -1,4 +1,4 @@
-import { ConfigProvider } from 'antd';
+import { App as AntApp, ConfigProvider } from 'antd';
 import ReactDOM from 'react-dom/client';
 
 import App from './App';
@@ -11,6 +11,8 @@ const root = ReactDOM.createRoot(
 
 root.render(
   <ConfigProvider>
-    <App />
+    <AntApp>
+      <App />
+    </AntApp>
   </ConfigProvider>
 );
