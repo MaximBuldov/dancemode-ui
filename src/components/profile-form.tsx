@@ -68,7 +68,12 @@ export const ProfileForm = ({
       <Form<ISignupForm>
         form={form}
         name="signup"
-        onFinish={onSubmit}
+        onFinish={({ dob, ...rest }) =>
+          onSubmit({
+            ...rest,
+            dob: dayjs(dob).toDate()
+          })
+        }
         layout="vertical"
         initialValues={
           initialValues

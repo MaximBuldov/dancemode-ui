@@ -31,14 +31,23 @@ export const CreateCoupon = () => {
   });
 
   const usersApi = useQuery({
-    queryFn: () => userService.getCustomers({ per_page: 100 }),
+    queryFn: () => userService.getCustomers(),
     queryKey: [IKeys.CUSTOMERS]
   });
 
   return (
     <>
       <Typography.Title level={4}>Create coupon</Typography.Title>
-      <Form form={form} onFinish={couponApi.mutate} layout="inline">
+      <Form
+        form={form}
+        onFinish={({ date_expires, ...rest }) => {
+          couponApi.mutate({
+            ...rest,
+            date_expires: dayjs(date_expires).toDate()
+          });
+        }}
+        layout="inline"
+      >
         <Item
           name="code"
           label="Code"
@@ -58,7 +67,7 @@ export const CreateCoupon = () => {
           label="Amount"
           rules={[{ required: true, message: 'Please input amount!' }]}
         >
-          <Input type="number" prefix="$" />
+          <InputNumber prefix="$" controls={false} />
         </Item>
         <Item name="allowed_users" label="Allowed users" style={style}>
           {usersApi.isPending ? (
@@ -69,7 +78,7 @@ export const CreateCoupon = () => {
               onChange={(e) => {
                 const users = Array.from(e.target.options)
                   .filter((el) => el.selected)
-                  .map((el) => el.value);
+                  .map((el) => +el.value);
                 form.setFieldValue('allowed_users', users);
               }}
             >

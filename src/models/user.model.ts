@@ -12,7 +12,7 @@ export interface IUser {
   last_name: string;
   created_at: string;
   instagram: string;
-  dob: string;
+  dob: Date;
   billing_phone: string;
 }
 

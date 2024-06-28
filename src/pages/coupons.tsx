@@ -56,7 +56,7 @@ export const Coupons = () => {
 
   return (
     <Table
-      dataSource={data?.data}
+      dataSource={data}
       columns={columns}
       loading={isFetching}
       rowKey={(line) => line.id}

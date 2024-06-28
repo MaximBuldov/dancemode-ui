@@ -6,7 +6,6 @@ import {
   ISignupForm,
   IUserResponse
 } from 'models';
-import { userStore } from 'stores';
 
 import { $api, $auth } from '../http';
 
@@ -31,7 +30,7 @@ class UserService {
 
   async update(data: ISignupForm) {
     try {
-      const res = await $api.patch(`/users/${userStore.data?.id}`, data);
+      const res = await $api.patch('/users', data);
       return res.data as IUserResponse;
     } catch (error) {
       throw error;

@@ -23,7 +23,7 @@ export const PromoCode = () => {
 
   const { mutate, isPending } = useMutation({
     mutationFn: (code: string) => couponService.getMy({ code }),
-    onSuccess: ({ data }) => {
+    onSuccess: (data) => {
       if (data.length) {
         const isValid = cartStore.checkCouponEligibility(
           userStore.data!.id,
