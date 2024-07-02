@@ -32,7 +32,7 @@ export const createReport = (arr: IROrder[]): IReport[] => {
         (order.payment_method === IPaymentMethod.COUPON
           ? Number(order.total)
           : 0) +
-        (order.coupon_lines?.reduce(
+        (order.coupons?.reduce(
           (acc, el) => acc + Number(el.discount || 0),
           0
         ) || 0);

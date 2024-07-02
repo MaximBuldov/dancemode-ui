@@ -1,7 +1,7 @@
 import { useMutation } from '@tanstack/react-query';
-import { IKeys, IOrderStatus, IPaymentMethod } from 'models';
+import { IKeys, IPaymentMethod } from 'models';
 import { orderService } from 'services';
-import { cartStore, userStore } from 'stores';
+import { cartStore } from 'stores';
 
 interface IUseCreateOrder {
   paymentIntentId?: string;
@@ -17,30 +17,10 @@ export const useCreateOrder = ({
   return useMutation({
     mutationFn: () =>
       orderService.create({
-        customer_id: Number(userStore.data?.id),
         line_items: cartStore.preparedData,
-        coupon_lines: cartStore.preparedCoupons,
+        coupons: cartStore.preparedCoupons,
         payment_method,
-        status: IOrderStatus.PROCESSING,
-        billing: {
-          first_name: userStore.data?.first_name,
-          last_name: userStore.data?.last_name,
-          city: 'San Diego',
-          state: 'CA',
-          email: userStore.data?.email,
-          phone: userStore.data?.billing_phone,
-          country: 'US'
-        },
-        meta_data: [
-          {
-            key: '_stripe_intent_id',
-            value: paymentIntentId || ''
-          },
-          {
-            key: 'date',
-            value: cartStore.orderDates
-          }
-        ]
+        stripe_id: paymentIntentId || ''
       }),
     mutationKey: [IKeys.ORDERS],
     onSuccess

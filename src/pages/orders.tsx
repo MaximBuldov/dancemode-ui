@@ -6,26 +6,17 @@ import { PaymentsProducts } from 'components';
 import { FilterOrdersForm } from 'components/filter-orders-form';
 import { OrderModalActions } from 'components/order-modal-actions';
 import { IKeys, IOrderStatus, IROrder } from 'models';
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import { orderService } from 'services';
-
-const enum PERPAGE {
-  FULL = 100,
-  SMALL = 10
-}
 
 export const Orders = () => {
   const [page, setPage] = useState(1);
   const [filters, setFilters] = useState({});
   const [modal, setModal] = useState(0);
-  const per_page = useMemo(
-    () => (Object.keys(filters).length > 0 ? PERPAGE.FULL : PERPAGE.SMALL),
-    [filters]
-  );
 
   const queryKey = [IKeys.ORDERS, { page, ...filters }];
   const orders = useQuery({
-    queryFn: () => orderService.getAll({ page, per_page, ...filters }),
+    queryFn: () => orderService.getAll({ page, ...filters }),
     queryKey,
     staleTime: 1000 * 60
   });
@@ -40,7 +31,12 @@ export const Orders = () => {
 
   const columns: ColumnsType<IROrder> = [
     { title: 'ID', dataIndex: 'id', key: 'id' },
-    { title: 'Customer', dataIndex: 'customer_name', key: 'customer' },
+    {
+      title: 'Customer',
+      dataIndex: 'customer',
+      key: 'customer',
+      render: (el) => `${el.first_name} ${el.last_name}`
+    },
     {
       title: 'Total',
       dataIndex: 'total',
@@ -57,7 +53,7 @@ export const Orders = () => {
             return '✅';
           case IOrderStatus.CANCELLED:
             return '🚫';
-          case IOrderStatus.PENDING:
+          case IOrderStatus.PROCESSING:
             return <SyncOutlined spin style={{ color: '#0958d9' }} />;
           default:
             return '';
@@ -88,8 +84,8 @@ export const Orders = () => {
         }}
         pagination={{
           current: page,
-          pageSize: per_page,
-          total: orders.isSuccess && orders.data?.headers['x-wp-total'],
+          pageSize: 10,
+          total: orders.isSuccess && orders.data?.headers['Total'],
           onChange: (number) => setPage(number)
         }}
       />

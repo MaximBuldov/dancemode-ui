@@ -21,7 +21,9 @@ export interface IRUser extends IUser {
   role: IUserRoles;
 }
 
-export interface IUserWithStatus extends IRUser {
+export interface IUserWithStatus {
+  id: number;
+  name: string;
   status?: IStatus;
   paid: boolean;
 }

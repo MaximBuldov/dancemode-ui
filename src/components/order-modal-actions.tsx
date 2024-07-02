@@ -1,4 +1,4 @@
-import { Button, Modal, message } from 'antd';
+import { App, Button, Modal } from 'antd';
 import { useDeleteOrder, useUpdateOrder } from 'hooks';
 import { IOrderStatus } from 'models';
 import { useCallback, useState } from 'react';
@@ -14,11 +14,11 @@ export const OrderModalActions = ({
   id,
   queryKey
 }: OrderModalActionsProps) => {
-  const [messageApi, contextHolder] = message.useMessage();
+  const { message } = App.useApp();
   const onSuccessAction = useCallback(() => {
     setOpen(0);
-    messageApi.success('Done!');
-  }, [messageApi, setOpen]);
+    message.success('Done!');
+  }, [message, setOpen]);
 
   const updateOrder = useUpdateOrder(queryKey, onSuccessAction);
   const deleteOrder = useDeleteOrder(id, queryKey, onSuccessAction);
@@ -33,53 +33,50 @@ export const OrderModalActions = ({
   );
 
   return (
-    <>
-      <Modal
-        title={`Update order #${id} status`}
-        open={!!id}
-        destroyOnClose
-        onCancel={() => setOpen(0)}
-        footer={() => (
-          <>
-            <Button
-              onClick={() => onClick(IOrderStatus.COMPLETED)}
-              type="primary"
-              loading={
-                updateOrder.isPending && loading === IOrderStatus.COMPLETED
-              }
-              disabled={
-                updateOrder.isPending && loading !== IOrderStatus.COMPLETED
-              }
-            >
-              Confirm
-            </Button>
-            <Button
-              onClick={() => onClick(IOrderStatus.CANCELLED)}
-              type="primary"
-              loading={
-                updateOrder.isPending && loading === IOrderStatus.CANCELLED
-              }
-              disabled={
-                updateOrder.isPending && loading !== IOrderStatus.CANCELLED
-              }
-              ghost
-              danger
-            >
-              Cancel
-            </Button>
-            <Button
-              onClick={() => deleteOrder.mutate()}
-              type="primary"
-              loading={deleteOrder.isPending}
-              disabled={updateOrder.isPending}
-              danger
-            >
-              Delete
-            </Button>
-          </>
-        )}
-      />
-      {contextHolder}
-    </>
+    <Modal
+      title={`Update order #${id} status`}
+      open={!!id}
+      destroyOnClose
+      onCancel={() => setOpen(0)}
+      footer={() => (
+        <>
+          <Button
+            onClick={() => onClick(IOrderStatus.COMPLETED)}
+            type="primary"
+            loading={
+              updateOrder.isPending && loading === IOrderStatus.COMPLETED
+            }
+            disabled={
+              updateOrder.isPending && loading !== IOrderStatus.COMPLETED
+            }
+          >
+            Confirm
+          </Button>
+          <Button
+            onClick={() => onClick(IOrderStatus.CANCELLED)}
+            type="primary"
+            loading={
+              updateOrder.isPending && loading === IOrderStatus.CANCELLED
+            }
+            disabled={
+              updateOrder.isPending && loading !== IOrderStatus.CANCELLED
+            }
+            ghost
+            danger
+          >
+            Cancel
+          </Button>
+          <Button
+            onClick={() => deleteOrder.mutate()}
+            type="primary"
+            loading={deleteOrder.isPending}
+            disabled={updateOrder.isPending}
+            danger
+          >
+            Delete
+          </Button>
+        </>
+      )}
+    />
   );
 };

@@ -10,11 +10,11 @@ export const useUpdateOrder = (queryKey: any[], onSuccess?: () => void) => {
       onSuccess && onSuccess();
       client.setQueryData(queryKey, (store: any) => {
         const newData = (arr: IROrder[]) =>
-          arr.map((el) => (el.id === data.id ? data : el));
+          arr?.map((el) => (el.id === data.id ? data : el));
         if (Array.isArray(store)) {
           return newData(store);
         } else {
-          return { ...store, data: newData(store.data) };
+          return { ...store, data: newData(store?.data) };
         }
       });
     }

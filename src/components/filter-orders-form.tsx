@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { Button, DatePicker, Form, Segmented, Select, Space } from 'antd';
+import { Button, DatePicker, Form, Select, Space } from 'antd';
 import { IKeys } from 'models';
 import { useState } from 'react';
 import { IFilters, userService } from 'services';
@@ -20,7 +20,7 @@ export const FilterOrdersForm = ({ setFilters }: FilterOrdersFormProps) => {
   const [dateName, setDateName] = useState<string | number>(FILTERNAME.ORDER);
 
   const users = useQuery({
-    queryFn: () => userService.getCustomers({ per_page: 100 }),
+    queryFn: () => userService.getCustomers(),
     queryKey: [IKeys.CUSTOMERS],
     select: ({ data }) =>
       data.map((el) => ({
@@ -34,16 +34,9 @@ export const FilterOrdersForm = ({ setFilters }: FilterOrdersFormProps) => {
       form={form}
       onFinish={(values) => {
         if (values?.month) {
-          values['before'] = values.month
-            .endOf('month')
-            .format('YYYY-MM-DDTHH:mm:ss');
-          values['after'] = values.month
-            .startOf('month')
-            .format('YYYY-MM-DDTHH:mm:ss');
+          values['before'] = values.month.endOf('month').toDate();
+          values['after'] = values.month.startOf('month').toDate();
           delete values.month;
-        }
-        if (values?.date) {
-          values['date'] = values.date.format('YYYYMM');
         }
         setFilters(values);
       }}
@@ -55,18 +48,9 @@ export const FilterOrdersForm = ({ setFilters }: FilterOrdersFormProps) => {
           options={users.data}
         />
       </Item>
-      <Space>
-        <Item>
-          <Segmented
-            options={[FILTERNAME.ORDER, FILTERNAME.CLASS]}
-            value={dateName}
-            onChange={(val) => setDateName(val)}
-          />
-        </Item>
-        <Item name={dateName === FILTERNAME.ORDER ? 'month' : 'date'}>
-          <DatePicker picker="month" />
-        </Item>
-      </Space>
+      <Item name="month">
+        <DatePicker picker="month" />
+      </Item>
       <Space>
         <Button type="primary" htmlType="submit" loading={users.isPending}>
           Submit

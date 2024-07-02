@@ -1,19 +1,19 @@
+import { IProduct } from './product.model';
+import { IRUser, IUser } from './user.model';
+
 export interface IOrder {
-  customer_id: number;
   line_items: IOrderProduct[];
-  meta_data?: IMetaData[];
   payment_method?: IPaymentMethod;
-  coupon_lines?: { code: string; discount?: string }[];
-  billing?: IBilling;
-  shipping?: IBilling;
+  coupons?: { code: string; discount?: string }[];
   status: IOrderStatus;
+  stripe_id?: string;
 }
 
 export interface IROrder extends IOrder {
   id: number;
-  customer_name: string;
-  date: string;
-  date_created: string;
+  customer_id: number;
+  customer: Pick<IUser, 'first_name' | 'last_name'>;
+  created_at: string;
   total: number;
   line_items: IROrderProduct[];
   note?: string;
@@ -24,20 +24,30 @@ export interface IOrderProduct {
   product_id: number;
   subtotal: number;
   total: number;
-  meta_data?: IMetaData[];
+  productStatus?: IProductStatus;
 }
 
 export interface IROrderProduct extends IOrderProduct {
   id: number;
   name: string;
-  order: number;
-  date_time: string;
+  order_id: number;
+  order: Pick<IROrder, 'status'>;
+  product_id: number;
+  product: Pick<IProduct, 'name'>;
+  user_id: number;
+  user: Pick<IRUser, 'first_name' | 'last_name'>;
 }
 
 export interface IMetaData {
   id?: number;
   key: string;
   value: string;
+}
+
+export enum IProductStatus {
+  CONFIRMED = 'confirmed',
+  CANCELED = 'canceled',
+  WAIT_LIST = 'wait_list'
 }
 
 export enum IStatus {

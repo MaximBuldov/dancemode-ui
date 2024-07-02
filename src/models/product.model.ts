@@ -1,3 +1,5 @@
+import { IROrderProduct } from './order.model';
+
 export interface IProduct {
   id: number;
   name: string | NameOfClass;
@@ -7,12 +9,9 @@ export interface IProduct {
   stock_status: IStockStatus;
   category: ICategory;
   category_id: Categories;
-  cancel: number[];
-  confirm: number[];
   stock_quantity: number;
-  paid: number[];
-  pending: number[];
   wait_list: number[];
+  orders: IROrderProduct[];
 }
 
 export interface ICartProduct extends IProduct {

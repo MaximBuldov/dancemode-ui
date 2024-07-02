@@ -21,7 +21,7 @@ interface PaymentsProductsProps {
 }
 
 const columns: ColumnsType<IROrderProduct> = [
-  { title: 'Class', dataIndex: 'name', key: 'name' },
+  { title: 'Class', dataIndex: ['product', 'name'], key: 'name' },
   {
     title: 'Date',
     dataIndex: 'date_time',
@@ -48,7 +48,7 @@ export const PaymentsProducts = ({ order }: PaymentsProductsProps) => {
       {
         key: 'date',
         label: 'Date',
-        children: dayjs(order.date_created).format('MMM D')
+        children: dayjs(order.created_at).format('MMM D')
       },
       {
         key: 'payment',
@@ -56,11 +56,11 @@ export const PaymentsProducts = ({ order }: PaymentsProductsProps) => {
         children: order.payment_method
       }
     ];
-    if (order.coupon_lines?.length) {
+    if (order.coupons?.length) {
       arr.push({
         key: 'coupon',
         label: 'Coupon',
-        children: order.coupon_lines.map((el) => (
+        children: order.coupons.map((el) => (
           <Tag key={el.code}>
             {el.code} - ${el?.discount}
           </Tag>
@@ -103,8 +103,8 @@ export const PaymentsProducts = ({ order }: PaymentsProductsProps) => {
           let subtotal = 0;
           let total = 0;
           pageData.forEach((el) => {
-            subtotal += Number(el.subtotal);
-            total += Number(el.total);
+            subtotal += el.subtotal;
+            total += el.total;
           });
           const hasDiscount = subtotal !== total;
           return (
@@ -112,7 +112,7 @@ export const PaymentsProducts = ({ order }: PaymentsProductsProps) => {
               <Table.Summary.Cell index={0} />
               <Table.Summary.Cell index={1} />
               <Table.Summary.Cell index={2}>
-                {hasDiscount && `$${subtotal} / $${total}`}
+                {hasDiscount ? `$${subtotal} / $${total}` : `$${total}`}
               </Table.Summary.Cell>
             </Table.Summary.Row>
           );

@@ -19,12 +19,18 @@ import {
   Typography
 } from 'antd';
 import { ColumnsType } from 'antd/es/table';
-import { AxiosResponse } from 'axios';
 import dayjs from 'dayjs';
 import { observer } from 'mobx-react-lite';
-import { IKeys, IProduct, IRUser, IStatus, IUserWithStatus } from 'models';
+import {
+  IKeys,
+  IOrderProduct,
+  IOrderStatus,
+  IProduct,
+  IProductStatus,
+  IUserWithStatus
+} from 'models';
 import { Key, useMemo, useState } from 'react';
-import { productService } from 'services';
+import { orderProductService, productService } from 'services';
 
 import { ProductForm } from './product-form';
 
@@ -33,39 +39,32 @@ interface TeacherClassProps {
 }
 
 export const TeacherClass = observer(({ product }: TeacherClassProps) => {
-  const { date_time, paid, cancel, pending, confirm, wait_list } = product;
+  const { date_time } = product;
   const classTime = dayjs(date_time);
   const isExpired = dayjs().isAfter(classTime, 'day');
   const client = useQueryClient();
   const [modal, setModal] = useState(false);
   const [customersTable, openCustomersTable] = useState(false);
   const [selectedRows, setSelectedRows] = useState<Key[]>([]);
-  const allCustomers = client.getQueryData<AxiosResponse<IRUser[]>>([
-    IKeys.CUSTOMERS
-  ])?.data;
 
-  const customers = useMemo(() => {
-    const paidCustomersId = [...paid, ...pending, ...wait_list];
-    return (
-      allCustomers?.reduce((res: IUserWithStatus[], customer) => {
-        const id = customer.id;
-        if (paidCustomersId.includes(id)) {
-          res.push({
-            ...customer,
-            paid: paid.includes(id),
-            status: confirm.includes(id)
-              ? IStatus.CONFIRM
-              : cancel.includes(id)
-                ? IStatus.CANCEL
-                : wait_list.includes(id)
-                  ? IStatus.WAIT_LIST
-                  : undefined
-          });
-        }
-        return res;
-      }, []) || []
-    );
-  }, [allCustomers, cancel, confirm, paid, pending, wait_list]);
+  const confirmed = useMemo(
+    () =>
+      product.orders.filter(
+        (el) => el.productStatus === IProductStatus.CONFIRMED
+      ),
+    [product.orders]
+  );
+
+  const customers = useMemo(
+    () =>
+      product.orders.map((el) => ({
+        id: el.id,
+        name: `${el.user.first_name} ${el.user.last_name}`,
+        paid: el.order.status === IOrderStatus.COMPLETED,
+        status: el.productStatus
+      })) as IUserWithStatus[],
+    [product.orders]
+  );
 
   const updateProduct = useMutation({
     mutationFn: (data: any) => productService.update(data, product.id),
@@ -74,10 +73,38 @@ export const TeacherClass = observer(({ product }: TeacherClassProps) => {
         [IKeys.PRODUCTS, { month: classTime.format('YYYY-MM') }],
         (products: IProduct[] | undefined) =>
           products
-            ? products.map((el) => (el.id === data.id ? data : el))
+            ? products.map((el) =>
+                el.id === data.id ? { ...el, ...data } : el
+              )
             : products
       );
       setModal(false);
+    }
+  });
+
+  const updateOrderProduct = useMutation({
+    mutationFn: (data: Pick<IOrderProduct, 'productStatus'>) =>
+      orderProductService.updateMany(data, selectedRows),
+    onSuccess: (_, values) => {
+      client.setQueryData(
+        [IKeys.PRODUCTS, { month: classTime.format('YYYY-MM') }],
+        (products: IProduct[] | undefined) =>
+          products?.map((el) =>
+            el.id === product.id
+              ? {
+                  ...el,
+                  orders: el.orders.map((order) =>
+                    selectedRows.includes(order.id)
+                      ? {
+                          ...order,
+                          productStatus: values.productStatus
+                        }
+                      : order
+                  )
+                }
+              : el
+          )
+      );
       setSelectedRows([]);
     }
   });
@@ -121,20 +148,20 @@ export const TeacherClass = observer(({ product }: TeacherClassProps) => {
     {
       title: 'Name',
       key: 'name',
-      render: (_, el) => `${el.first_name} ${el.last_name}`
+      dataIndex: 'name'
     },
     {
       title: 'Status',
       key: 'status',
       dataIndex: 'status',
       render: (el) => {
-        if (el === IStatus.CONFIRM) {
+        if (el === IProductStatus.CONFIRMED) {
           return <Tag color="green">Confirmed</Tag>;
         }
-        if (el === IStatus.CANCEL) {
+        if (el === IProductStatus.CANCELED) {
           return <Tag color="red">Canceled</Tag>;
         }
-        if (el === IStatus.WAIT_LIST) {
+        if (el === IProductStatus.WAIT_LIST) {
           return <Tag color="red">Wait list</Tag>;
         }
         return '';
@@ -148,26 +175,6 @@ export const TeacherClass = observer(({ product }: TeacherClassProps) => {
     }
   ];
 
-  const updateCustomersStatus = (status: IStatus) => {
-    let newConfirm;
-    let newCancel;
-
-    if (status === IStatus.CONFIRM) {
-      newConfirm = new Set([...confirm, ...selectedRows]);
-      newCancel = cancel.filter((el) => !selectedRows.includes(el));
-    }
-
-    if (status === IStatus.CANCEL) {
-      newCancel = new Set([...cancel, ...selectedRows]);
-      newConfirm = confirm.filter((el) => !selectedRows.includes(el));
-    }
-
-    updateProduct.mutate({
-      confirm: Array.from(newConfirm || []),
-      cancel: Array.from(newCancel || [])
-    });
-  };
-
   return (
     <Spin spinning={updateProduct.isPending || deleteProduct.isPending}>
       <Row justify="space-between">
@@ -175,8 +182,8 @@ export const TeacherClass = observer(({ product }: TeacherClassProps) => {
           <Space>
             {<CaretRightOutlined rotate={customersTable ? 90 : 0} />}
             <Typography>
-              {product.name}: {classTime.format('ha')} ({confirm.length}/
-              {customers.length})
+              {product.name}: {classTime.format('ha')} ({confirmed.length}/
+              {product.orders.length})
             </Typography>
             {product.is_canceled && (
               <Tag icon={<CloseCircleOutlined />} color="error">
@@ -199,7 +206,7 @@ export const TeacherClass = observer(({ product }: TeacherClassProps) => {
       </Row>
       {customersTable && (
         <Space direction="vertical" style={{ width: '100%' }}>
-          <Table
+          <Table<IUserWithStatus>
             dataSource={customers}
             rowKey={(el) => el.id}
             size="small"
@@ -215,14 +222,22 @@ export const TeacherClass = observer(({ product }: TeacherClassProps) => {
             <Flex wrap="wrap" gap="small">
               <Button
                 type="primary"
-                onClick={() => updateCustomersStatus(IStatus.CONFIRM)}
+                onClick={() =>
+                  updateOrderProduct.mutate({
+                    productStatus: IProductStatus.CONFIRMED
+                  })
+                }
               >
                 Confirm
               </Button>
               <Button
                 type="primary"
                 danger
-                onClick={() => updateCustomersStatus(IStatus.CANCEL)}
+                onClick={() =>
+                  updateOrderProduct.mutate({
+                    productStatus: IProductStatus.CANCELED
+                  })
+                }
               >
                 Cancel
               </Button>

@@ -33,6 +33,11 @@ class User {
     return arr.includes(Number(this.data?.id));
   }
 
+  // getUserProductStatus(arr: IOrderProductStatus[]) {
+  //   const id = this.data?.id;
+  //   return arr.find((el) => el.order.customer_id === id)?.status;
+  // }
+
   get isAdmin() {
     return this.data?.role === IUserRoles.ADMIN;
   }

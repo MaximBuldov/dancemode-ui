@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { message } from 'antd';
 import dayjs from 'dayjs';
-import { IKeys, IProduct, IStatus } from 'models';
+import { IStatus } from 'models';
 import { productService } from 'services';
 import { userStore } from 'stores';
 
@@ -33,17 +33,18 @@ export const useProductStatusUpdate = ({
         product_id
       ),
     onSuccess: (data, value) => {
-      client.setQueryData(
-        [IKeys.PRODUCTS, { month: day.format('YYYY-MM') }],
-        (items: IProduct[] | undefined) => {
-          if (items) {
-            const itemIndex = items.findIndex((el) => el.id === product_id);
-            items[itemIndex][value.key] = data[value.key];
-          }
+      console.log('fix it');
+      // client.setQueryData(
+      //   [IKeys.PRODUCTS, { month: day.format('YYYY-MM') }],
+      //   (items: IProduct[] | undefined) => {
+      //     if (items) {
+      //       const itemIndex = items.findIndex((el) => el.id === product_id);
+      //       items[itemIndex][value.key] = data[value.key];
+      //     }
 
-          return items;
-        }
-      );
+      //     return items;
+      //   }
+      // );
 
       if (value.key === IStatus.CANCEL) {
         if (isDeadline) {
