@@ -1,6 +1,12 @@
 import { makeAutoObservable } from 'mobx';
 import { makePersistable } from 'mobx-persist-store';
-import { IRUser, IUser, IUserResponse, IUserRoles } from 'models';
+import {
+  IROrderProduct,
+  IRUser,
+  IUser,
+  IUserResponse,
+  IUserRoles
+} from 'models';
 import { saveTokensStorage } from 'utils';
 
 class User {
@@ -33,10 +39,9 @@ class User {
     return arr.includes(Number(this.data?.id));
   }
 
-  // getUserProductStatus(arr: IOrderProductStatus[]) {
-  //   const id = this.data?.id;
-  //   return arr.find((el) => el.order.customer_id === id)?.status;
-  // }
+  getProductOrder(orders?: IROrderProduct[]) {
+    return orders?.find((order) => order.user_id === this.data?.id);
+  }
 
   get isAdmin() {
     return this.data?.role === IUserRoles.ADMIN;

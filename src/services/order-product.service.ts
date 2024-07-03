@@ -1,9 +1,12 @@
 import { Key } from 'antd/es/table/interface';
-import { IOrderProduct, IROrderProduct } from 'models';
+import { IOrderProduct, IProductStatus, IROrderProduct } from 'models';
 import { $api } from '../http';
 
 class OrderProductService {
-  async update(data: Partial<IOrderProduct>, id: number) {
+  async update(
+    data: { productStatus: IProductStatus; isDeadline: boolean },
+    id: number
+  ) {
     try {
       const res = await $api.patch(`/order-product/${id}`, data);
       return res.data as IROrderProduct;
@@ -18,7 +21,7 @@ class OrderProductService {
         ...data,
         ids
       });
-      return res.data as IROrderProduct;
+      return res.data as { count: number };
     } catch (error) {
       throw error;
     }

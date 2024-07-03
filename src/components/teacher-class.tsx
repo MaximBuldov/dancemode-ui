@@ -32,6 +32,7 @@ import {
 import { Key, useMemo, useState } from 'react';
 import { orderProductService, productService } from 'services';
 
+import { updateProductStatus } from 'utils';
 import { ProductForm } from './product-form';
 
 interface TeacherClassProps {
@@ -86,24 +87,12 @@ export const TeacherClass = observer(({ product }: TeacherClassProps) => {
     mutationFn: (data: Pick<IOrderProduct, 'productStatus'>) =>
       orderProductService.updateMany(data, selectedRows),
     onSuccess: (_, values) => {
-      client.setQueryData(
-        [IKeys.PRODUCTS, { month: classTime.format('YYYY-MM') }],
-        (products: IProduct[] | undefined) =>
-          products?.map((el) =>
-            el.id === product.id
-              ? {
-                  ...el,
-                  orders: el.orders.map((order) =>
-                    selectedRows.includes(order.id)
-                      ? {
-                          ...order,
-                          productStatus: values.productStatus
-                        }
-                      : order
-                  )
-                }
-              : el
-          )
+      updateProductStatus(
+        client,
+        classTime.format('YYYY-MM'),
+        product.id,
+        selectedRows,
+        values.productStatus
       );
       setSelectedRows([]);
     }

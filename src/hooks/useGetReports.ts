@@ -25,11 +25,15 @@ export const useGetReports = ({ from, to }: UseGetReports) => {
     queryKey: [IKeys.ORDERS],
     queryFn: () =>
       orderService.getAll({
-        status: [IOrderStatus.PENDING, IOrderStatus.COMPLETED],
-        min_date: lastReport?.completed
-          ? dayjs(lastReport?.date).add(1, 'month').format('YYYY-MM')
-          : lastReport?.date || from,
-        max_date: to
+        status: [
+          IOrderStatus.PROCESSING,
+          IOrderStatus.COMPLETED,
+          IOrderStatus.PENDING
+        ],
+        after: lastReport?.completed
+          ? dayjs(lastReport?.date).add(1, 'month').toDate()
+          : dayjs(lastReport?.date || from).toDate(),
+        before: dayjs(to).toDate()
       }),
     select: (res) => createReport(res.data),
     enabled: reports.isSuccess

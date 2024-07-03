@@ -14,8 +14,8 @@ export interface IFilters {
   customer_id?: number;
   product?: number;
   status?: IOrderStatus[];
-  min_date?: string;
-  max_date?: string;
+  after?: Date;
+  before?: Date;
 }
 
 class OrderService {

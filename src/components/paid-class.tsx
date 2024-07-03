@@ -1,10 +1,27 @@
-import { CreditCardOutlined, SyncOutlined } from '@ant-design/icons';
-import { Checkbox, Col, Modal, Row, Space, Tag, Typography } from 'antd';
+import {
+  CheckCircleOutlined,
+  CloseCircleOutlined,
+  CreditCardOutlined,
+  MoreOutlined,
+  SyncOutlined
+} from '@ant-design/icons';
+import {
+  Checkbox,
+  Col,
+  Dropdown,
+  MenuProps,
+  Modal,
+  Row,
+  Space,
+  Tag,
+  Typography
+} from 'antd';
 import dayjs from 'dayjs';
 import { useProductStatusUpdate } from 'hooks';
 import { observer } from 'mobx-react-lite';
-import { IProduct, IStatus } from 'models';
-import { useState } from 'react';
+import { IProduct, IProductStatus } from 'models';
+import { useMemo, useState } from 'react';
+import { userStore } from 'stores';
 
 interface PaidClassProps {
   product: IProduct;
@@ -15,52 +32,58 @@ interface PaidClassProps {
 
 export const PaidClass = observer(
   ({ product, isExpired, isPaid, isPrepaid }: PaidClassProps) => {
-    const [modalOpen, setModalOpen] = useState<IStatus | null>(null);
+    const [modalOpen, setModalOpen] = useState<IProductStatus | null>(null);
     const [seePolicy, setSeePolicy] = useState(false);
     const classTime = dayjs(product.date_time);
 
-    console.log('fix');
-    // const isConfirmed = userStore.checkUserId(product.confirm);
-    // const isCanceled = userStore.checkUserId(product.cancel);
+    const productOrder = useMemo(
+      () => userStore.getProductOrder(product.orders),
+      [product.orders]
+    );
 
-    const { mutate, isPending, contextHolder } = useProductStatusUpdate({
+    const isConfirmed =
+      productOrder?.productStatus === IProductStatus.CONFIRMED;
+    const isCanceled = productOrder?.productStatus === IProductStatus.CANCELED;
+
+    const { mutate, isPending } = useProductStatusUpdate({
       day: classTime,
       product_id: product.id,
+      product_order_id: productOrder?.id || 0,
       isPaid,
       onSuccess: () => setModalOpen(null)
     });
 
-    const isConfirmModal = modalOpen === IStatus.CONFIRM;
+    const isConfirmModal = modalOpen === IProductStatus.CONFIRMED;
 
-    // const items = useMemo(() => {
-    //   const elements: MenuProps['items'] = [];
+    const items = useMemo(() => {
+      const elements: MenuProps['items'] = [];
 
-    //   if (!isCanceled) {
-    //     elements.push({
-    //       label: (
-    //         <Typography.Text type="danger">
-    //           <CloseCircleOutlined /> Cancel
-    //         </Typography.Text>
-    //       ),
-    //       key: 'cancel',
-    //       onClick: () => setModalOpen(IStatus.CANCEL)
-    //     });
-    //   }
+      if (!isCanceled) {
+        elements.push({
+          label: (
+            <Typography.Text type="danger">
+              <CloseCircleOutlined /> Cancel
+            </Typography.Text>
+          ),
+          key: 'cancel',
+          onClick: () => setModalOpen(IProductStatus.CANCELED)
+        });
+      }
 
-    //   if (!isConfirmed && !isCanceled) {
-    //     elements.push({
-    //       label: (
-    //         <Typography.Text type="success">
-    //           <CheckCircleOutlined /> Confirm
-    //         </Typography.Text>
-    //       ),
-    //       key: 'Confirm',
-    //       onClick: () => setModalOpen(IStatus.CONFIRM)
-    //     });
-    //   }
+      if (!isConfirmed && !isCanceled) {
+        elements.push({
+          label: (
+            <Typography.Text type="success">
+              <CheckCircleOutlined /> Confirm
+            </Typography.Text>
+          ),
+          key: 'Confirm',
+          onClick: () => setModalOpen(IProductStatus.CONFIRMED)
+        });
+      }
 
-    //   return elements;
-    // }, [isCanceled, isConfirmed]);
+      return elements;
+    }, [isCanceled, isConfirmed]);
 
     return (
       <Row justify="space-between">
@@ -81,7 +104,7 @@ export const PaidClass = observer(
                   Preordered
                 </Tag>
               )}
-              {/* {isConfirmed && !isCanceled && (
+              {isConfirmed && !isCanceled && (
                 <Tag icon={<CheckCircleOutlined />} color="success">
                   Confirmed
                 </Tag>
@@ -90,11 +113,11 @@ export const PaidClass = observer(
                 <Tag icon={<CloseCircleOutlined />} color="error">
                   Canceled
                 </Tag>
-              )} */}
+              )}
             </div>
           </Space>
         </Col>
-        {/* {!isExpired && !!items.length && (
+        {!isExpired && !!items.length && (
           <Col>
             <Dropdown
               menu={{ items }}
@@ -104,12 +127,11 @@ export const PaidClass = observer(
               <MoreOutlined />
             </Dropdown>
           </Col>
-        )} */}
-        {contextHolder}
+        )}
         <Modal
           title={`Class ${isConfirmModal ? 'confirmation' : 'cancellation'}: ${classTime.format('MM/DD ha')} - ${product.name.toLocaleLowerCase()}`}
           open={!!modalOpen}
-          onOk={() => mutate({ key: modalOpen! })}
+          onOk={() => modalOpen && mutate(modalOpen)}
           confirmLoading={isPending}
           onCancel={() => {
             setModalOpen(null);

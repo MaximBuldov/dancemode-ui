@@ -1,13 +1,14 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { message } from 'antd';
+import { App } from 'antd';
 import dayjs from 'dayjs';
-import { IStatus } from 'models';
-import { productService } from 'services';
-import { userStore } from 'stores';
+import { IProductStatus } from 'models';
+import { orderProductService } from 'services';
+import { updateProductStatus } from 'utils';
 
 interface IUseProductStatusUpdate {
   day: dayjs.Dayjs;
   product_id: number;
+  product_order_id: number;
   onSuccess?: () => void;
   isPaid: boolean;
 }
@@ -16,50 +17,44 @@ export const useProductStatusUpdate = ({
   day,
   product_id,
   onSuccess,
-  isPaid
+  isPaid,
+  product_order_id
 }: IUseProductStatusUpdate) => {
   const client = useQueryClient();
   const isDeadline = dayjs().isBefore(day.subtract(5, 'hour'));
-  const [messageApi, contextHolder] = message.useMessage();
+  const { message } = App.useApp();
 
   const { mutate, isPending } = useMutation({
-    mutationFn: ({ key }: { key: IStatus }) =>
-      productService.update(
+    mutationFn: (productStatus: IProductStatus) =>
+      orderProductService.update(
         {
-          user_id: userStore.data?.id,
-          field: key,
+          productStatus,
           isDeadline: isDeadline && isPaid
         },
         product_id
       ),
-    onSuccess: (data, value) => {
-      console.log('fix it');
-      // client.setQueryData(
-      //   [IKeys.PRODUCTS, { month: day.format('YYYY-MM') }],
-      //   (items: IProduct[] | undefined) => {
-      //     if (items) {
-      //       const itemIndex = items.findIndex((el) => el.id === product_id);
-      //       items[itemIndex][value.key] = data[value.key];
-      //     }
-
-      //     return items;
-      //   }
-      // );
-
-      if (value.key === IStatus.CANCEL) {
+    onSuccess: (_, value) => {
+      updateProductStatus(
+        client,
+        day.format('YYYY-MM'),
+        product_id,
+        [product_order_id],
+        value
+      );
+      if (value === IProductStatus.CANCELED) {
         if (isDeadline) {
           isPaid
-            ? messageApi.success(
+            ? message.success(
                 'You have successfully canceled your class and received a coupon!'
               )
-            : messageApi.warning('Class was canceled');
+            : message.warning('Class was canceled');
         } else {
-          messageApi.warning('Class was canceled, but no coupon, is too late');
+          message.warning('Class was canceled, but no coupon, is too late');
         }
       }
 
-      if (value.key === IStatus.CONFIRM) {
-        messageApi.success(
+      if (value === IProductStatus.CONFIRMED) {
+        message.success(
           'Thank you for your confirmation, I look forward to seeing you in class!'
         );
       }
@@ -67,5 +62,5 @@ export const useProductStatusUpdate = ({
     }
   });
 
-  return { mutate, isPending, contextHolder };
+  return { mutate, isPending };
 };

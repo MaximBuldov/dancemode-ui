@@ -1,7 +1,8 @@
 import { observer } from 'mobx-react-lite';
-import { IProduct, IROrder } from 'models';
+import { IOrderStatus, IProduct, IROrder } from 'models';
 import { userStore } from 'stores';
 
+import { PaidClass } from './paid-class';
 import { TeacherClass } from './teacher-class';
 import { UnpaidClass } from './unpaid-class';
 
@@ -16,12 +17,12 @@ export const SingleClass = observer((props: SingleClassProps) => {
     return <TeacherClass {...props} />;
   }
 
-  // const status = userStore.getUserProductStatus(props.product.orderStatus);
-  // const isPaid = status === IOrderStatus.COMPLETED;
-  // const isPrepaid = status === IOrderStatus.PROCESSING;
+  const status = userStore.getProductOrder(props.product.orders)?.order.status;
+  const isPaid = status === IOrderStatus.COMPLETED;
+  const isPrepaid = status === IOrderStatus.PROCESSING;
 
-  // if (isPaid || isPrepaid) {
-  //   return <PaidClass {...props} isPaid={isPaid} isPrepaid={isPrepaid} />;
-  // }
+  if (isPaid || isPrepaid) {
+    return <PaidClass {...props} isPaid={isPaid} isPrepaid={isPrepaid} />;
+  }
   return <UnpaidClass {...props} />;
 });
