@@ -82,9 +82,9 @@ class OrderService {
     }
   }
 
-  async stripe(data: { total: number; customer?: number }) {
+  async stripe(total: number) {
     try {
-      const res = await $api.post('/orders/process-payment', data);
+      const res = await $api.post('/orders/intent', { total });
       return res.data;
     } catch (error) {
       throw error;

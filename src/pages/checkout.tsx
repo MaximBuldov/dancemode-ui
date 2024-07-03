@@ -15,10 +15,7 @@ const stripePromise =
 export const Checkout = () => {
   const { data, isPending, isSuccess } = useQuery({
     queryFn: () =>
-      orderService.stripe({
-        total: (cartStore.total - cartStore.couponsTotal) * 100,
-        customer: userStore.data?.id
-      }),
+      orderService.stripe(cartStore.total - cartStore.couponsTotal),
     queryKey: [IKeys.STRIPE]
   });
 

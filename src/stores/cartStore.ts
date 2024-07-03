@@ -120,7 +120,7 @@ class CartStore {
   }
 
   get total() {
-    return this.calculateTotal(this.data, 'price'); //total
+    return this.calculateTotal(this.data, 'total');
   }
 
   get subtotal() {
@@ -142,7 +142,7 @@ class CartStore {
       product_id: el.id,
       quantity: 1,
       subtotal: el.price,
-      total: el.price // el.total || el.price
+      total: el.total || el.price
     }));
   }
 
@@ -175,7 +175,7 @@ class CartStore {
         dayjs(el.date_time).day() === dayjs(data.date_time).day()
           ? {
               ...el,
-              total: '20'
+              total: 20
             }
           : el
       );
@@ -189,8 +189,8 @@ class CartStore {
           dayjs(el.date_time).isSame(data.date_time, 'month') &&
           dayjs(el.date_time).day() === dayjs(data.date_time).day()
         ) {
-          // const { total, ...rest } = el;
-          return el;
+          const { total, ...rest } = el;
+          return rest;
         } else {
           return el;
         }

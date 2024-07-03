@@ -4,14 +4,14 @@ import {
   useElements,
   useStripe
 } from '@stripe/react-stripe-js';
-import { StripeError, StripePaymentElementOptions } from '@stripe/stripe-js';
-import { useMutation } from '@tanstack/react-query';
+import { StripePaymentElementOptions } from '@stripe/stripe-js';
 import { App, Button, Divider } from 'antd';
 import { useCreateOrder } from 'hooks';
-import { IKeys, IPaymentMethod } from 'models';
+import { IPaymentMethod } from 'models';
 import { FormEvent, useState } from 'react';
 import { cartStore, userStore } from 'stores';
 
+import { useNavigate } from 'react-router-dom';
 import { SuccessPage } from './success-page';
 
 interface CheckoutFormProps {
@@ -23,43 +23,57 @@ export const CheckoutForm = ({ paymentIntentId }: CheckoutFormProps) => {
   const elements = useElements();
   const { message } = App.useApp();
   const [stripeError, setStripeError] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   const order = useCreateOrder({
     paymentIntentId,
-    onSuccess: () => payment.mutate(),
     payment_method: IPaymentMethod.STRIPE
   });
 
-  const payment = useMutation({
-    mutationFn: () =>
-      stripe!.confirmPayment({
-        elements: elements!,
-        redirect: 'if_required'
-      }),
-    mutationKey: [IKeys.PAYMENTS],
-    onSuccess: (data) => {
-      message.error(JSON.stringify(data));
-      if (data.error) {
-        message.error(data.error.message);
-      } else {
-        setStripeError(true);
-        cartStore.clear();
-      }
-    },
-    onError: (error: StripeError) => {
-      message.error(error.message);
-    }
-  });
+  const errorMessage = (text?: string) => {
+    setLoading(false);
+    message.error(text);
+    navigate('/');
+  };
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
+    setLoading(true);
     if (!stripe || !elements || !cartStore.count) {
+      errorMessage('Stripe, elements, or cart is not properly initialized.');
       return;
     }
-    elements.submit().then((res) => {
-      res.error ? message.error(res.error.message) : order.mutate();
-    });
+
+    try {
+      const res = await elements.submit();
+      if (res.error) {
+        message.error(res.error.message);
+        setLoading(false);
+        return;
+      }
+
+      const orderRes = await order.mutateAsync();
+      if (orderRes.id) {
+        const paymentResult = await stripe.confirmPayment({
+          elements,
+          redirect: 'if_required'
+        });
+
+        if (paymentResult.error) {
+          errorMessage(paymentResult.error.message);
+        } else {
+          message.success('Payment successful!');
+          setLoading(false);
+          setStripeError(true);
+          cartStore.clear();
+        }
+      } else {
+        errorMessage('Order creation failed.');
+      }
+    } catch (error: any) {
+      errorMessage(error.message || 'An error occurred.');
+    }
   };
 
   const paymentElementOptions: StripePaymentElementOptions = {
@@ -79,7 +93,7 @@ export const CheckoutForm = ({ paymentIntentId }: CheckoutFormProps) => {
       <Button
         disabled={!stripe || !elements}
         htmlType="submit"
-        loading={payment.isPending || order.isPending}
+        loading={loading || order.isPending}
         type="primary"
         block
         size="large"

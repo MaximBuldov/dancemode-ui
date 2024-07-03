@@ -17,7 +17,6 @@ export const Cart = observer(() => {
   const navigate = useNavigate();
   const isTotalZero = cartStore.totalMinusCoupons === 0;
   const order = useCreateOrder({
-    paymentIntentId: 'cash',
     onSuccess: () => cartStore.clear(),
     payment_method: isTotalZero ? IPaymentMethod.COUPON : IPaymentMethod.CASH
   });

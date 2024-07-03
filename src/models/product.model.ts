@@ -12,12 +12,12 @@ export interface IProduct {
   stock_quantity: number;
   wait_list: number[];
   orders: IROrderProduct[];
+  total?: number;
 }
 
 export interface ICartProduct extends IProduct {
   day: string;
   month: string;
-  total?: string;
 }
 
 export interface ICreateProduct {
