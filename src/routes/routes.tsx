@@ -1,10 +1,10 @@
 import {
+  AllCoupons,
   Calendar,
   Cart,
   Checkout,
   Classes,
   Coupons,
-  CreateCoupon,
   ForgotPassword,
   Login,
   Orders,
@@ -17,12 +17,12 @@ import {
 } from 'pages';
 
 import {
+  ALL_COUPONS,
   CALENDAR,
   CART,
   CHECKOUT,
   CLASSES,
   COUPONS,
-  CREATE_COUPON,
   FORGOT_PASSWORD,
   LOGIN,
   ORDERS,
@@ -57,8 +57,8 @@ export const adminRoutes: IRoute[] = [
     element: <Calendar />
   },
   {
-    path: CREATE_COUPON,
-    element: <CreateCoupon />
+    path: ALL_COUPONS,
+    element: <AllCoupons />
   },
   {
     path: REPORTS,

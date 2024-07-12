@@ -1,25 +1,17 @@
 import { Categories } from './product.model';
+import { IRUser } from './user.model';
 
 export interface ICoupon {
   id: number;
   code: string;
-  amount: string;
-  date_created: string;
+  amount: number;
+  created_at: Date;
   discount_type: IDiscountType;
   description: string;
-  date_expires: string;
-  usage_count: number;
-  individual_use: boolean;
-  product_ids: number[];
-  excluded_product_ids: number[];
-  usage_limit: number;
-  usage_limit_per_user: number;
-  limit_usage_to_x_items: number;
-  product_categories: number[];
+  date_expires: Date;
   exc_cat: Categories[];
-  email_restrictions: string[];
-  used_by: number[];
-  allowed_users: number[];
+  used_by: IRUser[];
+  allowed_users: IRUser[];
 }
 
 export enum IDiscountType {

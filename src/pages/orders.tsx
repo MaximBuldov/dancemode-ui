@@ -85,7 +85,7 @@ export const Orders = () => {
         pagination={{
           current: page,
           pageSize: 10,
-          total: orders.isSuccess && orders.data?.headers['Total'],
+          total: orders.isSuccess && orders.data?.headers['total'],
           onChange: (number) => setPage(number)
         }}
       />

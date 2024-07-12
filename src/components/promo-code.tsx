@@ -1,6 +1,7 @@
 import { CaretRightOutlined, DeleteTwoTone } from '@ant-design/icons';
 import { useMutation } from '@tanstack/react-query';
 import {
+  App,
   Button,
   Col,
   Form,
@@ -9,34 +10,26 @@ import {
   Row,
   Space,
   Tag,
-  Typography,
-  message
+  Typography
 } from 'antd';
 import { useState } from 'react';
 import { couponService } from 'services';
-import { cartStore, userStore } from 'stores';
+import { cartStore } from 'stores';
 
 export const PromoCode = () => {
   const [open, setOpen] = useState(false);
   const [form] = Form.useForm();
-  const [messageApi, contextHolder] = message.useMessage();
+  const { message } = App.useApp();
 
   const { mutate, isPending } = useMutation({
-    mutationFn: (code: string) => couponService.getMy({ code }),
+    mutationFn: (code: string) => couponService.validate(code),
     onSuccess: (data) => {
-      if (data.length) {
-        const isValid = cartStore.checkCouponEligibility(
-          userStore.data!.id,
-          data[0]
-        );
-        if (isValid.success) {
-          cartStore.addCoupon(data[0]);
-        } else {
-          messageApi.error(isValid.message);
-          form.resetFields();
-        }
+      const isValid = cartStore.checkCouponEligibility(data);
+      if (isValid.success) {
+        cartStore.addCoupon(data);
       } else {
-        messageApi.error('Coupon code is not valid');
+        message.error(isValid.message);
+        form.resetFields();
       }
     },
     onSettled: () => form.resetFields()
@@ -82,7 +75,7 @@ export const PromoCode = () => {
           <Form<{ code: string }>
             onFinish={({ code }) => {
               if (cartStore.isCouponAdded(code)) {
-                messageApi.error('You already use this coupon');
+                message.error('You already use this coupon');
                 form.resetFields();
               } else {
                 mutate(code);
@@ -118,7 +111,6 @@ export const PromoCode = () => {
           </Form>
         </>
       )}
-      {contextHolder}
     </Space>
   );
 };

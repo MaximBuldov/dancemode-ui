@@ -2,7 +2,7 @@ import { Button, Checkbox, Col, Row, Space, Tag, Typography } from 'antd';
 import dayjs from 'dayjs';
 import { useUpdateProduct } from 'hooks';
 import { observer } from 'mobx-react-lite';
-import { IKeys, IProduct, IStatus, IStockStatus } from 'models';
+import { IKeys, IProduct, IStatus } from 'models';
 import { cartStore, userStore } from 'stores';
 
 interface UnpaidClassProps {
@@ -13,7 +13,7 @@ interface UnpaidClassProps {
 export const UnpaidClass = observer(
   ({ product, isExpired }: UnpaidClassProps) => {
     const classTime = dayjs(product.date_time);
-    const isOutOfStock = product.stock_status === IStockStatus.OUTOFSTOCK;
+    const isOutOfStock = product.stock_quantity === 0;
     const isInWaitList = userStore.checkUserId(product.wait_list);
 
     const { mutate, isPending } = useUpdateProduct({

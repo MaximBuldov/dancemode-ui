@@ -18,7 +18,7 @@ export const useCreateOrder = ({
     mutationFn: () =>
       orderService.create({
         line_items: cartStore.preparedData,
-        coupons: cartStore.preparedCoupons,
+        coupons: cartStore.coupons,
         payment_method,
         stripe_id: paymentIntentId || ''
       }),

@@ -15,7 +15,8 @@ interface DayCardProps {
 }
 
 export const DayCard = observer(({ day, classes }: DayCardProps) => {
-  const isExpired = dayjs().isAfter(day, 'day');
+  // const isExpired = dayjs().isAfter(day, 'day');
+  const isExpired = false;
   const isJaneCanceled = classes?.every((el) => el.is_canceled);
 
   return (

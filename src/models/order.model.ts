@@ -1,10 +1,11 @@
+import { ICoupon } from './coupon.model';
 import { IProduct } from './product.model';
 import { IRUser, IUser } from './user.model';
 
 export interface IOrder {
   line_items: IOrderProduct[];
   payment_method?: IPaymentMethod;
-  coupons?: { code: string; discount?: string }[];
+  coupons?: ICoupon[];
   status: IOrderStatus;
   stripe_id?: string;
 }

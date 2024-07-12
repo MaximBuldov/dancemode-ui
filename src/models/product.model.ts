@@ -6,7 +6,6 @@ export interface IProduct {
   price: number;
   date_time: Date;
   is_canceled: boolean;
-  stock_status: IStockStatus;
   category: ICategory;
   category_id: Categories;
   stock_quantity: number;
@@ -48,12 +47,6 @@ export enum Categories {
   BEGINNER = 1,
   ADV = 2,
   CUSTOM = 3
-}
-
-export enum IStockStatus {
-  INSTOCK = 'instock',
-  OUTOFSTOCK = 'outofstock',
-  ONBACKORDER = 'onbackorder'
 }
 
 export const catOptions = [

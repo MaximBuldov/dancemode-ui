@@ -31,11 +31,7 @@ export const createReport = (arr: IROrder[]): IReport[] => {
       acc[key].coupons +=
         (order.payment_method === IPaymentMethod.COUPON
           ? Number(order.total)
-          : 0) +
-        (order.coupons?.reduce(
-          (acc, el) => acc + Number(el.discount || 0),
-          0
-        ) || 0);
+          : 0) + (order.coupons?.reduce((acc, el) => acc + el.amount, 0) || 0);
       acc[key].stripe =
         (acc[key].stripe || 0) +
         (order.payment_method === IPaymentMethod.STRIPE

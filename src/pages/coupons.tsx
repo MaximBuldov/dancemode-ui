@@ -15,6 +15,12 @@ const columns: ColumnsType<ICoupon> = [
     )
   },
   {
+    title: '$',
+    key: 'amount',
+    dataIndex: 'amount',
+    render: (el) => `$${el}`
+  },
+  {
     title: 'Ex. groups',
     key: 'groups',
     dataIndex: 'exc_cat',

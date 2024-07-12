@@ -40,7 +40,7 @@ const adminItems = [
     icon: '🗂️'
   },
   {
-    label: 'coupon',
+    label: 'all coupons',
     icon: '🎟️'
   },
   {

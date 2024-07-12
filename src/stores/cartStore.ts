@@ -62,20 +62,16 @@ class CartStore {
     return this.data.every((el) => el.category_id === coupon.exc_cat[0]);
   }
 
-  checkCouponEligibility(userId: number, coupon: ICoupon) {
-    if (!coupon.allowed_users.includes(userId)) {
-      return { success: false, message: 'Coupon issued to another user' };
-    }
-
+  checkCouponEligibility(coupon: ICoupon) {
     const totalCostExcluded = this.data.reduce((acc, el) => {
       if (el.category_id === coupon.exc_cat[0]) {
         return acc;
       } else {
-        // return (acc += parseFloat(el.price));
-        return acc;
+        return (acc += el.price);
       }
     }, 0);
-    if (totalCostExcluded < parseFloat(coupon.amount)) {
+
+    if (totalCostExcluded < coupon.amount) {
       return {
         success: false,
         message:
@@ -83,7 +79,6 @@ class CartStore {
       };
     }
 
-    // Шаг 4: Проверка на один купон с категориями исключения
     if (
       coupon.exc_cat.length > 0 &&
       this.coupons.some((item) => item.exc_cat.length > 0)
@@ -94,13 +89,7 @@ class CartStore {
       };
     }
 
-    // Проверка даты истечения срока действия купона
-    const expiryDate = dayjs(coupon.date_expires);
-    if (expiryDate.isBefore(dayjs(), 'day')) {
-      return { success: false, message: 'Coupon has expired' };
-    }
-
-    return { success: true, message: 'Купон может быть применен' };
+    return { success: true, message: 'Validated' };
   }
 
   get count() {
@@ -144,10 +133,6 @@ class CartStore {
       subtotal: el.price,
       total: el.total || el.price
     }));
-  }
-
-  get preparedCoupons() {
-    return this.coupons.map((el) => ({ code: el.code }));
   }
 
   get discount() {
