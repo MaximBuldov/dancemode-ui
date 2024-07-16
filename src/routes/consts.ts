@@ -13,3 +13,4 @@ export const CALENDAR = '/calendar';
 export const CHECKOUT = '/checkout';
 export const REPORTS = '/reports';
 export const ALL_COUPONS = '/all-coupons';
+export const RESET_PASSWORD = '/reset-password/:token';

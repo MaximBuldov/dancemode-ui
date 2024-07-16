@@ -1,8 +1,8 @@
 import {
   ILoginForm,
-  IRResetPassword,
   IRUser,
   IResetPassword,
+  ISendResetCode,
   ISignupForm,
   IUserResponse
 } from 'models';
@@ -46,12 +46,12 @@ class UserService {
     }
   }
 
-  async sendCode(data: IResetPassword) {
+  async sendCode(data: ISendResetCode) {
     try {
-      const res = await $auth<IRResetPassword>('/auth/reset-password', {
+      const res = await $auth<{ message: string }>('/auth/reset-password', {
         data
       });
-      return res;
+      return res.data;
     } catch (error) {
       throw error;
     }
@@ -59,10 +59,10 @@ class UserService {
 
   async resetPassword(data: IResetPassword) {
     try {
-      const res = await $auth<IRResetPassword>('/auth/set-password', {
+      const res = await $auth<IUserResponse>('/auth/set-password', {
         data
       });
-      return res;
+      return res.data;
     } catch (error) {
       throw error;
     }

@@ -12,6 +12,7 @@ import {
   Profile,
   Registration,
   Reports,
+  ResetPassword,
   Students,
   Video
 } from 'pages';
@@ -29,6 +30,7 @@ import {
   PAYMENTS,
   PROFILE,
   REPORTS,
+  RESET_PASSWORD,
   SIGN_UP,
   STUDENTS,
   VIDEO
@@ -109,5 +111,9 @@ export const publicRoutes: IRoute[] = [
   {
     path: FORGOT_PASSWORD,
     element: <ForgotPassword />
+  },
+  {
+    path: RESET_PASSWORD,
+    element: <ResetPassword />
   }
 ];

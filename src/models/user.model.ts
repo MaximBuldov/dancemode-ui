@@ -33,15 +33,12 @@ export enum IUserRoles {
   CUSTOMER = 'customer'
 }
 
-export interface IRResetPassword {
-  data: {
-    status: number;
-  };
-  message: string;
+export interface ISendResetCode {
+  email: string;
 }
 
 export interface IResetPassword {
-  email: string;
-  code?: string;
-  password?: string;
+  token: string;
+  password: string;
+  confirm: string;
 }

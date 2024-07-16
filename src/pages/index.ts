@@ -14,5 +14,6 @@ export * from './payments';
 export * from './profile';
 export * from './registration';
 export * from './reports';
+export * from './reset-password';
 export * from './students';
 export * from './video';
