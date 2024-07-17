@@ -1,3 +1,4 @@
+import { ICategory } from './category.model';
 import { IROrderProduct } from './order.model';
 
 export interface IProduct {
@@ -29,12 +30,6 @@ export interface IBatchProducts {
   create?: IProduct[];
   update?: IProduct[];
   delete?: number[];
-}
-
-export interface ICategory {
-  id: number | Categories;
-  name?: string;
-  slug?: string;
 }
 
 export enum NameOfClass {

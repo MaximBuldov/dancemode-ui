@@ -6,25 +6,29 @@ import { Link, Outlet, useNavigate } from 'react-router-dom';
 import * as routes from 'routes/consts';
 import { cartStore, userStore } from 'stores';
 
+import { useState } from 'react';
 import styles from './template.module.scss';
 
 const { Header, Content } = Layout;
 
 export const Template = observer(() => {
   const navigate = useNavigate();
+  const [drawer, setDrawer] = useState(false);
   return (
     <Layout>
       <Header className={styles.header}>
         <div className={styles.logo}>
           <Link to="/">DanceMode</Link>
         </div>
-        {userStore.data && (
-          <Link to={routes.PROFILE}>
-            <Avatar style={{ backgroundColor: '#1677ff' }}>
-              {userStore.initials}
-            </Avatar>
-          </Link>
-        )}
+        <div>
+          {userStore.data && (
+            <Link to={routes.PROFILE}>
+              <Avatar style={{ backgroundColor: '#1677ff' }}>
+                {userStore.initials}
+              </Avatar>
+            </Link>
+          )}
+        </div>
       </Header>
       <Layout className={styles.layout}>
         <Content>

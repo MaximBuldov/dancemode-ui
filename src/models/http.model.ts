@@ -13,10 +13,16 @@ export enum IKeys {
   COUPONS = 'coupons',
   STRIPE = 'stripe',
   PAYMENTS = 'payments',
-  REPORTS = 'reports'
+  REPORTS = 'reports',
+  CATEGORIES = 'categories'
 }
 
 export enum SecureStore {
   ACCESS_TOKEN = 'accessToken',
   REFRESH_TOKEN = 'refreshToken'
+}
+
+export interface PaginationParam {
+  page: number;
+  per_page?: number;
 }

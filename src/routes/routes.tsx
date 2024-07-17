@@ -9,6 +9,7 @@ import {
   Login,
   Orders,
   Payments,
+  ProductCategories,
   Profile,
   Registration,
   Reports,
@@ -28,6 +29,7 @@ import {
   LOGIN,
   ORDERS,
   PAYMENTS,
+  PRODUCT_CAT,
   PROFILE,
   REPORTS,
   RESET_PASSWORD,
@@ -65,6 +67,10 @@ export const adminRoutes: IRoute[] = [
   {
     path: REPORTS,
     element: <Reports />
+  },
+  {
+    path: PRODUCT_CAT,
+    element: <ProductCategories />
   }
 ];
 

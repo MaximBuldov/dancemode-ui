@@ -11,6 +11,7 @@ export * from './home';
 export * from './login';
 export * from './orders';
 export * from './payments';
+export * from './product-categories';
 export * from './profile';
 export * from './registration';
 export * from './reports';
