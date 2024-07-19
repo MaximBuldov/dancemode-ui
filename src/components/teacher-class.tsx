@@ -50,20 +50,20 @@ export const TeacherClass = observer(({ product }: TeacherClassProps) => {
 
   const confirmed = useMemo(
     () =>
-      product.orders.filter(
+      product?.orders?.filter(
         (el) => el.productStatus === IProductStatus.CONFIRMED
-      ),
+      ) || [],
     [product.orders]
   );
 
   const customers = useMemo(
     () =>
-      product.orders.map((el) => ({
+      (product?.orders?.map((el) => ({
         id: el.id,
         name: `${el.user.first_name} ${el.user.last_name}`,
         paid: el.order.status === IOrderStatus.COMPLETED,
         status: el.productStatus
-      })) as IUserWithStatus[],
+      })) as IUserWithStatus[]) || [],
     [product.orders]
   );
 
@@ -172,7 +172,7 @@ export const TeacherClass = observer(({ product }: TeacherClassProps) => {
             {<CaretRightOutlined rotate={customersTable ? 90 : 0} />}
             <Typography>
               {product.name}: {classTime.format('ha')} ({confirmed.length}/
-              {product.orders.length})
+              {product?.orders?.length || 0})
             </Typography>
             {product.is_canceled && (
               <Tag icon={<CloseCircleOutlined />} color="error">

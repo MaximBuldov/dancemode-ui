@@ -31,18 +31,17 @@ export const AddClassModal = ({ isOpen, closeModal }: AddClassModalProps) => {
       const monthsToUpdate = new Set(
         data?.map((product) => dayjs(product.date_time).format('YYYY-MM'))
       );
+
       monthsToUpdate.forEach((month) => {
         client.setQueryData(
           [IKeys.PRODUCTS, { month }],
           (products: IProduct[] | undefined) =>
-            products && data
-              ? [
-                  ...products,
-                  ...data.filter(
-                    (el) => dayjs(el.date_time).format('YYYY-MM') === month
-                  )
-                ]
-              : products
+            products && [
+              ...products,
+              ...data.filter(
+                (el) => dayjs(el.date_time).format('YYYY-MM') === month
+              )
+            ]
         );
       });
       form.resetFields();
@@ -105,6 +104,15 @@ export const AddClassModal = ({ isOpen, closeModal }: AddClassModalProps) => {
         </Item>
         {isCustom && (
           <>
+            <Item
+              name="time"
+              label="Time"
+              rules={[
+                { required: isCustom, message: 'Please input class time!' }
+              ]}
+            >
+              <Input type="time" />
+            </Item>
             <Item
               name="name"
               label="Class name"

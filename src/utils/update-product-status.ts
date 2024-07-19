@@ -16,14 +16,15 @@ export function updateProductStatus(
         el.id === product_id
           ? {
               ...el,
-              orders: el.orders.map((order) =>
-                ordersId.includes(order.id)
-                  ? {
-                      ...order,
-                      productStatus
-                    }
-                  : order
-              )
+              orders:
+                el?.orders?.map((order) =>
+                  ordersId.includes(order.id)
+                    ? {
+                        ...order,
+                        productStatus
+                      }
+                    : order
+                ) || []
             }
           : el
       )

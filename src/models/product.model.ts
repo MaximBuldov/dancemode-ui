@@ -11,7 +11,7 @@ export interface IProduct {
   category_id: Categories;
   stock_quantity: number;
   wait_list: number[];
-  orders: IROrderProduct[];
+  orders?: IROrderProduct[];
   total?: number;
 }
 
