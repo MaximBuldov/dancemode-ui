@@ -37,6 +37,15 @@ class UserService {
     }
   }
 
+  async remove(id: number) {
+    try {
+      const res = await $api.delete<IRUser>(`/users/${id}`);
+      return res.data;
+    } catch (error) {
+      throw error;
+    }
+  }
+
   async getCustomers(params?: any) {
     try {
       const res = await $api.get<IRUser[]>('/users', { params });

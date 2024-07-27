@@ -1,31 +1,13 @@
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Descriptions, Divider, Input, Table, Typography } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
+import { AxiosResponse } from 'axios';
+import { DeleteIcon } from 'components';
 import dayjs from 'dayjs';
 import useDebounce from 'hooks/useDebounce';
 import { IKeys, IRUser } from 'models';
 import { useState } from 'react';
 import { userService } from 'services';
-
-const columns: ColumnsType<IRUser> = [
-  {
-    title: 'Students',
-    key: 'name',
-    render: (_, el) => `${el.first_name} ${el.last_name}`
-  },
-  {
-    title: 'DOB',
-    key: 'dob',
-    dataIndex: 'dob',
-    render: (el) => dayjs(el).format('MM/DD/YY')
-  },
-  {
-    title: 'Reg',
-    key: 'reg',
-    dataIndex: 'created_at',
-    render: (el) => dayjs(el).format('MM/DD/YY')
-  }
-];
 
 const pageSize = 10;
 
@@ -33,6 +15,7 @@ export const Students = () => {
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState('');
   const debouncedSearch = useDebounce(search);
+  const client = useQueryClient();
   const { data, isPending } = useQuery({
     queryFn: () =>
       userService.getCustomers({
@@ -43,6 +26,45 @@ export const Students = () => {
     queryKey: [IKeys.CUSTOMERS, { name: debouncedSearch, page }],
     staleTime: 1000 * 60
   });
+
+  const remove = useMutation({
+    mutationFn: (id: number) => userService.remove(id),
+    onSuccess: (res) => {
+      client.setQueryData(
+        [IKeys.CUSTOMERS, { name: debouncedSearch, page }],
+        (oldData: AxiosResponse<IRUser[]> | undefined) =>
+          oldData && {
+            ...oldData,
+            data: oldData.data.filter((el) => el.id !== res.id)
+          }
+      );
+    }
+  });
+
+  const columns: ColumnsType<IRUser> = [
+    {
+      title: 'Students',
+      key: 'name',
+      render: (_, el) => `${el.first_name} ${el.last_name}`
+    },
+    {
+      title: 'DOB',
+      key: 'dob',
+      dataIndex: 'dob',
+      render: (el) => dayjs(el).format('MM/DD/YY')
+    },
+    {
+      title: 'Reg',
+      key: 'reg',
+      dataIndex: 'created_at',
+      render: (el) => dayjs(el).format('MM/DD/YY')
+    },
+    {
+      key: 'actions',
+      dataIndex: 'id',
+      render: (id) => <DeleteIcon<IRUser> remove={remove} id={id} />
+    }
+  ];
 
   return (
     <>

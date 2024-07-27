@@ -1,5 +1,5 @@
-import { DeleteTwoTone } from '@ant-design/icons';
 import { Button, Divider, Spin, Table, TableProps, Typography } from 'antd';
+import { DeleteIcon } from 'components';
 import { useCategory } from 'hooks';
 import { ICategory } from 'models';
 import { useState } from 'react';
@@ -25,7 +25,7 @@ export const ProductCategories = () => {
       dataIndex: 'id',
       key: 'remove',
       align: 'center',
-      render: renderDeleteRow
+      render: (id) => <DeleteIcon<ICategory> remove={remove} id={id} />
     }
   ];
 
@@ -77,14 +77,6 @@ export const ProductCategories = () => {
           text
         )}
       </Typography.Paragraph>
-    );
-  }
-
-  function renderDeleteRow(el: number) {
-    return remove.isPending && remove.variables === el ? (
-      <Spin spinning />
-    ) : (
-      <DeleteTwoTone twoToneColor="#cf1322" onClick={() => remove.mutate(el)} />
     );
   }
 };
