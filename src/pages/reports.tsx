@@ -1,4 +1,5 @@
 import { FileTextOutlined, SearchOutlined } from '@ant-design/icons';
+import { useQuery } from '@tanstack/react-query';
 import {
   Button,
   Divider,
@@ -11,9 +12,9 @@ import {
 } from 'antd';
 import { ReportCosts, ReportCostsForm, ReportSummary } from 'components';
 import dayjs from 'dayjs';
-import { useGetReports } from 'hooks/useGetReports';
-import { IReport, IReportCost } from 'models';
+import { IKeys, IReport, IReportCost } from 'models';
 import { useState } from 'react';
+import { reportService } from 'services';
 
 const columnsCosts: TableProps<IReportCost>['columns'] = [
   {
@@ -73,7 +74,7 @@ const columns: TableProps<IReport>['columns'] = [
     key: 'profit',
     dataIndex: 'profit',
     align: 'center',
-    render: (el) => (el !== 0 ? <>${el}</> : 'N/A')
+    render: (el) => Math.floor(el)
   },
   {
     title: 'Cash',
@@ -86,13 +87,6 @@ const columns: TableProps<IReport>['columns'] = [
     title: 'Card',
     key: 'card',
     dataIndex: 'card',
-    align: 'center',
-    render: (el) => `$${el}`
-  },
-  {
-    title: 'Coup',
-    key: 'coupons',
-    dataIndex: 'coupons',
     align: 'center',
     render: (el) => `$${el}`
   },
@@ -118,7 +112,14 @@ export const Reports = () => {
   const [from, setFrom] = useState(minDate);
   const [to, setTo] = useState(maxDate);
   const [costsDrawer, openCostsDrawer] = useState(false);
-  const { data, isPending } = useGetReports({ from, to });
+  const reports = useQuery({
+    queryKey: [IKeys.REPORTS, { from, to }],
+    queryFn: () =>
+      reportService.getAll({
+        from,
+        to
+      })
+  });
   const costsTitle = `Costs ${from} - ${to}`;
 
   return (
@@ -150,9 +151,9 @@ export const Reports = () => {
         </Space.Compact>
       </Form>
       <Table
-        dataSource={data}
+        dataSource={reports.data}
         columns={columns}
-        loading={isPending}
+        loading={reports.isPending}
         pagination={false}
         rowKey={(el) => el.date}
         size="small"
@@ -192,10 +193,10 @@ export const Reports = () => {
         size="large"
       >
         <Table
-          dataSource={data?.flatMap((el) => el.costs || [])}
+          dataSource={reports.data?.flatMap((el) => el.costs || [])}
           columns={columnsCosts}
           pagination={false}
-          loading={isPending}
+          loading={reports.isPending}
           rowKey={(el) => el.name + el.sum + el.date}
           summary={(tableData) => {
             const totalCosts = tableData.reduce(

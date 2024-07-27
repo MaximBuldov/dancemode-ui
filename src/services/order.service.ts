@@ -16,6 +16,7 @@ export interface IFilters {
   status?: IOrderStatus[];
   after?: Date;
   before?: Date;
+  all?: boolean;
 }
 
 class OrderService {

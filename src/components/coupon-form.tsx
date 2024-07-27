@@ -31,7 +31,7 @@ export const CouponForm = ({
   form
 }: CouponFormProps) => {
   const usersApi = useQuery({
-    queryFn: () => userService.getCustomers(),
+    queryFn: () => userService.getCustomers({ all: true }),
     queryKey: [IKeys.CUSTOMERS]
   });
 

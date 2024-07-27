@@ -39,6 +39,15 @@ class CouponService {
     }
   }
 
+  async remove(id: number) {
+    try {
+      const res = await $api.delete<ICoupon>(`/coupon/${id}`);
+      return res.data;
+    } catch (error) {
+      throw error;
+    }
+  }
+
   async getAll(page: number) {
     try {
       return await $api.get<ICoupon[]>('/coupon', {

@@ -17,7 +17,6 @@ export const ReportSummary = ({ reports }: IReportSummaryProps) => {
   let totalBeg = 0;
   let totalAdv = 0;
   let totalStu = 0;
-  let totalCoup = 0;
   let totalCosts = 0;
 
   reports.forEach(
@@ -29,7 +28,6 @@ export const ReportSummary = ({ reports }: IReportSummaryProps) => {
       totalBeg += beg;
       totalAdv += adv;
       totalStu += students;
-      totalCoup += coupons;
       totalCosts +=
         costs?.reduce((acc, item) => acc + Number(item.sum), 0) || 0;
     }
@@ -54,7 +52,7 @@ export const ReportSummary = ({ reports }: IReportSummaryProps) => {
           {totalStu}
         </Cell>
         <Cell align="center" index={5}>
-          ${totalProf}
+          ${Math.floor(totalProf)}
         </Cell>
         <Cell align="center" index={6}>
           ${totalCash}
@@ -63,12 +61,9 @@ export const ReportSummary = ({ reports }: IReportSummaryProps) => {
           ${totalCard}
         </Cell>
         <Cell align="center" index={8}>
-          ${totalCoup}
-        </Cell>
-        <Cell align="center" index={9}>
           {totalBeg}
         </Cell>
-        <Cell align="center" index={10}>
+        <Cell align="center" index={9}>
           {totalAdv}
         </Cell>
       </Row>
@@ -96,12 +91,9 @@ export const ReportSummary = ({ reports }: IReportSummaryProps) => {
           ${Math.round(totalCard / repCount)}
         </Cell>
         <Cell align="center" index={8}>
-          ${Math.round(totalCoup / repCount)}
-        </Cell>
-        <Cell align="center" index={9}>
           {Math.round(totalBeg / repCount)}
         </Cell>
-        <Cell align="center" index={10}>
+        <Cell align="center" index={9}>
           {Math.round(totalAdv / repCount)}
         </Cell>
       </Row>

@@ -39,9 +39,7 @@ export const ReportCostsForm = ({
       client.setQueryData(
         [IKeys.REPORTS, { from: minDate, to: maxDate }],
         (reports: IReport[] | undefined) =>
-          id
-            ? reports?.map((el) => (el.id === data.id ? data : el))
-            : [data, ...(reports || [])]
+          reports?.map((el) => (el.date === data.date ? data : el))
       );
       messageApi.success('Report updated');
     }
@@ -105,9 +103,8 @@ export const ReportCostsForm = ({
                       {...restField}
                       name={[name, 'date']}
                       initialValue={dayjs().format('YYYY-MM-DD')}
-                      hidden
                     >
-                      <Input />
+                      <Input type="date" />
                     </Item>
                     <MinusCircleOutlined onClick={() => remove(name)} />
                   </Flex>

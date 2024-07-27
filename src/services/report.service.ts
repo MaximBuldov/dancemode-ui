@@ -19,11 +19,7 @@ class ReportService {
 
   async create(data: Partial<IReport>) {
     try {
-      const res = await $api.post('/wp/v2/reports', {
-        acf: data,
-        title: data.date,
-        status: 'publish'
-      });
+      const res = await $api.post('/reports', data);
       return res.data as IReport;
     } catch (error) {
       throw error;
@@ -32,7 +28,7 @@ class ReportService {
 
   async update({ data, id }: { data: Partial<IReport>; id: number }) {
     try {
-      const res = await $api.post(`/wp/v2/reports/${id}`, { acf: data });
+      const res = await $api.post(`/reports/${id}`, data);
       return res.data as IReport;
     } catch (error) {
       throw error;
