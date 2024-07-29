@@ -14,7 +14,7 @@ export const UnpaidClass = observer(
   ({ product, isExpired }: UnpaidClassProps) => {
     const classTime = dayjs(product.date_time);
     const isOutOfStock = product.stock_quantity === 0;
-    const isInWaitList = userStore.checkUserId(product.wait_list);
+    const isInWaitList = false;
 
     const { mutate, isPending } = useUpdateProduct({
       data: {
