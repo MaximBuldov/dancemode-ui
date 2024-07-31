@@ -77,12 +77,12 @@ export const ReportCostsForm = ({
             {(fields, { add, remove }) => (
               <>
                 {fields.map(({ key, name, ...restField }) => (
-                  <Flex gap="small" key={key}>
+                  <Flex key={key}>
                     <Item
                       {...restField}
                       name={[name, 'name']}
                       rules={[{ required: true }]}
-                      style={{ width: '150px' }}
+                      style={{ width: '100px' }}
                     >
                       <Input placeholder="Name" />
                     </Item>
@@ -96,13 +96,14 @@ export const ReportCostsForm = ({
                         min={0}
                         placeholder="Sum"
                         prefix="$"
-                        style={{ width: '100px' }}
+                        style={{ width: '60px' }}
                       />
                     </Item>
                     <Item
                       {...restField}
                       name={[name, 'date']}
                       initialValue={dayjs().format('YYYY-MM-DD')}
+                      style={{ width: '80px' }}
                     >
                       <Input type="date" />
                     </Item>
