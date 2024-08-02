@@ -25,7 +25,9 @@ export const ProductCategories = () => {
       dataIndex: 'id',
       key: 'remove',
       align: 'center',
-      render: (id) => <DeleteIcon<ICategory> remove={remove} id={id} />
+      render: (id, record) => (
+        <DeleteIcon<ICategory> remove={remove} id={id} name={record.name} />
+      )
     }
   ];
 

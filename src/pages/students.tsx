@@ -62,7 +62,13 @@ export const Students = () => {
     {
       key: 'actions',
       dataIndex: 'id',
-      render: (id) => <DeleteIcon<IRUser> remove={remove} id={id} />
+      render: (id, record) => (
+        <DeleteIcon<IRUser>
+          remove={remove}
+          id={id}
+          name={`${record.first_name} ${record.last_name}`}
+        />
+      )
     }
   ];
 
