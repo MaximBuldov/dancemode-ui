@@ -67,6 +67,7 @@ export const ReportCostsForm = ({ report }: ReportCostsFormPrps) => {
                     >
                       <Input />
                     </Item>
+                    <MinusCircleOutlined onClick={() => remove(name)} />
                     <Item<IReportCost[]>
                       {...restField}
                       name={[name, 'name']}
@@ -74,6 +75,19 @@ export const ReportCostsForm = ({ report }: ReportCostsFormPrps) => {
                       style={{ width: '100px' }}
                     >
                       <Input placeholder="Name" />
+                    </Item>
+                    <Item
+                      {...restField}
+                      name={[name, 'sum']}
+                      rules={[{ required: true }]}
+                    >
+                      <InputNumber
+                        controls={false}
+                        min={0}
+                        placeholder="Sum"
+                        prefix="$"
+                        style={{ width: '60px' }}
+                      />
                     </Item>
                     <Item
                       {...restField}
@@ -90,22 +104,6 @@ export const ReportCostsForm = ({ report }: ReportCostsFormPrps) => {
                           .endOf('month')
                           .format('YYYY-MM-DD')}
                       />
-                    </Item>
-                    <Item
-                      {...restField}
-                      name={[name, 'sum']}
-                      rules={[{ required: true }]}
-                    >
-                      <InputNumber
-                        controls={false}
-                        min={0}
-                        placeholder="Sum"
-                        prefix="$"
-                        style={{ width: '60px' }}
-                      />
-                    </Item>
-                    <Item>
-                      <MinusCircleOutlined onClick={() => remove(name)} />
                     </Item>
                   </Flex>
                 ))}
