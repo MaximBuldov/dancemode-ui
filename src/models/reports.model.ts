@@ -17,7 +17,8 @@ export interface IReport {
 }
 
 export interface IReportCost {
+  id?: number;
   name: string;
   sum: number;
-  date: string;
+  date: Date;
 }

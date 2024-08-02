@@ -1,4 +1,4 @@
-import { IReport } from 'models';
+import { IReport, IReportCost } from 'models';
 
 import { $api } from '../http';
 
@@ -26,9 +26,18 @@ class ReportService {
     }
   }
 
-  async update({ data, id }: { data: Partial<IReport>; id: number }) {
+  async update(data: IReportCost[]) {
     try {
-      const res = await $api.post(`/reports/${id}`, data);
+      const res = await $api.patch('/reports', data);
+      return res.data as IReport;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async remove(id: number) {
+    try {
+      const res = await $api.delete(`/reports/${id}`);
       return res.data as IReport;
     } catch (error) {
       throw error;

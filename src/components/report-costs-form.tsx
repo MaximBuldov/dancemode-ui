@@ -1,90 +1,95 @@
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import {
-  Button,
-  Flex,
-  Form,
-  Input,
-  InputNumber,
-  Space,
-  Switch,
-  message
-} from 'antd';
+import { useMutation } from '@tanstack/react-query';
+import { Button, Flex, Form, Input, InputNumber, Space, message } from 'antd';
 import dayjs from 'dayjs';
-import { IKeys, IPaymentMethod, IReport } from 'models';
+import { IReport, IReportCost } from 'models';
 import { reportService } from 'services';
 
 interface ReportCostsFormPrps {
   report: IReport;
-  minDate: string;
-  maxDate: string;
+}
+
+interface CostsForm {
+  costs: IReportCost[];
 }
 
 const { useForm, Item, List } = Form;
 
-export const ReportCostsForm = ({
-  report,
-  minDate,
-  maxDate
-}: ReportCostsFormPrps) => {
-  const { date, costs, id, stripe } = report;
+export const ReportCostsForm = ({ report }: ReportCostsFormPrps) => {
+  const { costs, stripe } = report;
   const [messageApi, contextHolder] = message.useMessage();
-  const client = useQueryClient();
-  const notCurrentMonth = date !== maxDate;
   const [form] = useForm();
   const { mutate, isPending } = useMutation({
-    mutationFn: (data: IReport) =>
-      id ? reportService.update({ id, data }) : reportService.create(data),
-    onSuccess: (data) => {
-      client.setQueryData(
-        [IKeys.REPORTS, { from: minDate, to: maxDate }],
-        (reports: IReport[] | undefined) =>
-          reports?.map((el) => (el.date === data.date ? data : el))
-      );
+    mutationFn: (data: IReportCost[]) => reportService.update(data),
+    onSuccess: () => {
       messageApi.success('Report updated');
     }
   });
+
   return (
     <>
-      <Form<IReport>
+      <Form<CostsForm>
         form={form}
         initialValues={{
-          costs: [
-            { name: IPaymentMethod.STRIPE, sum: stripe?.toFixed(2) },
-            ...(costs?.filter(
-              (el) => el.name.toLocaleLowerCase() !== IPaymentMethod.STRIPE
-            ) || [])
-          ],
-          date
+          costs: costs?.map((el) => ({
+            ...el,
+            date: dayjs(el.date).format('YYYY-MM-DD')
+          }))
         }}
         size="small"
         layout="inline"
-        onFinish={(values) =>
-          mutate({
-            ...report,
-            ...values,
-            profit:
-              report.revenue -
-              Number(values.costs?.reduce((acc, el) => acc + Number(el.sum), 0))
-          })
+        onFinish={({ costs }) =>
+          mutate(
+            costs.map(({ date, sum, ...rest }) => ({
+              ...rest,
+              date: dayjs(date).toDate(),
+              sum: +sum
+            }))
+          )
         }
       >
-        <Item name="date" rules={[{ required: true }]} hidden>
-          <Input />
-        </Item>
+        <Flex gap="small">
+          <div>
+            <b>Stripe:</b>
+          </div>
+          <div>${stripe}</div>
+        </Flex>
         <Space direction="vertical" style={{ width: '100%' }}>
           <List name="costs">
             {(fields, { add, remove }) => (
               <>
                 {fields.map(({ key, name, ...restField }) => (
                   <Flex key={key}>
-                    <Item
+                    <Item<IReportCost[]>
+                      {...restField}
+                      name={[name, 'id']}
+                      hidden
+                    >
+                      <Input />
+                    </Item>
+                    <Item<IReportCost[]>
                       {...restField}
                       name={[name, 'name']}
                       rules={[{ required: true }]}
                       style={{ width: '100px' }}
                     >
                       <Input placeholder="Name" />
+                    </Item>
+                    <Item
+                      {...restField}
+                      name={[name, 'date']}
+                      initialValue={dayjs(report.date).format('YYYY-MM-DD')}
+                      style={{ width: '80px' }}
+                    >
+                      <Input
+                        type="date"
+                        min={dayjs(report.date)
+                          .startOf('month')
+                          .format('YYYY-MM-DD')}
+                        max={dayjs(report.date)
+                          .endOf('month')
+                          .format('YYYY-MM-DD')}
+                      />
                     </Item>
                     <Item
                       {...restField}
@@ -99,15 +104,9 @@ export const ReportCostsForm = ({
                         style={{ width: '60px' }}
                       />
                     </Item>
-                    <Item
-                      {...restField}
-                      name={[name, 'date']}
-                      initialValue={dayjs().format('YYYY-MM-DD')}
-                      style={{ width: '80px' }}
-                    >
-                      <Input type="date" />
+                    <Item>
+                      <MinusCircleOutlined onClick={() => remove(name)} />
                     </Item>
-                    <MinusCircleOutlined onClick={() => remove(name)} />
                   </Flex>
                 ))}
                 <Item>
@@ -122,17 +121,8 @@ export const ReportCostsForm = ({
               </>
             )}
           </List>
-          {notCurrentMonth && (
-            <Item name="completed">
-              <Switch
-                checkedChildren="Complete"
-                unCheckedChildren="Report uncompleted"
-                size="default"
-              />
-            </Item>
-          )}
           <Button loading={isPending} htmlType="submit" type="primary" block>
-            Submit
+            Update
           </Button>
         </Space>
       </Form>

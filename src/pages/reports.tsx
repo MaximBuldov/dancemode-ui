@@ -10,7 +10,7 @@ import {
   Table,
   TableProps
 } from 'antd';
-import { ReportCosts, ReportCostsForm, ReportSummary } from 'components';
+import { ReportCostsForm, ReportSummary } from 'components';
 import dayjs from 'dayjs';
 import { IKeys, IReport, IReportCost } from 'models';
 import { useState } from 'react';
@@ -164,16 +164,7 @@ export const Reports = () => {
         }}
         expandable={{
           rowExpandable: () => true,
-          expandedRowRender: (record) =>
-            record.completed ? (
-              <ReportCosts data={record.costs || []} />
-            ) : (
-              <ReportCostsForm
-                report={record}
-                minDate={minDate}
-                maxDate={maxDate}
-              />
-            )
+          expandedRowRender: (record) => <ReportCostsForm report={record} />
         }}
         summary={(pageData) => <ReportSummary reports={pageData} />}
       />
