@@ -239,6 +239,7 @@ export const TeacherClass = observer(({ product }: TeacherClassProps) => {
         open={modal}
         footer={false}
         onClose={() => setModal(false)}
+        destroyOnClose
       >
         <ProductForm
           onFinish={(values) => updateProduct.mutate(values)}

@@ -4,7 +4,7 @@ import { ICreateProductsForm, IProduct, NameOfClass } from 'models';
 export function prepareProducts(values: ICreateProductsForm) {
   const products: Pick<
     IProduct,
-    'name' | 'price' | 'category_id' | 'date_time'
+    'name' | 'price' | 'category_id' | 'date_time' | 'stock_quantity'
   >[] = [];
 
   const [hours, minutes] = values.time
@@ -15,12 +15,13 @@ export function prepareProducts(values: ICreateProductsForm) {
     for (const el of values.classes) {
       products.push({
         name: values?.name || el.label,
-        price: 25,
+        price: Number(values?.regular_price || 25),
         category_id: el.value,
         date_time: dayjs(date)
           .hour(hours || (el.label === NameOfClass.BEGINNER ? 19 : 20))
           .minute(minutes || 0)
-          .toDate()
+          .toDate(),
+        stock_quantity: Number(values?.stock_quantity || 13)
       });
     }
   }

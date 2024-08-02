@@ -129,7 +129,6 @@ class CartStore {
   get preparedData() {
     return this.data.map((el) => ({
       product_id: el.id,
-      quantity: 1,
       subtotal: el.price,
       total: el.total || el.price
     }));

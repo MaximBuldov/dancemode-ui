@@ -1,4 +1,4 @@
-import { Button, Form, Input, Select } from 'antd';
+import { Button, Form, Input, InputNumber, Select } from 'antd';
 import dayjs from 'dayjs';
 import { Categories, IProduct, catOptions } from 'models';
 import { useState } from 'react';
@@ -32,7 +32,6 @@ export const ProductForm = ({
           ...values,
           date_time: dayjs(values.date_time).toDate()
         });
-        form.resetFields();
       }}
       initialValues={{
         ...initialValues,
@@ -57,10 +56,10 @@ export const ProductForm = ({
         </Item>
       )}
       <Item<IProductorm> label="Price" name="price">
-        <Input prefix="$" placeholder="100" style={{ width: '100%' }} />
+        <InputNumber prefix="$" placeholder="100" style={{ width: '100%' }} />
       </Item>
       <Item label="Quantity" name="stock_quantity">
-        <Input placeholder="13" style={{ width: '100%' }} />
+        <InputNumber placeholder="13" style={{ width: '100%' }} />
       </Item>
       <Item>
         <Button block htmlType="submit" type="primary" loading={isPending}>
