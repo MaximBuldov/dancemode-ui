@@ -31,7 +31,7 @@ export const useProductStatusUpdate = ({
           productStatus,
           isDeadline: isDeadline && isPaid
         },
-        product_id
+        product_order_id
       ),
     onSuccess: (_, value) => {
       updateProductStatus(
