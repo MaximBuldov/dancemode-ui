@@ -19,7 +19,7 @@ export const Calendar = () => {
     }
   };
   const customersApi = useQuery({
-    queryFn: () => userService.getCustomers(),
+    queryFn: () => userService.getCustomers({ all: true }),
     queryKey: [IKeys.CUSTOMERS]
   });
 

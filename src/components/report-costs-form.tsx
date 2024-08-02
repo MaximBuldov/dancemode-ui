@@ -1,4 +1,4 @@
-import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
+import { MinusCircleTwoTone, PlusOutlined } from '@ant-design/icons';
 import { useMutation } from '@tanstack/react-query';
 import { Button, Flex, Form, Input, InputNumber, Space, message } from 'antd';
 import dayjs from 'dayjs';
@@ -67,7 +67,12 @@ export const ReportCostsForm = ({ report }: ReportCostsFormPrps) => {
                     >
                       <Input />
                     </Item>
-                    <MinusCircleOutlined onClick={() => remove(name)} />
+                    <Item>
+                      <MinusCircleTwoTone
+                        onClick={() => remove(name)}
+                        twoToneColor={'#cf1322'}
+                      />
+                    </Item>
                     <Item<IReportCost[]>
                       {...restField}
                       name={[name, 'name']}
