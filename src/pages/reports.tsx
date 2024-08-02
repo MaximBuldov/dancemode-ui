@@ -56,9 +56,11 @@ const columns: TableProps<IReport>['columns'] = [
     key: 'costs',
     dataIndex: 'costs',
     align: 'center',
-    render: (el?: IReportCost[]) => (
+    render: (el: IReportCost[], record) => (
       <>
-        ${Math.round(el?.reduce((acc, item) => acc + Number(item.sum), 0) || 0)}
+        $
+        {Math.round(el?.reduce((acc, item) => acc + Number(item.sum), 0) || 0) +
+          Math.round(record.stripe)}
       </>
     )
   },

@@ -13,7 +13,7 @@ export interface IReport {
   students: number;
   costs?: IReportCost[];
   completed: boolean;
-  stripe?: number;
+  stripe: number;
 }
 
 export interface IReportCost {
