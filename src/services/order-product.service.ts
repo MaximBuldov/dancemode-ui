@@ -3,10 +3,7 @@ import { IOrderProduct, IProductStatus, IROrderProduct } from 'models';
 import { $api } from '../http';
 
 class OrderProductService {
-  async update(
-    data: { productStatus: IProductStatus; isDeadline: boolean },
-    id: number
-  ) {
+  async update(data: { productStatus: IProductStatus }, id: number) {
     try {
       const res = await $api.patch(`/order-product/${id}`, data);
       return res.data as IROrderProduct;

@@ -26,13 +26,7 @@ export const useProductStatusUpdate = ({
 
   const { mutate, isPending } = useMutation({
     mutationFn: (productStatus: IProductStatus) =>
-      orderProductService.update(
-        {
-          productStatus,
-          isDeadline: isDeadline && isPaid
-        },
-        product_order_id
-      ),
+      orderProductService.update({ productStatus }, product_order_id),
     onSuccess: (_, value) => {
       updateProductStatus(
         client,
