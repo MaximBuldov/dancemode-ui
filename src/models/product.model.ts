@@ -44,6 +44,11 @@ export enum Categories {
   CUSTOM = 3
 }
 
+export const CatMap = {
+  [Categories.BEGINNER]: NameOfClass.BEGINNER,
+  [Categories.ADV]: NameOfClass.ADV,
+  [Categories.CUSTOM]: NameOfClass.CUSTOM
+};
 export const catOptions = [
   { label: NameOfClass.BEGINNER, value: Categories.BEGINNER },
   { label: NameOfClass.ADV, value: Categories.ADV },
