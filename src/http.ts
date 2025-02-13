@@ -18,7 +18,6 @@ const $auth = axios.create({
 const $api = axios.create({ ...axiosInstance.defaults });
 const authInterceptor = (config: any) => {
   const accessToken = secureLs.get('accessToken');
-
   if (config.headers && accessToken)
     config.headers.Authorization = `Bearer ${accessToken}`;
 
@@ -51,3 +50,4 @@ $api.interceptors.response.use(
 );
 
 export { $api, $auth };
+
