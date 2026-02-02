@@ -44,20 +44,25 @@ const App = observer(() => {
       ? adminRoutes
       : userRoutes
     : publicRoutes;
-  const router = createBrowserRouter([
+  const router = createBrowserRouter(
+    [
+      {
+        path: '/',
+        element: <Template />,
+        errorElement: <ErrorPage />,
+        children: [
+          {
+            path: '/',
+            element: <Home />
+          },
+          ...routes
+        ]
+      }
+    ],
     {
-      path: '/',
-      element: <Template />,
-      errorElement: <ErrorPage />,
-      children: [
-        {
-          path: '/',
-          element: <Home />
-        },
-        ...routes
-      ]
+      basename: '/app'
     }
-  ]);
+  );
   const handlers = useSwipeable({
     onSwipedDown: () => window.location.reload(),
     delta: 250
