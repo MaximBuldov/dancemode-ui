@@ -18,6 +18,7 @@ import { adminRoutes, publicRoutes, userRoutes } from './routes';
 
 const App = observer(() => {
   const { onErrorFn } = useError();
+
   const queryClient = new QueryClient({
     defaultOptions: {
       queries: {
