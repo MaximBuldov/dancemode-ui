@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { Button, DatePicker, Drawer, Form, Input, Select } from 'antd';
-import { DefaultOptionType } from 'antd/es/select';
+import { Button, DatePicker, Divider, Drawer, Form, Input, Select } from 'antd';
 import dayjs from 'dayjs';
+import { useTemplate } from 'hooks';
 import {
   Categories,
   ICategoryOption,
@@ -25,6 +25,7 @@ interface AddClassModalProps {
 export const AddClassModal = ({ isOpen, closeModal }: AddClassModalProps) => {
   const [form] = useForm();
   const client = useQueryClient();
+  const { get: getTemplates } = useTemplate();
   const { mutate, isPending } = useMutation({
     mutationFn: productService.createMany,
     onSuccess: (data) => {
@@ -67,8 +68,30 @@ export const AddClassModal = ({ isOpen, closeModal }: AddClassModalProps) => {
       footer={null}
       onClose={() => closeModal(false)}
     >
+      <Select
+        allowClear
+        loading={getTemplates.isLoading}
+        placeholder="Templates"
+        style={{ width: '100%' }}
+        options={getTemplates.data?.map((el) => ({
+          label: `${el.name} - $${el.price}`,
+          value: el.id
+        }))}
+        onChange={(value: number) => {
+          const template = getTemplates.data?.find((el) => el.id === value);
+          form.setFieldsValue({
+            time: template?.time,
+            name: template?.name,
+            regular_price: template?.price
+          });
+        }}
+      />
+      <Divider size="small" />
       <Form<ICreateProductsForm>
         form={form}
+        initialValues={{
+          stock_quantity: 13
+        }}
         onFinish={(values) => {
           mutate(prepareProducts(values));
         }}
@@ -82,66 +105,35 @@ export const AddClassModal = ({ isOpen, closeModal }: AddClassModalProps) => {
           <DatePicker placeholder="Dates" minDate={dayjs()} multiple />
         </Item>
         <Item
-          label="Classes"
-          name="classes"
-          rules={[{ required: true, message: 'Please select class type!' }]}
+          name="time"
+          label="Time"
+          rules={[{ required: true, message: 'Please input class time!' }]}
         >
-          <Select
-            options={options}
-            allowClear
-            mode="multiple"
-            labelInValue
-            showSearch={false}
-            onChange={(values: DefaultOptionType[]) => {
-              const customOption = values.find(
-                (el) => Categories.CUSTOM === el.value
-              );
-              if (customOption) {
-                form.setFieldValue('classes', [customOption]);
-              }
-            }}
-          />
+          <Input type="time" />
         </Item>
-        {isCustom && (
-          <>
-            <Item
-              name="time"
-              label="Time"
-              rules={[
-                { required: isCustom, message: 'Please input class time!' }
-              ]}
-            >
-              <Input type="time" />
-            </Item>
-            <Item
-              name="name"
-              label="Class name"
-              rules={[
-                { required: isCustom, message: 'Please input class name!' }
-              ]}
-            >
-              <Input placeholder="Class name" />
-            </Item>
-            <Item
-              label="Price"
-              name="regular_price"
-              rules={[
-                { required: isCustom, message: 'Please input class price!' }
-              ]}
-            >
-              <Input prefix="$" placeholder="100" style={{ width: '100%' }} />
-            </Item>
-            <Item
-              label="Quantity"
-              name="stock_quantity"
-              rules={[
-                { required: isCustom, message: 'Please input class capacity!' }
-              ]}
-            >
-              <Input placeholder="13" style={{ width: '100%' }} />
-            </Item>
-          </>
-        )}
+        <Item
+          name="name"
+          label="Class name"
+          rules={[{ required: true, message: 'Please input class name!' }]}
+        >
+          <Input placeholder="Class name" />
+        </Item>
+        <Item
+          label="Price"
+          name="regular_price"
+          rules={[{ required: true, message: 'Please input class price!' }]}
+        >
+          <Input prefix="$" placeholder="100" style={{ width: '100%' }} />
+        </Item>
+        <Item
+          label="Quantity"
+          name="stock_quantity"
+          rules={[
+            { required: isCustom, message: 'Please input class capacity!' }
+          ]}
+        >
+          <Input placeholder="13" style={{ width: '100%' }} />
+        </Item>
         <Item>
           <Button block htmlType="submit" type="primary" loading={isPending}>
             Submit

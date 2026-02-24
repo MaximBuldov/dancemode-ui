@@ -7,13 +7,13 @@ class TemplateService {
   async getAll() {
     try {
       const res = await $api.get<ITemplate[]>(TEMPLATE_ENDPOINT);
-      return res;
+      return res.data;
     } catch (error) {
       throw error;
     }
   }
 
-  async create(data: Pick<ITemplate, 'name' | 'price'>) {
+  async create(data: Omit<ITemplate, 'id'>) {
     try {
       const res = await $api.post<ITemplate>(TEMPLATE_ENDPOINT, data);
       return res.data;

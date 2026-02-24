@@ -1,5 +1,4 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { AxiosResponse } from 'axios';
 import { IKeys, ITemplate } from 'models';
 import { templateService } from 'services';
 
@@ -15,11 +14,8 @@ export const useTemplate = () => {
     onSuccess: (data) => {
       client.setQueryData(
         [IKeys.TEMPLATES],
-        (res: AxiosResponse<ITemplate[]> | undefined) =>
-          res && {
-            ...res,
-            data: res.data.map((el) => (el.id === data.id ? data : el))
-          }
+        (res: ITemplate[] | undefined) =>
+          res && res.map((el) => (el.id === data.id ? data : el))
       );
     }
   });
@@ -29,8 +25,7 @@ export const useTemplate = () => {
     onSuccess: (data) => {
       client.setQueryData(
         [IKeys.TEMPLATES],
-        (res: AxiosResponse<ITemplate[]> | undefined) =>
-          res && { ...res, data: [...res.data, data] }
+        (res: ITemplate[] | undefined) => res && [...res, data]
       );
     }
   });
@@ -40,8 +35,8 @@ export const useTemplate = () => {
     onSuccess: (data) => {
       client.setQueryData(
         [IKeys.TEMPLATES],
-        (res: AxiosResponse<ITemplate[]> | undefined) =>
-          res && { ...res, data: res.data.filter((el) => el.id !== data.id) }
+        (res: ITemplate[] | undefined) =>
+          res && res.filter((el) => el.id !== data.id)
       );
     }
   });

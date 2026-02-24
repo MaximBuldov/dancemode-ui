@@ -26,6 +26,12 @@ export const Templates = () => {
       render: (text, record) => renderEditRow(text, record, 'price')
     },
     {
+      title: 'Time',
+      dataIndex: 'time',
+      key: 'time',
+      render: (text, record) => renderEditRow(text, record, 'time')
+    },
+    {
       dataIndex: 'id',
       key: 'remove',
       align: 'center',
@@ -42,7 +48,9 @@ export const Templates = () => {
         onClick={() => {
           const name = window.prompt('Template name');
           const price = window.prompt('Template price');
-          if (name && price) create.mutate({ name, price: +price });
+          const time = window.prompt('Template time');
+          if (name && price && time)
+            create.mutate({ name, price: +price, time });
         }}
         type="primary"
       >
@@ -53,7 +61,7 @@ export const Templates = () => {
         loading={get.isPending || create.isPending}
         rowKey={(el) => el.id}
         columns={columns}
-        dataSource={get.data?.data}
+        dataSource={get.data}
         size="small"
       />
     </>

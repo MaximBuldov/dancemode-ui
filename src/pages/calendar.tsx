@@ -25,8 +25,8 @@ export const Calendar = () => {
 
   return (
     <Spin spinning={products.isPending || customersApi.isPending}>
-      <Space direction="vertical" size={12} style={{ width: '100%' }}>
-        <Space.Compact>
+      <Space orientation="vertical" size={12} style={{ width: '100%' }}>
+        <Space.Compact block>
           <Button block type="primary" onClick={() => setModal(true)}>
             Add class
           </Button>
@@ -41,7 +41,7 @@ export const Calendar = () => {
             return <DayCard day={el} key={el} classes={groupedProducts[el]} />;
           })}
       </Space>
-      <AddClassModal isOpen={modal} closeModal={onSuccess} />
+      {modal && <AddClassModal isOpen={modal} closeModal={onSuccess} />}
     </Spin>
   );
 };
