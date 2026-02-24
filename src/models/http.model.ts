@@ -13,8 +13,8 @@ export enum IKeys {
   COUPONS = 'coupons',
   STRIPE = 'stripe',
   PAYMENTS = 'payments',
-  REPORTS = 'reports',
-  CATEGORIES = 'categories'
+  TEMPLATES = 'template',
+  BUNDELS = 'bundels'
 }
 
 export enum SecureStore {

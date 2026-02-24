@@ -1,6 +1,5 @@
 export const PROFILE = '/profile';
 export const CLASSES = '/classes';
-export const VIDEO = '/video';
 export const PAYMENTS = '/payments';
 export const LOGIN = '/login';
 export const SIGN_UP = '/sign-up';
@@ -11,7 +10,7 @@ export const STUDENTS = '/students';
 export const ORDERS = '/orders';
 export const CALENDAR = '/calendar';
 export const CHECKOUT = '/checkout';
-export const REPORTS = '/reports';
 export const ALL_COUPONS = '/all-coupons';
 export const RESET_PASSWORD = '/reset-password/:token';
-export const PRODUCT_CAT = '/product-categories';
+export const TEMPLATES = 'templates';
+export const BUNDELS = 'bundels';

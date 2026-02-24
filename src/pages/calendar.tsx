@@ -26,9 +26,15 @@ export const Calendar = () => {
   return (
     <Spin spinning={products.isPending || customersApi.isPending}>
       <Space direction="vertical" size={12} style={{ width: '100%' }}>
-        <Button block type="primary" onClick={() => setModal(true)}>
-          Add class
-        </Button>
+        <Space.Compact>
+          <Button block type="primary" onClick={() => setModal(true)}>
+            Add class
+          </Button>
+          <Button block type="primary" danger onClick={() => setModal(true)}>
+            Create bundle
+          </Button>
+        </Space.Compact>
+
         <MonthStepper month={month} setMonth={setMonth} />
         {customersApi.isSuccess &&
           Object.keys(groupedProducts).map((el) => {

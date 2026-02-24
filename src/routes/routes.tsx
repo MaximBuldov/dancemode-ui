@@ -9,13 +9,11 @@ import {
   Login,
   Orders,
   Payments,
-  ProductCategories,
   Profile,
   Registration,
-  Reports,
   ResetPassword,
   Students,
-  Video
+  Templates
 } from 'pages';
 
 import {
@@ -29,13 +27,11 @@ import {
   LOGIN,
   ORDERS,
   PAYMENTS,
-  PRODUCT_CAT,
   PROFILE,
-  REPORTS,
   RESET_PASSWORD,
   SIGN_UP,
   STUDENTS,
-  VIDEO
+  TEMPLATES
 } from './consts';
 
 interface IRoute {
@@ -65,12 +61,12 @@ export const adminRoutes: IRoute[] = [
     element: <AllCoupons />
   },
   {
-    path: REPORTS,
-    element: <Reports />
+    path: TEMPLATES,
+    element: <Templates />
   },
   {
-    path: PRODUCT_CAT,
-    element: <ProductCategories />
+    path: ALL_COUPONS,
+    element: <AllCoupons />
   }
 ];
 
@@ -82,10 +78,6 @@ export const userRoutes: IRoute[] = [
   {
     path: CLASSES,
     element: <Classes />
-  },
-  {
-    path: VIDEO,
-    element: <Video />
   },
   {
     path: PAYMENTS,

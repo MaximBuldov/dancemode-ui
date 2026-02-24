@@ -12,7 +12,7 @@ export const Classes = () => {
 
   return (
     <Spin spinning={productsApi.isFetching}>
-      <Space direction="vertical" size={12} style={{ width: '100%' }}>
+      <Space orientation="vertical" size={12} style={{ width: '100%' }}>
         <MonthStepper month={month} setMonth={setMonth} />
         {products.length > 0 ? (
           products.map((el) => {

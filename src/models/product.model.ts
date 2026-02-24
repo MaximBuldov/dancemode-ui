@@ -1,4 +1,3 @@
-import { ICategory } from './category.model';
 import { IROrderProduct } from './order.model';
 
 export interface IProduct {
@@ -7,7 +6,6 @@ export interface IProduct {
   price: number;
   date_time: Date;
   is_canceled: boolean;
-  category: ICategory;
   category_id: Categories;
   stock_quantity: number;
   wait_list: number[];

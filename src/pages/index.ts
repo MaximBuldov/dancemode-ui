@@ -1,4 +1,5 @@
 export * from './all-coupons';
+export * from './bundels';
 export * from './calendar';
 export * from './cart';
 export * from './checkout';
@@ -11,10 +12,8 @@ export * from './home';
 export * from './login';
 export * from './orders';
 export * from './payments';
-export * from './product-categories';
 export * from './profile';
 export * from './registration';
-export * from './reports';
 export * from './reset-password';
 export * from './students';
-export * from './video';
+export * from './templates';

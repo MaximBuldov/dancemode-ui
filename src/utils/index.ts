@@ -1,5 +1,4 @@
 export * from './auth';
-export * from './create-report';
 export * from './error-catch';
 export * from './generate-coupon';
 export * from './group-by-date';

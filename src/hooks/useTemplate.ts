@@ -1,21 +1,21 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { AxiosResponse } from 'axios';
-import { ICategory, IKeys } from 'models';
-import { categoryService } from 'services/category.setvice';
+import { IKeys, ITemplate } from 'models';
+import { templateService } from 'services';
 
-export const useCategory = (page: number) => {
+export const useTemplate = () => {
   const client = useQueryClient();
   const get = useQuery({
-    queryKey: [IKeys.CATEGORIES, { page }],
-    queryFn: () => categoryService.getAll({ page })
+    queryKey: [IKeys.TEMPLATES],
+    queryFn: () => templateService.getAll()
   });
 
   const update = useMutation({
-    mutationFn: (cat: ICategory) => categoryService.update(cat),
+    mutationFn: templateService.update,
     onSuccess: (data) => {
       client.setQueryData(
-        [IKeys.CATEGORIES, { page }],
-        (res: AxiosResponse<ICategory[]> | undefined) =>
+        [IKeys.TEMPLATES],
+        (res: AxiosResponse<ITemplate[]> | undefined) =>
           res && {
             ...res,
             data: res.data.map((el) => (el.id === data.id ? data : el))
@@ -25,22 +25,22 @@ export const useCategory = (page: number) => {
   });
 
   const create = useMutation({
-    mutationFn: (name: string) => categoryService.create({ name }),
+    mutationFn: templateService.create,
     onSuccess: (data) => {
       client.setQueryData(
-        [IKeys.CATEGORIES, { page }],
-        (res: AxiosResponse<ICategory[]> | undefined) =>
+        [IKeys.TEMPLATES],
+        (res: AxiosResponse<ITemplate[]> | undefined) =>
           res && { ...res, data: [...res.data, data] }
       );
     }
   });
 
   const remove = useMutation({
-    mutationFn: (id: number) => categoryService.remove(id),
+    mutationFn: (id: number) => templateService.remove(id),
     onSuccess: (data) => {
       client.setQueryData(
-        [IKeys.CATEGORIES, { page }],
-        (res: AxiosResponse<ICategory[]> | undefined) =>
+        [IKeys.TEMPLATES],
+        (res: AxiosResponse<ITemplate[]> | undefined) =>
           res && { ...res, data: res.data.filter((el) => el.id !== data.id) }
       );
     }

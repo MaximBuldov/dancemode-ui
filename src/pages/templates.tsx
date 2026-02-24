@@ -1,14 +1,12 @@
 import { Button, Divider, Spin, Table, TableProps, Typography } from 'antd';
 import { DeleteIcon } from 'components';
-import { useCategory } from 'hooks';
-import { ICategory } from 'models';
-import { useState } from 'react';
+import { useTemplate } from 'hooks';
+import { ITemplate } from 'models/template.model';
 
-export const ProductCategories = () => {
-  const [page, setPage] = useState(1);
-  const { get, update, remove, create } = useCategory(page);
+export const Templates = () => {
+  const { get, update, remove, create } = useTemplate();
 
-  const columns: TableProps<ICategory>['columns'] = [
+  const columns: TableProps<ITemplate>['columns'] = [
     {
       title: 'ID',
       dataIndex: 'id',
@@ -19,14 +17,20 @@ export const ProductCategories = () => {
       title: 'Name',
       dataIndex: 'name',
       key: 'name',
-      render: renderNameRow
+      render: (text, record) => renderEditRow(text, record, 'name')
+    },
+    {
+      title: 'Price',
+      dataIndex: 'price',
+      key: 'price',
+      render: (text, record) => renderEditRow(text, record, 'price')
     },
     {
       dataIndex: 'id',
       key: 'remove',
       align: 'center',
       render: (id, record) => (
-        <DeleteIcon<ICategory> remove={remove} id={id} name={record.name} />
+        <DeleteIcon<ITemplate> remove={remove} id={id} name={record.name} />
       )
     }
   ];
@@ -36,12 +40,13 @@ export const ProductCategories = () => {
       <Button
         block
         onClick={() => {
-          const name = window.prompt('Category name');
-          if (name) create.mutate(name);
+          const name = window.prompt('Template name');
+          const price = window.prompt('Template price');
+          if (name && price) create.mutate({ name, price: +price });
         }}
         type="primary"
       >
-        Create category
+        Create template
       </Button>
       <Divider />
       <Table
@@ -50,23 +55,17 @@ export const ProductCategories = () => {
         columns={columns}
         dataSource={get.data?.data}
         size="small"
-        pagination={{
-          pageSize: 10,
-          current: page,
-          total: get.data?.headers['total'],
-          onChange: (number) => setPage(number)
-        }}
       />
     </>
   );
 
-  function renderNameRow(text: string, el: ICategory) {
+  function renderEditRow(text: string, el: ITemplate, key: keyof ITemplate) {
     return (
       <Typography.Paragraph
         editable={{
           text,
           onChange: (value) => {
-            if (value !== text) update.mutate({ id: el.id, name: value });
+            if (value !== text) update.mutate({ id: el.id, [key]: value });
           },
           enterIcon: null,
           triggerType: ['icon', 'text']
