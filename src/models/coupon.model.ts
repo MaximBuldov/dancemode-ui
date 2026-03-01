@@ -9,7 +9,7 @@ export interface ICoupon {
   discount_type: IDiscountType;
   description: string;
   date_expires: Date;
-  exc_cat: Categories[];
+  exc_cat?: Categories[];
   used_by: IRUser[];
   allowed_users: IRUser[];
 }

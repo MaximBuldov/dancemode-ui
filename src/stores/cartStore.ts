@@ -1,6 +1,6 @@
 import { makeAutoObservable } from 'mobx';
 import { makePersistable } from 'mobx-persist-store';
-import { CatMap, ICoupon, IProduct } from 'models';
+import { ICoupon, IProduct } from 'models';
 
 class CartStore {
   data: IProduct[] = [];
@@ -55,28 +55,8 @@ class CartStore {
   }
 
   checkCouponEligibility(coupon: ICoupon) {
-    if (this.data.every((el) => coupon.exc_cat.includes(el.category_id))) {
-      return {
-        success: false,
-        message: `You cannot use this coupon for ${CatMap[coupon.exc_cat[0]]}`
-      };
-    }
-    if (
-      coupon.exc_cat.length > 0 &&
-      this.coupons.some((item) => item.exc_cat.length > 0)
-    ) {
-      return {
-        success: false,
-        message: 'You cannot use coupons for different groups at the same time'
-      };
-    }
-
     const totalCostExcluded = this.data.reduce((acc, el) => {
-      if (el.category_id === coupon.exc_cat[0]) {
-        return acc;
-      } else {
-        return (acc += el.price);
-      }
+      return (acc += el.price);
     }, 0);
 
     if (totalCostExcluded < coupon.amount) {
