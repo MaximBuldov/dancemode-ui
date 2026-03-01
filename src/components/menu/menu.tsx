@@ -43,12 +43,12 @@ const adminItems = [
     icon: '🎟️'
   },
   {
-    label: 'bundels',
+    label: 'bundles',
     icon: '🗂️'
   },
   {
-    label: 'templates',
-    icon: '📋'
+    label: 'settings',
+    icon: '⚙️'
   },
   {
     label: 'profile',

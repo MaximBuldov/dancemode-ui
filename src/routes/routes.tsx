@@ -1,5 +1,6 @@
 import {
   AllCoupons,
+  Bundles,
   Calendar,
   Cart,
   Checkout,
@@ -12,12 +13,13 @@ import {
   Profile,
   Registration,
   ResetPassword,
-  Students,
-  Templates
+  Settings,
+  Students
 } from 'pages';
 
 import {
   ALL_COUPONS,
+  BUNDLES,
   CALENDAR,
   CART,
   CHECKOUT,
@@ -29,9 +31,9 @@ import {
   PAYMENTS,
   PROFILE,
   RESET_PASSWORD,
+  SETTINGS,
   SIGN_UP,
-  STUDENTS,
-  TEMPLATES
+  STUDENTS
 } from './consts';
 
 interface IRoute {
@@ -61,12 +63,16 @@ export const adminRoutes: IRoute[] = [
     element: <AllCoupons />
   },
   {
-    path: TEMPLATES,
-    element: <Templates />
+    path: SETTINGS,
+    element: <Settings />
   },
   {
     path: ALL_COUPONS,
     element: <AllCoupons />
+  },
+  {
+    path: BUNDLES,
+    element: <Bundles />
   }
 ];
 

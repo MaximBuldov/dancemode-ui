@@ -3,6 +3,7 @@ import { IROrderProduct } from './order.model';
 export interface IProduct {
   id: number;
   name: string | NameOfClass;
+  sale_price: null | number;
   price: number;
   date_time: Date;
   is_canceled: boolean;

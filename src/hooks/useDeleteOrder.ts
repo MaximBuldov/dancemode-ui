@@ -20,7 +20,7 @@ export const useDeleteOrder = (
           return { ...store, data: newData(store.data) };
         }
       });
-      onSuccess && onSuccess();
+      onSuccess?.();
     }
   });
 

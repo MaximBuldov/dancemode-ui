@@ -1,4 +1,3 @@
-import dayjs, { Dayjs } from 'dayjs';
 import { makeAutoObservable } from 'mobx';
 import { makePersistable } from 'mobx-persist-store';
 import { CatMap, ICoupon, IProduct } from 'models';
@@ -6,6 +5,7 @@ import { CatMap, ICoupon, IProduct } from 'models';
 class CartStore {
   data: IProduct[] = [];
   coupons: ICoupon[] = [];
+  total: number = 0;
 
   constructor() {
     makeAutoObservable(this);
@@ -17,10 +17,7 @@ class CartStore {
   }
 
   add(data: IProduct) {
-    const res = this.checkSale(data, true);
-    if (res) {
-      this.data.push(res);
-    }
+    this.data.push(data);
   }
 
   clear() {
@@ -38,7 +35,6 @@ class CartStore {
     if (index !== -1) {
       this.data.splice(index, 1);
     }
-    this.checkSale(product, false);
   }
 
   addCoupon(coupon: ICoupon) {
@@ -56,10 +52,6 @@ class CartStore {
     return this.coupons.some(
       (el) => el.code.toLocaleLowerCase() === code.toLocaleLowerCase()
     );
-  }
-
-  isExludedCat(coupon: ICoupon) {
-    return this.data.every((el) => el.category_id === coupon.exc_cat[0]);
   }
 
   checkCouponEligibility(coupon: ICoupon) {
@@ -98,6 +90,10 @@ class CartStore {
     return { success: true, message: 'Validated' };
   }
 
+  setTotal(total: number) {
+    this.total = total;
+  }
+
   get count() {
     return this.data.length;
   }
@@ -114,81 +110,12 @@ class CartStore {
     return this.calculateTotal(this.coupons, 'amount');
   }
 
-  get total() {
-    return this.calculateTotal(this.data, 'total');
-  }
-
-  get subtotal() {
-    return this.calculateTotal(this.data, 'price');
-  }
-
-  get totalMinusCoupons() {
-    return this.total - this.couponsTotal;
-  }
-
-  get orderDates() {
-    return Array.from(
-      new Set(this.data.map((obj) => dayjs(obj.date_time).format('YYYY-MM')))
-    ).join(',');
-  }
-
   get preparedData() {
     return this.data.map((el) => ({
       product_id: el.id,
       subtotal: el.price,
       total: el.total || el.price
     }));
-  }
-
-  get discount() {
-    return this.subtotal - this.total;
-  }
-
-  get isDiscount() {
-    return this.discount > 0;
-  }
-
-  private checkSale(data: IProduct, action: boolean) {
-    const allDaysInMonth = this.getAllDaysOfMonth(dayjs(data.date_time));
-    const classes = action ? [...this.data, data] : this.data;
-    const isWholeMonth = allDaysInMonth.every((day) =>
-      classes.some(
-        (cls) =>
-          cls.name === data.name && dayjs(cls.date_time).isSame(day, 'day')
-      )
-    );
-
-    if (action && isWholeMonth) {
-      this.data = classes.map((el) =>
-        el.name === data.name &&
-        dayjs(el.date_time).isSame(data.date_time, 'month') &&
-        dayjs(el.date_time).day() === dayjs(data.date_time).day()
-          ? {
-              ...el,
-              total: 20
-            }
-          : el
-      );
-      return false;
-    }
-
-    if (!action && !isWholeMonth) {
-      this.data = classes.map((el) => {
-        if (
-          el.name === data.name &&
-          dayjs(el.date_time).isSame(data.date_time, 'month') &&
-          dayjs(el.date_time).day() === dayjs(data.date_time).day()
-        ) {
-          const { total, ...rest } = el;
-          return rest;
-        } else {
-          return el;
-        }
-      });
-      return false;
-    }
-
-    return data;
   }
 
   private calculateTotal<T>(arr: T[], prop: keyof T) {
@@ -198,26 +125,6 @@ class CartStore {
         : Number((el as IProduct).price);
       return acc + price;
     }, 0);
-  }
-
-  private getAllDaysOfMonth(currentDate: Dayjs) {
-    const dayOfWeek = currentDate.day();
-    const firstDayOfMonth = currentDate.startOf('month');
-
-    let firstDay = firstDayOfMonth.day(dayOfWeek);
-
-    if (firstDay.month() !== firstDayOfMonth.month()) {
-      firstDay = firstDay.add(7, 'day');
-    }
-
-    const days = [];
-
-    while (firstDay.month() === currentDate.month()) {
-      days.push(firstDay);
-      firstDay = firstDay.add(7, 'day');
-    }
-
-    return days;
   }
 }
 

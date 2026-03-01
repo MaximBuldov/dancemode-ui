@@ -7,7 +7,7 @@ export const useUpdateOrder = (queryKey: any[], onSuccess?: () => void) => {
   const mutation = useMutation({
     mutationFn: (data: IUpdate) => orderService.update(data),
     onSuccess: (data) => {
-      onSuccess && onSuccess();
+      onSuccess?.();
       client.setQueryData(queryKey, (store: any) => {
         const newData = (arr: IROrder[]) =>
           arr?.map((el) => (el.id === data.id ? data : el));

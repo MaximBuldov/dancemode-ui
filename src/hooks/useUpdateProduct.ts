@@ -22,7 +22,7 @@ export const useUpdateProduct = ({
       client.setQueryData(queryKey, (items: IProduct[] | undefined) =>
         items?.map((el) => (el.id === data.id ? data : el))
       );
-      onSuccess && onSuccess();
+      onSuccess?.();
     }
   });
 };

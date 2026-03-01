@@ -1,3 +1,5 @@
+export * from './bundle.model';
+export * from './category.model';
 export * from './coupon.model';
 export * from './forms.model';
 export * from './http.model';

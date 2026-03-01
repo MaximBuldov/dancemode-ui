@@ -38,6 +38,7 @@ export default tseslint.config(
   {
     files: ['**/*.{ts,tsx}'],
     rules: {
+      ...eslintReactHooks.configs.recommended.rules,
       ...prettierPlugin.configs.recommended.rules,
       ...eslintConfigPrettier.rules,
       'react-refresh/only-export-components': [

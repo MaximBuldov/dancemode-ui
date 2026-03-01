@@ -1,17 +1,8 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Button, DatePicker, Divider, Drawer, Form, Input, Select } from 'antd';
 import dayjs from 'dayjs';
-import { useTemplate } from 'hooks';
-import {
-  Categories,
-  ICategoryOption,
-  ICreateProductsForm,
-  IKeys,
-  IProduct,
-  NameOfClass,
-  catOptions
-} from 'models';
-import { useMemo } from 'react';
+import { useCategory, useTemplate } from 'hooks';
+import { ICreateProductsForm, IKeys, IProduct } from 'models';
 import { productService } from 'services';
 import { prepareProducts } from 'utils';
 
@@ -26,6 +17,7 @@ export const AddClassModal = ({ isOpen, closeModal }: AddClassModalProps) => {
   const [form] = useForm();
   const client = useQueryClient();
   const { get: getTemplates } = useTemplate();
+  const { get: getCat } = useCategory();
   const { mutate, isPending } = useMutation({
     mutationFn: productService.createMany,
     onSuccess: (data) => {
@@ -49,17 +41,6 @@ export const AddClassModal = ({ isOpen, closeModal }: AddClassModalProps) => {
       closeModal(true);
     }
   });
-  const isCustom = Form.useWatch('classes', form)?.some(
-    (el: ICategoryOption) => el.label === NameOfClass.CUSTOM
-  );
-
-  const options = useMemo(() => {
-    return isCustom
-      ? catOptions.map((el) =>
-          el.value !== Categories.CUSTOM ? { disabled: true, ...el } : el
-        )
-      : catOptions;
-  }, [isCustom]);
 
   return (
     <Drawer
@@ -82,7 +63,8 @@ export const AddClassModal = ({ isOpen, closeModal }: AddClassModalProps) => {
           form.setFieldsValue({
             time: template?.time,
             name: template?.name,
-            regular_price: template?.price
+            regular_price: template?.price,
+            categories: template?.categories?.map((el) => el.id)
           });
         }}
       />
@@ -125,12 +107,22 @@ export const AddClassModal = ({ isOpen, closeModal }: AddClassModalProps) => {
         >
           <Input prefix="$" placeholder="100" style={{ width: '100%' }} />
         </Item>
+        <Item label="Categories" name="categories">
+          <Select
+            mode="multiple"
+            allowClear
+            placeholder="Categories"
+            style={{ width: '100%' }}
+            options={getCat.data?.map((el) => ({
+              label: el.name,
+              value: el.id
+            }))}
+          />
+        </Item>
         <Item
           label="Quantity"
           name="stock_quantity"
-          rules={[
-            { required: isCustom, message: 'Please input class capacity!' }
-          ]}
+          rules={[{ required: true, message: 'Please input class capacity!' }]}
         >
           <Input placeholder="13" style={{ width: '100%' }} />
         </Item>

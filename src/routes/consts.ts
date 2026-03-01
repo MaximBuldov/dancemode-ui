@@ -12,5 +12,5 @@ export const CALENDAR = '/calendar';
 export const CHECKOUT = '/checkout';
 export const ALL_COUPONS = '/all-coupons';
 export const RESET_PASSWORD = '/reset-password/:token';
-export const TEMPLATES = 'templates';
-export const BUNDELS = 'bundels';
+export const SETTINGS = '/settings';
+export const BUNDLES = '/bundles';

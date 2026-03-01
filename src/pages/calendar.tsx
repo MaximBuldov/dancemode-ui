@@ -1,6 +1,11 @@
 import { useQuery } from '@tanstack/react-query';
 import { App, Button, Space, Spin } from 'antd';
-import { AddClassModal, DayCard, MonthStepper } from 'components';
+import {
+  AddClassModal,
+  CreateBundleModal,
+  DayCard,
+  MonthStepper
+} from 'components';
 import dayjs from 'dayjs';
 import { useProducts } from 'hooks';
 import { IKeys } from 'models';
@@ -9,6 +14,7 @@ import { userService } from 'services';
 
 export const Calendar = () => {
   const [modal, setModal] = useState(false);
+  const [bundleModal, setBundleModal] = useState(false);
   const [month, setMonth] = useState(dayjs());
   const { message } = App.useApp();
   const { groupedProducts, products } = useProducts(month);
@@ -30,7 +36,12 @@ export const Calendar = () => {
           <Button block type="primary" onClick={() => setModal(true)}>
             Add class
           </Button>
-          <Button block type="primary" danger onClick={() => setModal(true)}>
+          <Button
+            block
+            type="primary"
+            danger
+            onClick={() => setBundleModal(true)}
+          >
             Create bundle
           </Button>
         </Space.Compact>
@@ -42,6 +53,11 @@ export const Calendar = () => {
           })}
       </Space>
       {modal && <AddClassModal isOpen={modal} closeModal={onSuccess} />}
+      <CreateBundleModal
+        isOpen={bundleModal}
+        products={products.data}
+        closeModal={() => setBundleModal(false)}
+      />
     </Spin>
   );
 };

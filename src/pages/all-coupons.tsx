@@ -15,7 +15,7 @@ export const AllCoupons = () => {
   const queryKey = useMemo(() => [IKeys.COUPONS, { page }], [page]);
   const { data, isLoading } = useQuery({
     queryKey,
-    queryFn: () => couponService.getAll(page)
+    queryFn: () => couponService.getAllCoupons(page)
   });
 
   const remove = useMutation({

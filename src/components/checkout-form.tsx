@@ -98,7 +98,7 @@ export const CheckoutForm = ({ paymentIntentId }: CheckoutFormProps) => {
         block
         size="large"
       >
-        Pay now
+        {`Pay now $${cartStore.total}`}
       </Button>
     </form>
   );

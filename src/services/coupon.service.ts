@@ -1,11 +1,17 @@
 import { ICoupon } from 'models';
 
 import { $api } from '../http';
+import { BaseService } from './base.service';
 
-class CouponService {
+const ENDPOINT = '/coupon';
+
+class CouponService extends BaseService<ICoupon> {
+  constructor() {
+    super(ENDPOINT);
+  }
   async getMy(params?: any) {
     try {
-      const res = await $api.get<ICoupon[]>('/coupon/my', { params });
+      const res = await $api.get<ICoupon[]>(`${ENDPOINT}/my`, { params });
       return res.data;
     } catch (error) {
       throw error;
@@ -21,34 +27,7 @@ class CouponService {
     }
   }
 
-  async create(data?: Partial<ICoupon>) {
-    try {
-      const res = await $api.post<ICoupon>('/coupon', data);
-      return res.data;
-    } catch (error) {
-      throw error;
-    }
-  }
-
-  async update(data: ICoupon) {
-    try {
-      const res = await $api.patch<ICoupon>(`/coupon/${data.id}`, data);
-      return res.data;
-    } catch (error) {
-      throw error;
-    }
-  }
-
-  async remove(id: number) {
-    try {
-      const res = await $api.delete<ICoupon>(`/coupon/${id}`);
-      return res.data;
-    } catch (error) {
-      throw error;
-    }
-  }
-
-  async getAll(page: number) {
+  async getAllCoupons(page: number) {
     try {
       return await $api.get<ICoupon[]>('/coupon', {
         params: { page }

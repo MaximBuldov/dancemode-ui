@@ -1,21 +1,55 @@
 import {
   CreditCardOutlined,
   DeleteOutlined,
-  DollarOutlined,
-  ShoppingCartOutlined
+  DollarOutlined
 } from '@ant-design/icons';
-import { Button, Col, Flex, List, Row, Typography } from 'antd';
-import { CartItem, PromoCode, SuccessPage } from 'components';
+import { useQuery } from '@tanstack/react-query';
+import { Button, Card, Col, Flex, Row, Typography } from 'antd';
+import { CartItem, Price, PromoCode, SuccessPage } from 'components';
 import { useCreateOrder } from 'hooks';
 import { observer } from 'mobx-react-lite';
-import { IPaymentMethod } from 'models';
+import { IKeys, IPaymentMethod } from 'models';
+import { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import * as routes from 'routes/consts';
+import { bundleService } from 'services';
 import { cartStore } from 'stores';
 
 export const Cart = observer(() => {
   const navigate = useNavigate();
-  const isTotalZero = cartStore.totalMinusCoupons === 0;
+  const bundles = useQuery({
+    queryKey: [IKeys.BUNDELS],
+    queryFn: () =>
+      bundleService.getProductsWithPrice(cartStore.data.map((el) => el.id))
+  });
+
+  const result = useMemo(
+    () =>
+      bundles.data?.reduce(
+        (acc, bundle) => {
+          const res = bundle.products?.reduce(
+            (acc, product) => {
+              acc.total += product?.sale_price || product.price;
+              acc.subtotal += product.price;
+              return acc;
+            },
+            { subtotal: 0, total: 0 }
+          );
+
+          acc.subtotal += res.subtotal;
+          acc.total += res.total;
+
+          return acc;
+        },
+        { subtotal: 0, total: 0 }
+      ),
+    [bundles.data]
+  );
+  const totalMinusCoupons = useMemo(
+    () => (result?.total || 0) - cartStore.couponsTotal,
+    [result?.total]
+  );
+  const isTotalZero = totalMinusCoupons === 0;
   const order = useCreateOrder({
     onSuccess: () => cartStore.clear(),
     payment_method: isTotalZero ? IPaymentMethod.COUPON : IPaymentMethod.CASH
@@ -26,18 +60,74 @@ export const Cart = observer(() => {
       {order.isSuccess ? (
         <SuccessPage order={order.data} />
       ) : (
-        <>
-          <List
-            header={renderHeader()}
-            footer={renderFooter()}
-            bordered={false}
-            dataSource={cartStore.data}
-            renderItem={(item) => (
-              <List.Item>
-                <CartItem item={item} />
-              </List.Item>
-            )}
-          />
+        <Flex orientation="vertical" gap="middle">
+          <Flex align="center" justify="space-between">
+            <b style={{ fontSize: 16 }}>🛒 Cart</b>
+            <Button
+              onClick={() => {
+                cartStore.clear();
+                bundles.refetch();
+              }}
+              danger
+              type="text"
+              icon={<DeleteOutlined />}
+            >
+              Clear cart
+            </Button>
+          </Flex>
+          {bundles.data?.map((bundle, i) => {
+            const { total, subtotal } = bundle.products.reduce(
+              (acc, el) => {
+                acc.subtotal += el.price;
+                acc.total += el.sale_price || 0;
+                return acc;
+              },
+              {
+                total: 0,
+                subtotal: 0
+              }
+            );
+            return (
+              <Card
+                key={bundle.id}
+                type="inner"
+                title={bundle.id === -1 ? 'Classes' : `Package #${i + 1}`}
+                size="small"
+                extra={<Price total={total} subtotal={subtotal} />}
+              >
+                {bundle.products.map((el) => (
+                  <CartItem item={el} />
+                ))}
+              </Card>
+            );
+          })}
+          <div>
+            <PromoCode />
+            <Row align="top" justify="space-between">
+              <Col>
+                <Typography.Text strong>
+                  Total count:{' '}
+                  <span style={{ color: '#1677ff' }}>{cartStore.count}</span>
+                </Typography.Text>
+              </Col>
+              <Col span={8} style={{ textAlign: 'right' }}>
+                {result && (
+                  <Row>
+                    {renderTotalLine('Subtotal', result.subtotal)}
+                    {result.subtotal !== result.total &&
+                      renderTotalLine(
+                        'Discount',
+                        result.subtotal - result.total,
+                        true
+                      )}
+                    {cartStore.isCoupons &&
+                      renderTotalLine('Coupons', cartStore.couponsTotal, true)}
+                    {renderTotalLine('Total', result.total)}
+                  </Row>
+                )}
+              </Col>
+            </Row>
+          </div>
           <Flex gap="small">
             <Button
               type="primary"
@@ -45,11 +135,12 @@ export const Cart = observer(() => {
               block
               icon={<CreditCardOutlined />}
               disabled={
-                !cartStore.count ||
-                order.isPending ||
-                cartStore.totalMinusCoupons <= 0
+                !cartStore.count || order.isPending || totalMinusCoupons <= 0
               }
-              onClick={() => navigate(routes.CHECKOUT)}
+              onClick={() => {
+                cartStore.setTotal(result?.total || 0);
+                navigate(routes.CHECKOUT);
+              }}
             >
               Pay Card
             </Button>
@@ -58,61 +149,17 @@ export const Cart = observer(() => {
               size="large"
               block
               icon={<DollarOutlined />}
-              disabled={!cartStore.count || cartStore.totalMinusCoupons < 0}
+              disabled={!cartStore.count || totalMinusCoupons < 0}
               onClick={() => order.mutate()}
               loading={order.isPending}
             >
               {isTotalZero ? 'Book class' : 'Pay Cash'}
             </Button>
           </Flex>
-        </>
+        </Flex>
       )}
     </>
   );
-
-  function renderHeader() {
-    return (
-      <Row align="middle" justify="space-between">
-        <Typography.Text strong style={{ fontSize: 20 }}>
-          <ShoppingCartOutlined /> Cart
-        </Typography.Text>
-        <Button
-          onClick={() => cartStore.clear()}
-          danger
-          type="text"
-          icon={<DeleteOutlined />}
-        >
-          Clear cart
-        </Button>
-      </Row>
-    );
-  }
-
-  function renderFooter() {
-    return (
-      <>
-        <PromoCode />
-        <Row align="top" justify="space-between">
-          <Col>
-            <Typography.Text strong>
-              Total count:{' '}
-              <span style={{ color: '#1677ff' }}>{cartStore.count}</span>
-            </Typography.Text>
-          </Col>
-          <Col span={8} style={{ textAlign: 'right' }}>
-            <Row>
-              {renderTotalLine('Subtotal', cartStore.subtotal)}
-              {cartStore.isDiscount &&
-                renderTotalLine('Discount', cartStore.discount, true)}
-              {cartStore.isCoupons &&
-                renderTotalLine('Coupons', cartStore.couponsTotal, true)}
-              {renderTotalLine('Total', cartStore.totalMinusCoupons)}
-            </Row>
-          </Col>
-        </Row>
-      </>
-    );
-  }
 
   function renderTotalLine(
     title: string,

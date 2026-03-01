@@ -14,7 +14,8 @@ export enum IKeys {
   STRIPE = 'stripe',
   PAYMENTS = 'payments',
   TEMPLATES = 'template',
-  BUNDELS = 'bundels'
+  BUNDELS = 'bundels',
+  CATEGORY = 'category'
 }
 
 export enum SecureStore {

@@ -2,6 +2,8 @@ export * from './add-class-modal';
 export * from './cancel-order-modal';
 export * from './cart-item';
 export * from './checkout-form';
+export * from './class-templates';
+export * from './create-bundle-modal';
 export * from './create-coupon';
 export * from './day-card';
 export * from './menu';

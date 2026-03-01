@@ -1,4 +1,5 @@
 export * from './useAddToHomeScreen';
+export * from './useCategory';
 export * from './useCreateOrder';
 export * from './useDebounce';
 export * from './useDeleteOrder';
