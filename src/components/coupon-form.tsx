@@ -1,15 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
-import {
-  Button,
-  Form,
-  FormInstance,
-  Input,
-  InputNumber,
-  Select,
-  Spin
-} from 'antd';
+import { Button, Form, FormInstance, Input, InputNumber, Spin } from 'antd';
 import dayjs from 'dayjs';
-import { ICoupon, IKeys, catOptions } from 'models';
+import { ICoupon, IKeys } from 'models';
 import { userService } from 'services';
 import { generatePromoCode } from 'utils';
 
@@ -105,27 +97,29 @@ export const CouponForm = ({
           </select>
         )}
       </Item>
-      <Item<ICoupon> name="used_by" label="Used by" style={style}>
-        {usersApi.isPending ? (
-          <Spin spinning />
-        ) : (
-          <select
-            multiple
-            onChange={(e) => {
-              const users = Array.from(e.target.options)
-                .filter((el) => el.selected)
-                .map((el) => +el.value);
-              form.setFieldValue('used_by', users);
-            }}
-          >
-            {usersApi.data?.data.map((el) => (
-              <option key={el.id} value={el.id}>
-                {el.first_name} {el.last_name}
-              </option>
-            ))}
-          </select>
-        )}
-      </Item>
+      {initialValues && (
+        <Item<ICoupon> name="used_by" label="Used by" style={style}>
+          {usersApi.isPending ? (
+            <Spin spinning />
+          ) : (
+            <select
+              multiple
+              onChange={(e) => {
+                const users = Array.from(e.target.options)
+                  .filter((el) => el.selected)
+                  .map((el) => +el.value);
+                form.setFieldValue('used_by', users);
+              }}
+            >
+              {usersApi.data?.data.map((el) => (
+                <option key={el.id} value={el.id}>
+                  {el.first_name} {el.last_name}
+                </option>
+              ))}
+            </select>
+          )}
+        </Item>
+      )}
       <Item<ICoupon>
         name="date_expires"
         label="Expiry date"
@@ -133,9 +127,6 @@ export const CouponForm = ({
         style={style}
       >
         <Input type="date" min={dayjs().format('YYYY-MM-DD')} />
-      </Item>
-      <Item<ICoupon> name="exc_cat" style={style} label="Exclude categories">
-        <Select options={catOptions} mode="multiple" />
       </Item>
       <Item name="description" label="Note" style={style}>
         <Input />

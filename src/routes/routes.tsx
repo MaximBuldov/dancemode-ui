@@ -18,7 +18,6 @@ import {
 } from 'pages';
 
 import {
-  ALL_COUPONS,
   BUNDLES,
   CALENDAR,
   CART,
@@ -27,6 +26,7 @@ import {
   COUPONS,
   FORGOT_PASSWORD,
   LOGIN,
+  MY_COUPONS,
   ORDERS,
   PAYMENTS,
   PROFILE,
@@ -59,16 +59,12 @@ export const adminRoutes: IRoute[] = [
     element: <Calendar />
   },
   {
-    path: ALL_COUPONS,
+    path: COUPONS,
     element: <AllCoupons />
   },
   {
     path: SETTINGS,
     element: <Settings />
-  },
-  {
-    path: ALL_COUPONS,
-    element: <AllCoupons />
   },
   {
     path: BUNDLES,
@@ -94,7 +90,7 @@ export const userRoutes: IRoute[] = [
     element: <Cart />
   },
   {
-    path: COUPONS,
+    path: MY_COUPONS,
     element: <Coupons />
   },
   {

@@ -12,7 +12,7 @@ const userItems = [
     icon: '🗓️'
   },
   {
-    label: 'coupons',
+    label: 'my coupons',
     icon: '🎟️'
   },
   {
@@ -39,7 +39,7 @@ const adminItems = [
     icon: '💵'
   },
   {
-    label: 'all coupons',
+    label: 'coupons',
     icon: '🎟️'
   },
   {
