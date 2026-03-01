@@ -122,7 +122,10 @@ export const Cart = observer(() => {
                       )}
                     {cartStore.isCoupons &&
                       renderTotalLine('Coupons', cartStore.couponsTotal, true)}
-                    {renderTotalLine('Total', result.total)}
+                    {renderTotalLine(
+                      'Total',
+                      result.total - cartStore.couponsTotal
+                    )}
                   </Row>
                 )}
               </Col>
@@ -138,7 +141,10 @@ export const Cart = observer(() => {
                 !cartStore.count || order.isPending || totalMinusCoupons <= 0
               }
               onClick={() => {
-                cartStore.setTotal(result?.total || 0);
+                const total = result?.total
+                  ? result.total - cartStore.couponsTotal
+                  : 0;
+                cartStore.setTotal(total);
                 navigate(routes.CHECKOUT);
               }}
             >
