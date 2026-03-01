@@ -13,7 +13,7 @@ export const Price = (props: PriceProps) => {
   return (
     <>
       <Typography.Link strong={!isSale} delete={!!isSale} disabled={!!isSale}>
-        ${Math.round(subtotal / 10) * 10}
+        ${Math.round(subtotal * 10) / 10}
       </Typography.Link>
       {!!isSale && (
         <Typography.Link strong style={{ marginLeft: 10 }}>
