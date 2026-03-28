@@ -1,9 +1,10 @@
 import { CaretRightOutlined, DeleteTwoTone } from '@ant-design/icons';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import {
   App,
   Button,
   Col,
+  Flex,
   Form,
   Input,
   List,
@@ -12,6 +13,9 @@ import {
   Tag,
   Typography
 } from 'antd';
+import copy from 'copy-to-clipboard';
+import { observer } from 'mobx-react-lite';
+import { IKeys } from 'models';
 import { useState } from 'react';
 import { couponService } from 'services';
 import { cartStore } from 'stores';
@@ -20,10 +24,16 @@ interface PromoCodeProps {
   cartTotal?: number;
 }
 
-export const PromoCode = ({ cartTotal = 0 }: PromoCodeProps) => {
+export const PromoCode = observer(({ cartTotal = 0 }: PromoCodeProps) => {
   const [open, setOpen] = useState(false);
   const [form] = Form.useForm();
   const { message } = App.useApp();
+
+  const { data } = useQuery({
+    queryFn: () => couponService.getMy(),
+    queryKey: [IKeys.COUPONS],
+    enabled: !!open
+  });
 
   const { mutate, isPending } = useMutation({
     mutationFn: (code: string) =>
@@ -44,6 +54,9 @@ export const PromoCode = ({ cartTotal = 0 }: PromoCodeProps) => {
     },
     onSettled: () => form.resetFields()
   });
+
+  const availableCoupons =
+    data?.filter((a) => !cartStore.coupons.some((b) => a.id === b.id)) || [];
 
   return (
     <Space
@@ -119,8 +132,26 @@ export const PromoCode = ({ cartTotal = 0 }: PromoCodeProps) => {
               </Col>
             </Row>
           </Form>
+          {availableCoupons && (
+            <Flex gap={8}>
+              <div>Available coupons:</div>
+              <Flex gap={8}>
+                {availableCoupons.map((coupon) => (
+                  <Tag
+                    onClick={() => {
+                      copy(coupon.code);
+                      message.info('Copied!');
+                    }}
+                    color="cyan"
+                  >
+                    {coupon.code}
+                  </Tag>
+                ))}
+              </Flex>
+            </Flex>
+          )}
         </>
       )}
     </Space>
   );
-};
+});
