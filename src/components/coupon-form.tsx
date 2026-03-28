@@ -1,7 +1,16 @@
 import { useQuery } from '@tanstack/react-query';
-import { Button, Form, FormInstance, Input, InputNumber, Spin } from 'antd';
+import {
+  Button,
+  Form,
+  FormInstance,
+  Input,
+  InputNumber,
+  Select,
+  Spin
+} from 'antd';
 import dayjs from 'dayjs';
-import { ICoupon, IKeys } from 'models';
+import { useCategory } from 'hooks';
+import { ICoupon, IDiscountType, IKeys } from 'models';
 import { userService } from 'services';
 import { generatePromoCode } from 'utils';
 
@@ -26,6 +35,7 @@ export const CouponForm = ({
     queryFn: () => userService.getCustomers({ all: true }),
     queryKey: [IKeys.CUSTOMERS]
   });
+  const cats = useCategory();
 
   return (
     <Form<ICoupon>
@@ -46,7 +56,9 @@ export const CouponForm = ({
               allowed_users: initialValues?.allowed_users?.map((el) => el.id),
               used_by: initialValues?.used_by?.map((el) => el.id)
             }
-          : undefined
+          : {
+              amount: 0
+            }
       }
       layout="inline"
     >
@@ -69,6 +81,25 @@ export const CouponForm = ({
       >
         Generate
       </Button>
+      <Item<ICoupon>
+        name="discount_type"
+        label="Discount type"
+        rules={[{ required: true, message: 'Please input amount!' }]}
+        style={style}
+      >
+        <Select<IDiscountType>
+          options={[
+            {
+              value: IDiscountType.FIXED_CART,
+              label: 'Sum'
+            },
+            {
+              value: IDiscountType.CREDIT,
+              label: 'Class credit'
+            }
+          ]}
+        />
+      </Item>
       <Item<ICoupon>
         name="amount"
         label="Amount"
@@ -127,6 +158,20 @@ export const CouponForm = ({
         style={style}
       >
         <Input type="date" min={dayjs().format('YYYY-MM-DD')} />
+      </Item>
+      <Item<ICoupon>
+        name="allowed_cat"
+        style={style}
+        label="Allowed categories"
+      >
+        <Select
+          loading={cats.get.isLoading}
+          options={cats.get.data?.map((el) => ({
+            value: el.id,
+            label: el.name
+          }))}
+          mode="multiple"
+        />
       </Item>
       <Item name="description" label="Note" style={style}>
         <Input />

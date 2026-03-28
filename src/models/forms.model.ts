@@ -15,6 +15,7 @@ export interface ICreateProductsForm {
   regular_price: string;
   stock_quantity: string;
   time: string;
+  categories: number[];
 }
 export interface ICategoryOption {
   label: string;

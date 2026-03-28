@@ -19,8 +19,7 @@ export const Cart = observer(() => {
   const navigate = useNavigate();
   const bundles = useQuery({
     queryKey: [IKeys.BUNDELS],
-    queryFn: () =>
-      bundleService.getProductsWithPrice(cartStore.data.map((el) => el.id))
+    queryFn: () => bundleService.getProductsWithPrice(cartStore.cartProductIds)
   });
 
   const result = useMemo(
@@ -102,7 +101,7 @@ export const Cart = observer(() => {
             );
           })}
           <div>
-            <PromoCode />
+            <PromoCode cartTotal={result?.total} />
             <Row align="top" justify="space-between">
               <Col>
                 <Typography.Text strong>

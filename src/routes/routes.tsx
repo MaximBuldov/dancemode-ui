@@ -13,7 +13,7 @@ import {
   Profile,
   Registration,
   ResetPassword,
-  Settings,
+  SettingsPage,
   Students
 } from 'pages';
 
@@ -64,7 +64,7 @@ export const adminRoutes: IRoute[] = [
   },
   {
     path: SETTINGS,
-    element: <Settings />
+    element: <SettingsPage />
   },
   {
     path: BUNDLES,

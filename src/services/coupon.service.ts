@@ -1,4 +1,4 @@
-import { ICoupon } from 'models';
+import { CouponValidation, ICoupon } from 'models';
 
 import { $api } from '../http';
 import { BaseService } from './base.service';
@@ -18,9 +18,12 @@ class CouponService extends BaseService<ICoupon> {
     }
   }
 
-  async validate(code: string) {
+  async validate(code: string, products: number[]) {
     try {
-      const res = await $api.post<ICoupon>('/coupon/validate', { code });
+      const res = await $api.post<CouponValidation>('/coupon/validate', {
+        code,
+        products
+      });
       return res.data;
     } catch (error) {
       throw error;

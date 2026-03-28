@@ -1,10 +1,20 @@
 import { DeleteTwoTone, EditTwoTone } from '@ant-design/icons';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { Button, Divider, Drawer, Space, Table, TableProps, Tag } from 'antd';
+import {
+  Button,
+  Descriptions,
+  DescriptionsProps,
+  Divider,
+  Drawer,
+  Space,
+  Table,
+  TableProps,
+  Tag
+} from 'antd';
 import { AxiosResponse } from 'axios';
 import { CreateCoupon, UpdateCoupon } from 'components';
 import dayjs from 'dayjs';
-import { ICoupon, IKeys } from 'models';
+import { ICoupon, IDiscountType, IKeys } from 'models';
 import { useMemo, useState } from 'react';
 import { couponService } from 'services';
 
@@ -47,7 +57,8 @@ export const AllCoupons = () => {
       dataIndex: 'amount',
       align: 'center',
       key: 'amount',
-      render: (el) => `$${el}`
+      render: (el, record) =>
+        record.discount_type === IDiscountType.CREDIT ? 1 : `$${el}`
     },
     {
       title: 'Created',
@@ -90,6 +101,30 @@ export const AllCoupons = () => {
           total: data?.headers['total'],
           onChange: (number) => setPage(number)
         }}
+        expandable={{
+          expandedRowRender: (el) => {
+            const items: DescriptionsProps['items'] = [
+              {
+                key: '1',
+                label: 'Allowed categories',
+                children: (
+                  <Space>
+                    {el.allowed_cat?.map((el) => (
+                      <Tag color="blue">{el.name}</Tag>
+                    ))}
+                  </Space>
+                )
+              },
+              {
+                key: '2',
+                label: 'Description',
+                children: el.description
+              }
+            ];
+            return <Descriptions size="small" items={items} />;
+          },
+          rowExpandable: (el) => !!el.description || el.allowed_cat.length > 0
+        }}
       />
       <Drawer
         open={!!drawer}
@@ -100,7 +135,7 @@ export const AllCoupons = () => {
             : `Edit coupon ${(drawer as ICoupon).code}`
         }
         size="large"
-        destroyOnClose
+        destroyOnHidden
       >
         {drawer === true ? (
           <CreateCoupon

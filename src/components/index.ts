@@ -12,6 +12,7 @@ export * from './payments-products';
 export * from './product-form';
 export * from './profile-form';
 export * from './promo-code';
+export * from './settings';
 export * from './single-class';
 export * from './success-page';
 export * from './teacher-class';

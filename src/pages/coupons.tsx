@@ -1,8 +1,15 @@
 import { useQuery } from '@tanstack/react-query';
-import { Table, Typography } from 'antd';
+import {
+  Descriptions,
+  DescriptionsProps,
+  Space,
+  Table,
+  Tag,
+  Typography
+} from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import dayjs from 'dayjs';
-import { ICoupon, IKeys } from 'models';
+import { ICoupon, IDiscountType, IKeys } from 'models';
 import { couponService } from 'services';
 
 const columns: ColumnsType<ICoupon> = [
@@ -15,10 +22,12 @@ const columns: ColumnsType<ICoupon> = [
     )
   },
   {
-    title: '$',
+    title: 'Amount',
     key: 'amount',
+    align: 'center',
     dataIndex: 'amount',
-    render: (el) => `$${el}`
+    render: (el, record) =>
+      record.discount_type === IDiscountType.CREDIT ? 1 : `$${el}`
   },
   {
     title: 'Expiry day',
@@ -43,8 +52,28 @@ export const Coupons = () => {
       size="small"
       pagination={false}
       expandable={{
-        expandedRowRender: (el) => el.description,
-        rowExpandable: (el) => !!el.description
+        expandedRowRender: (el) => {
+          const items: DescriptionsProps['items'] = [
+            {
+              key: '1',
+              label: 'Allowed categories',
+              children: (
+                <Space>
+                  {el.allowed_cat?.map((el) => (
+                    <Tag color="blue">{el.name}</Tag>
+                  ))}
+                </Space>
+              )
+            },
+            {
+              key: '2',
+              label: 'Description',
+              children: el.description
+            }
+          ];
+          return <Descriptions size="small" items={items} />;
+        },
+        rowExpandable: (el) => !!el.description || el.allowed_cat.length > 0
       }}
     />
   );

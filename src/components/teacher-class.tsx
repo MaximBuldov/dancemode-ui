@@ -194,7 +194,7 @@ export const TeacherClass = observer(({ product }: TeacherClassProps) => {
         )}
       </Row>
       {customersTable && (
-        <Space direction="vertical" style={{ width: '100%' }}>
+        <Space orientation="vertical" style={{ width: '100%' }}>
           <Table<IUserWithStatus>
             dataSource={customers}
             rowKey={(el) => el.id}
@@ -239,7 +239,7 @@ export const TeacherClass = observer(({ product }: TeacherClassProps) => {
         open={modal}
         footer={false}
         onClose={() => setModal(false)}
-        destroyOnClose
+        destroyOnHidden
       >
         <ProductForm
           onFinish={(values) => updateProduct.mutate(values)}
@@ -249,7 +249,7 @@ export const TeacherClass = observer(({ product }: TeacherClassProps) => {
             price: product.price,
             date_time: classTime.toDate(),
             stock_quantity: product.stock_quantity,
-            category_id: product.category_id
+            categories: product.categories.map((el) => el.id)
           }}
         />
       </Drawer>

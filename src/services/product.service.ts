@@ -1,4 +1,4 @@
-import { IProduct } from 'models';
+import { ICreateProduct, IProduct } from 'models';
 
 import { $api } from '../http';
 
@@ -16,7 +16,7 @@ class ProductService {
     }
   }
 
-  async createOne(data: IProduct) {
+  async createOne(data: ICreateProduct) {
     try {
       const res = await $api.post('/products', data);
       return res.data as IProduct;
@@ -25,7 +25,7 @@ class ProductService {
     }
   }
 
-  async createMany(data: Partial<IProduct>[]) {
+  async createMany(data: ICreateProduct[]) {
     try {
       const res = await $api.post<IProduct[]>('/products/batch', data);
       return res.data;
@@ -34,7 +34,7 @@ class ProductService {
     }
   }
 
-  async update(data: any, id: number) {
+  async update(data: ICreateProduct, id: number) {
     try {
       const res = await $api.patch(`/products/${id}`, data);
       return res.data as IProduct;

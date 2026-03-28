@@ -10,7 +10,8 @@ import {
   Typography
 } from 'antd';
 import dayjs from 'dayjs';
-import { IKeys, catOptions } from 'models';
+import { useCategory } from 'hooks';
+import { IKeys } from 'models';
 import { couponService, userService } from 'services';
 import { generatePromoCode } from 'utils';
 
@@ -34,6 +35,8 @@ export const CreateCoupon = () => {
     queryFn: () => userService.getCustomers(),
     queryKey: [IKeys.CUSTOMERS]
   });
+
+  const { catOptions } = useCategory();
 
   return (
     <>
@@ -98,8 +101,8 @@ export const CreateCoupon = () => {
         >
           <Input type="date" min={dayjs().format('YYYY-MM-DD')} />
         </Item>
-        <Item name="exc_cat" style={style} label="Exclude categories">
-          <Select options={catOptions} mode="multiple" />
+        <Item name="allowed_cat" style={style} label="Allowed categories">
+          <Select mode="multiple" options={catOptions} />
         </Item>
         <Item
           name="usage_limit"

@@ -1,11 +1,8 @@
 import dayjs from 'dayjs';
-import { ICreateProductsForm, IProduct } from 'models';
+import { ICreateProduct, ICreateProductsForm } from 'models';
 
 export function prepareProducts(values: ICreateProductsForm) {
-  const products: Pick<
-    IProduct,
-    'name' | 'price' | 'date_time' | 'stock_quantity'
-  >[] = [];
+  const products: ICreateProduct[] = [];
 
   const [hours, minutes] = values.time
     ? values.time.split(':').map(Number)
@@ -19,7 +16,8 @@ export function prepareProducts(values: ICreateProductsForm) {
         .hour(hours)
         .minute(minutes || 0)
         .toDate(),
-      stock_quantity: Number(values?.stock_quantity || 13)
+      stock_quantity: Number(values?.stock_quantity || 13),
+      categories: values.categories
     });
   }
 

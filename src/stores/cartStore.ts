@@ -54,22 +54,6 @@ class CartStore {
     );
   }
 
-  checkCouponEligibility(coupon: ICoupon) {
-    const totalCostExcluded = this.data.reduce((acc, el) => {
-      return (acc += el.price);
-    }, 0);
-
-    if (totalCostExcluded < coupon.amount) {
-      return {
-        success: false,
-        message:
-          'The total cost of classes in the cart is less than the coupon amount'
-      };
-    }
-
-    return { success: true, message: 'Validated' };
-  }
-
   setTotal(total: number) {
     this.total = total;
   }
@@ -96,6 +80,10 @@ class CartStore {
       subtotal: el.price,
       total: el.total || el.price
     }));
+  }
+
+  get cartProductIds() {
+    return this.data.map((el) => el.id);
   }
 
   private calculateTotal<T>(arr: T[], prop: keyof T) {

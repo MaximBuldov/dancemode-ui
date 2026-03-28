@@ -17,7 +17,7 @@ export const AddClassModal = ({ isOpen, closeModal }: AddClassModalProps) => {
   const [form] = useForm();
   const client = useQueryClient();
   const { get: getTemplates } = useTemplate();
-  const { get: getCat } = useCategory();
+  const { catOptions } = useCategory();
   const { mutate, isPending } = useMutation({
     mutationFn: productService.createMany,
     onSuccess: (data) => {
@@ -113,10 +113,7 @@ export const AddClassModal = ({ isOpen, closeModal }: AddClassModalProps) => {
             allowClear
             placeholder="Categories"
             style={{ width: '100%' }}
-            options={getCat.data?.map((el) => ({
-              label: el.name,
-              value: el.id
-            }))}
+            options={catOptions}
           />
         </Item>
         <Item

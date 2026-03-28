@@ -1,17 +1,12 @@
 import { Button, Form, Input, InputNumber, Select } from 'antd';
 import dayjs from 'dayjs';
-import { Categories, IProduct, catOptions } from 'models';
-import { useState } from 'react';
-
-type IProductorm = Pick<
-  IProduct,
-  'date_time' | 'category_id' | 'price' | 'name' | 'stock_quantity'
->;
+import { useCategory } from 'hooks';
+import { ICreateProduct } from 'models';
 
 interface CreateSingleProductFormProps {
-  onFinish: (values: Partial<IProduct>) => void;
+  onFinish: (values: ICreateProduct) => void;
   isPending: boolean;
-  initialValues?: IProductorm;
+  initialValues?: ICreateProduct;
 }
 
 const { useForm, Item } = Form;
@@ -21,11 +16,11 @@ export const ProductForm = ({
   isPending,
   initialValues
 }: CreateSingleProductFormProps) => {
-  const [isCustomName, setCustomName] = useState(false);
-  const [form] = useForm<IProductorm>();
+  const [form] = useForm<ICreateProduct>();
+  const { catOptions } = useCategory();
 
   return (
-    <Form<IProductorm>
+    <Form<ICreateProduct>
       form={form}
       onFinish={(values) => {
         onFinish({
@@ -38,24 +33,21 @@ export const ProductForm = ({
         date_time: dayjs(initialValues?.date_time).format('YYYY-MM-DDTHH:MM')
       }}
     >
-      <Item<IProductorm> label="Day" name="date_time">
+      <Item<ICreateProduct> label="Day" name="date_time">
         <Input type="datetime-local" />
       </Item>
-      {!initialValues && (
-        <Item<IProductorm> label="Class name" name="category_id">
-          <Select
-            labelInValue
-            options={catOptions}
-            onChange={(el) => setCustomName(el.value === Categories.CUSTOM)}
-          />
-        </Item>
-      )}
-      {(isCustomName || !!initialValues) && (
-        <Item<IProductorm> name="name" label={!!initialValues && 'Class name'}>
+      {!!initialValues && (
+        <Item<ICreateProduct>
+          name="name"
+          label={!!initialValues && 'Class name'}
+        >
           <Input placeholder="Class name" />
         </Item>
       )}
-      <Item<IProductorm> label="Price" name="price">
+      <Item<ICreateProduct> label="Categories" name="categories">
+        <Select mode="multiple" options={catOptions} />
+      </Item>
+      <Item<ICreateProduct> label="Price" name="price">
         <InputNumber prefix="$" placeholder="100" style={{ width: '100%' }} />
       </Item>
       <Item label="Quantity" name="stock_quantity">

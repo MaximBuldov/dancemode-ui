@@ -1,5 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { ICategory, IKeys } from 'models';
+import { useMemo } from 'react';
 import { categoryService } from 'services';
 
 export const useCategory = () => {
@@ -42,5 +43,12 @@ export const useCategory = () => {
     }
   });
 
-  return { get, update, remove, create };
+  const catOptions = useMemo(() => {
+    return get.data?.map((el) => ({
+      label: el.name,
+      value: el.id
+    }));
+  }, [get.data]);
+
+  return { get, update, remove, create, catOptions };
 };

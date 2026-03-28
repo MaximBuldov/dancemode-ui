@@ -16,19 +16,29 @@ import { useState } from 'react';
 import { couponService } from 'services';
 import { cartStore } from 'stores';
 
-export const PromoCode = () => {
+interface PromoCodeProps {
+  cartTotal?: number;
+}
+
+export const PromoCode = ({ cartTotal = 0 }: PromoCodeProps) => {
   const [open, setOpen] = useState(false);
   const [form] = Form.useForm();
   const { message } = App.useApp();
 
   const { mutate, isPending } = useMutation({
-    mutationFn: (code: string) => couponService.validate(code),
+    mutationFn: (code: string) =>
+      couponService.validate(code, cartStore.cartProductIds),
     onSuccess: (data) => {
-      const isValid = cartStore.checkCouponEligibility(data);
-      if (isValid.success) {
-        cartStore.addCoupon(data);
+      if (data.valid) {
+        if (cartTotal - data.coupon.amount > 0) {
+          cartStore.addCoupon(data.coupon);
+        } else {
+          message.error(
+            'The coupon discount exceeds the total cart amount and cannot be applied.'
+          );
+        }
       } else {
-        message.error(isValid.message);
+        message.error(data.message);
         form.resetFields();
       }
     },
@@ -37,7 +47,7 @@ export const PromoCode = () => {
 
   return (
     <Space
-      direction="vertical"
+      orientation="vertical"
       style={{
         width: '100%',
         marginBottom: 16,
