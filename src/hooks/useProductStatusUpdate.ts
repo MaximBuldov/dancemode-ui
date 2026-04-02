@@ -37,11 +37,13 @@ export const useProductStatusUpdate = ({
       );
       if (value === IProductStatus.CANCELED) {
         if (isDeadline) {
-          isPaid
-            ? message.success(
-                'You have successfully canceled your class and received a coupon!'
-              )
-            : message.warning('Class was canceled');
+          if (isPaid) {
+            message.success(
+              'You have successfully canceled your class and received a coupon!'
+            );
+          } else {
+            message.warning('Class was canceled');
+          }
         } else {
           message.warning('Class was canceled, but no coupon, is too late');
         }
@@ -52,7 +54,7 @@ export const useProductStatusUpdate = ({
           'Thank you for your confirmation, I look forward to seeing you in class!'
         );
       }
-      onSuccess && onSuccess();
+      onSuccess?.();
     }
   });
 

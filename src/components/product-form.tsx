@@ -30,7 +30,7 @@ export const ProductForm = ({
       }}
       initialValues={{
         ...initialValues,
-        date_time: dayjs(initialValues?.date_time).format('YYYY-MM-DDTHH:MM')
+        date_time: dayjs(initialValues?.date_time).format('YYYY-MM-DDTHH:mm')
       }}
     >
       <Item<ICreateProduct> label="Day" name="date_time">

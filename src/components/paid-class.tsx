@@ -91,7 +91,7 @@ export const PaidClass = observer(
           <Space>
             <Checkbox disabled />
             <Typography>
-              {product.name}: {classTime.format('ha')}
+              {product.name}: {classTime.format('h:mma')}
             </Typography>
             <div>
               {isPaid && (

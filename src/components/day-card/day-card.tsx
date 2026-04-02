@@ -25,7 +25,7 @@ export const DayCard = observer(({ day, classes }: DayCardProps) => {
       className={classNames({ [styles['badge-hide']]: !isJaneCanceled })}
     >
       <Card size="small" title={renderTitle()}>
-        <Space direction="vertical" style={{ width: '100%' }}>
+        <Space orientation="vertical" style={{ width: '100%' }}>
           {classes?.map((el) => (
             <div
               key={el.id}

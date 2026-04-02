@@ -171,7 +171,7 @@ export const TeacherClass = observer(({ product }: TeacherClassProps) => {
           <Space>
             {<CaretRightOutlined rotate={customersTable ? 90 : 0} />}
             <Typography>
-              {product.name}: {classTime.format('ha')} ({confirmed.length}/
+              {product.name}: {classTime.format('h:mma')} ({confirmed.length}/
               {product?.orders?.length || 0})
             </Typography>
             {product.is_canceled && (
@@ -249,7 +249,7 @@ export const TeacherClass = observer(({ product }: TeacherClassProps) => {
             price: product.price,
             date_time: classTime.toDate(),
             stock_quantity: product.stock_quantity,
-            categories: product.categories.map((el) => el.id)
+            categories: product?.categories.map((el) => el.id)
           }}
         />
       </Drawer>
