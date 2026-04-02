@@ -22,6 +22,7 @@ import { ColumnsType } from 'antd/es/table';
 import dayjs from 'dayjs';
 import { observer } from 'mobx-react-lite';
 import {
+  CLASS_TIME_FORMAT,
   IKeys,
   IOrderProduct,
   IOrderStatus,
@@ -171,8 +172,8 @@ export const TeacherClass = observer(({ product }: TeacherClassProps) => {
           <Space>
             {<CaretRightOutlined rotate={customersTable ? 90 : 0} />}
             <Typography>
-              {product.name}: {classTime.format('h:mma')} ({confirmed.length}/
-              {product?.orders?.length || 0})
+              {product.name}: {classTime.format(CLASS_TIME_FORMAT)} (
+              {confirmed.length}/{product?.orders?.length || 0})
             </Typography>
             {product.is_canceled && (
               <Tag icon={<CloseCircleOutlined />} color="error">

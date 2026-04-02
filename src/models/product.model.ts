@@ -31,3 +31,5 @@ export interface IBatchProducts {
   update?: IProduct[];
   delete?: number[];
 }
+
+export const CLASS_TIME_FORMAT = 'h:mma';

@@ -2,7 +2,7 @@ import { DeleteOutlined } from '@ant-design/icons';
 import { Button, Col, Row } from 'antd';
 import { Price } from 'components';
 import dayjs from 'dayjs';
-import { IProduct } from 'models';
+import { CLASS_TIME_FORMAT, IProduct } from 'models';
 import { cartStore } from 'stores';
 
 interface CartItemProps {
@@ -13,7 +13,8 @@ export const CartItem = ({ item }: CartItemProps) => {
   return (
     <Row align="middle" justify="space-between" style={{ width: '100%' }}>
       <Col span={14} style={{ fontSize: 12 }}>
-        <b>{item.name}:</b> {dayjs(item.date_time).format('MMM D - ddd - ha')}
+        <b>{item.name}:</b>{' '}
+        {dayjs(item.date_time).format(`MMM D - ddd - ${CLASS_TIME_FORMAT}`)}
       </Col>
       <Col span={6}>
         <Price total={item.sale_price || 0} subtotal={item.price} />

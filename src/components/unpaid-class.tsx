@@ -2,7 +2,7 @@ import { Button, Checkbox, Col, Row, Space, Tag, Typography } from 'antd';
 import dayjs from 'dayjs';
 import { useUpdateProduct } from 'hooks';
 import { observer } from 'mobx-react-lite';
-import { IKeys, IProduct, IStatus } from 'models';
+import { CLASS_TIME_FORMAT, IKeys, IProduct, IStatus } from 'models';
 import { cartStore, userStore } from 'stores';
 
 interface UnpaidClassProps {
@@ -39,7 +39,7 @@ export const UnpaidClass = observer(
               }
             />
             <Typography>
-              {product.name}: {classTime.format('h:mma')} -{' '}
+              {product.name}: {classTime.format(CLASS_TIME_FORMAT)} -{' '}
               <b>${product.price}</b>
             </Typography>
             {isOutOfStock && <Tag color="#f50">Sold out</Tag>}

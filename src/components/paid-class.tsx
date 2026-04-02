@@ -19,7 +19,7 @@ import {
 import dayjs from 'dayjs';
 import { useProductStatusUpdate } from 'hooks';
 import { observer } from 'mobx-react-lite';
-import { IProduct, IProductStatus } from 'models';
+import { CLASS_TIME_FORMAT, IProduct, IProductStatus } from 'models';
 import { useMemo, useState } from 'react';
 import { userStore } from 'stores';
 
@@ -91,7 +91,7 @@ export const PaidClass = observer(
           <Space>
             <Checkbox disabled />
             <Typography>
-              {product.name}: {classTime.format('h:mma')}
+              {product.name}: {classTime.format(CLASS_TIME_FORMAT)}
             </Typography>
             <div>
               {isPaid && (

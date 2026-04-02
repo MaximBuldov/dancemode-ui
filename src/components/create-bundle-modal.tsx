@@ -1,7 +1,7 @@
 import { useMutation } from '@tanstack/react-query';
 import { Button, Drawer, Form, Input, Select } from 'antd';
 import dayjs from 'dayjs';
-import { IProduct } from 'models';
+import { CLASS_TIME_FORMAT, IProduct } from 'models';
 import { bundleService } from 'services';
 
 const { useForm, Item } = Form;
@@ -48,7 +48,7 @@ export const CreateBundleModal = ({
             mode="multiple"
             options={products?.map((el) => ({
               value: el.id,
-              label: `${el.name} - ${dayjs(el.date_time).format('M/D ha')}`
+              label: `${el.name} - ${dayjs(el.date_time).format(`M/D ${CLASS_TIME_FORMAT}`)}`
             }))}
             allowClear
             showSearch
