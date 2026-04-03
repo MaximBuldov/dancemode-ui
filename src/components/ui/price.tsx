@@ -8,7 +8,7 @@ interface PriceProps {
 export const Price = (props: PriceProps) => {
   const total = Number(props.total);
   const subtotal = Number(props.subtotal);
-  const isSale = total !== 0;
+  const isSale = total !== 0 || total === subtotal;
 
   return (
     <>
