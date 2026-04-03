@@ -12,14 +12,15 @@ interface CartItemProps {
 export const CartItem = ({ item }: CartItemProps) => {
   return (
     <Row align="middle" justify="space-between" style={{ width: '100%' }}>
-      <Col span={14} style={{ fontSize: 12 }}>
-        <b>{item.name}:</b>{' '}
+      <Col span={16} style={{ fontSize: 12 }}>
+        <b>{item.name}: </b>
+        {item.name.length > 20 && <br />}
         {dayjs(item.date_time).format(`MMM D - ddd - ${CLASS_TIME_FORMAT}`)}
       </Col>
       <Col span={6}>
         <Price total={item.sale_price || 0} subtotal={item.price} />
       </Col>
-      <Col span={4} style={{ textAlign: 'right' }}>
+      <Col span={2} style={{ textAlign: 'right' }}>
         <Button
           icon={<DeleteOutlined />}
           danger

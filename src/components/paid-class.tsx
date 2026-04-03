@@ -99,11 +99,7 @@ export const PaidClass = observer(
                   Paid
                 </Tag>
               )}
-              {isPrepaid && (
-                <Tag icon={<SyncOutlined spin />} color="cyan">
-                  Preordered
-                </Tag>
-              )}
+              {isPrepaid && <Tag icon={<SyncOutlined spin />} color="cyan" />}
               {isConfirmed && !isCanceled && (
                 <Tag icon={<CheckCircleOutlined />} color="success">
                   Confirmed
@@ -144,7 +140,7 @@ export const PaidClass = observer(
           okText={isConfirmModal ? 'Confirm' : 'Confirm cancellation'}
         >
           <div>
-            {`${isConfirmModal ? 'Do you want to confirm?' : 'Are you sure you want to cancel? Cancel 5 hours before class for a coupon; within 5 hours, no refunds. '} `}
+            {`${isConfirmModal ? 'Do you want to confirm?' : 'Are you sure you want to cancel? Cancel at least 5 hours before class to receive a class credit (valid for 4 weeks). Cancellations within 5 hours are not eligible for a refund or class credit.'} `}
             {!seePolicy && !isConfirmModal && (
               <Typography.Link onClick={() => setSeePolicy(true)}>
                 See cancelation policy

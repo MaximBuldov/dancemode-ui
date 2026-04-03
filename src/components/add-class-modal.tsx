@@ -77,7 +77,6 @@ export const AddClassModal = ({ isOpen, closeModal }: AddClassModalProps) => {
         onFinish={(values) => {
           mutate(prepareProducts(values));
         }}
-        size="large"
       >
         <Item
           label="Dates"

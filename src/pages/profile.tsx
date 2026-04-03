@@ -27,7 +27,6 @@ export const Profile = () => {
         title="Profile 👩"
         onSubmit={mutate}
         isPending={isPending}
-        isLabels={true}
         submitButton="Update profile"
         initialValues={userStore.data}
         isRequired={false}

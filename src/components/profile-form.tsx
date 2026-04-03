@@ -5,15 +5,15 @@ import {
   PhoneOutlined,
   UserOutlined
 } from '@ant-design/icons';
-import { Button, Form, Input, Typography } from 'antd';
+import { Button, Form, Space, Typography } from 'antd';
 import dayjs from 'dayjs';
 import { ISignupForm, IUser } from 'models';
+import { AddonInput, BirthdayPicker } from './ui';
 
 interface ProfileFormProps {
   title: string;
   onSubmit: (data: ISignupForm) => void;
   isPending: boolean;
-  isLabels: boolean;
   submitButton: string;
   initialValues: IUser | null;
   isRequired: boolean;
@@ -21,46 +21,15 @@ interface ProfileFormProps {
 
 const { useForm, Item } = Form;
 
-const labelsConfig = {
-  firstName: 'First name',
-  lastName: 'Last name',
-  email: 'Email',
-  phone: 'Phone',
-  instagram: 'Instagram',
-  password: 'Password',
-  confirmPassword: 'Confirm Password',
-  dob: 'Date of Birthday'
-};
-
 export const ProfileForm = ({
   title,
   onSubmit,
   isPending,
-  isLabels,
   submitButton,
   initialValues,
   isRequired
 }: ProfileFormProps) => {
   const [form] = useForm<ISignupForm>();
-
-  const label = (text: string) => {
-    return isLabels ? text : '';
-  };
-
-  const placeholder = (text: string) => {
-    return !isLabels ? text : '';
-  };
-
-  const {
-    firstName,
-    lastName,
-    email,
-    phone,
-    instagram,
-    password,
-    confirmPassword,
-    dob
-  } = labelsConfig;
 
   return (
     <>
@@ -68,12 +37,7 @@ export const ProfileForm = ({
       <Form<ISignupForm>
         form={form}
         name="signup"
-        onFinish={({ dob, ...rest }) =>
-          onSubmit({
-            ...rest,
-            dob: dayjs(dob).toDate()
-          })
-        }
+        onFinish={onSubmit}
         layout="vertical"
         initialValues={
           initialValues
@@ -84,138 +48,106 @@ export const ProfileForm = ({
             : undefined
         }
       >
-        <Item<ISignupForm>
-          name="first_name"
-          rules={[
-            { required: isRequired, message: 'Please input your first name!' }
-          ]}
-        >
-          <Input
-            addonBefore={label(firstName)}
+        <Space orientation="vertical">
+          <AddonInput
             prefix={<UserOutlined />}
-            placeholder={placeholder(firstName)}
+            addon="First Name"
+            name="first_name"
+            rules={[
+              { required: isRequired, message: 'Please input your first name!' }
+            ]}
           />
-        </Item>
-        <Item<ISignupForm>
-          name="last_name"
-          rules={[
-            { required: isRequired, message: 'Please input your last name!' }
-          ]}
-        >
-          <Input
-            addonBefore={label(lastName)}
+          <AddonInput
+            name="last_name"
+            rules={[
+              { required: isRequired, message: 'Please input your last name!' }
+            ]}
             prefix={<UserOutlined />}
-            placeholder={placeholder(lastName)}
+            addon="Last Name"
           />
-        </Item>
-        <Item<ISignupForm>
-          name="dob"
-          rules={[
-            {
-              required: isRequired,
-              message: 'Please input your date of birthday!'
-            }
-          ]}
-        >
-          <Input
-            addonBefore="Date of Birthday"
-            type="date"
-            placeholder={placeholder(dob)}
-            style={{ width: '100%' }}
-          />
-        </Item>
-        <Item<ISignupForm>
-          name="email"
-          rules={[
-            { required: isRequired, message: 'Please input your email!' },
-            { type: 'email', message: 'The input is not valid E-mail!' }
-          ]}
-        >
-          <Input
-            addonBefore={label(email)}
-            prefix={<MailOutlined />}
-            placeholder={placeholder(email)}
-          />
-        </Item>
-        <Item<ISignupForm>
-          name="billing_phone"
-          rules={[
-            { required: isRequired, message: 'Please input your phone!' },
-            {
-              min: 10,
-              message: 'Please enter correct phone number'
-            }
-          ]}
-        >
-          <Input
-            maxLength={10}
-            addonBefore={label(phone)}
-            prefix={<PhoneOutlined />}
-            placeholder={placeholder(phone)}
-          />
-        </Item>
-        <Item<ISignupForm>
-          name="instagram"
-          rules={[
-            { required: isRequired, message: 'Please input your instagram!' }
-          ]}
-        >
-          <Input
-            addonBefore={label(instagram)}
-            prefix={<InstagramOutlined />}
-            placeholder={`${placeholder(instagram)} @dancemode`}
-          />
-        </Item>
-        <Item<ISignupForm>
-          name="password"
-          hasFeedback
-          rules={[
-            {
-              required: isRequired,
-              message: 'Please input your password!'
-            },
-            {
-              min: 6,
-              message: 'Minimum password length is 6 characters'
-            }
-          ]}
-        >
-          <Input.Password
-            addonBefore={label(password)}
-            prefix={<LockOutlined />}
-            placeholder={placeholder(password)}
-          />
-        </Item>
-        <Item<ISignupForm>
-          name="confirm"
-          dependencies={['password']}
-          hasFeedback
-          rules={[
-            {
-              required: isRequired,
-              message: 'Please confirm your password!'
-            },
-            ({ getFieldValue }) => ({
-              validator(_, value) {
-                if (!value || getFieldValue('password') === value) {
-                  return Promise.resolve();
-                }
-                return Promise.reject(
-                  new Error('The new password that you entered do not match!')
-                );
+          <BirthdayPicker
+            name="dob"
+            rules={[
+              {
+                required: isRequired,
+                message: 'Please input your date of birthday!'
               }
-            })
-          ]}
-        >
-          <Input.Password
-            addonBefore={label(confirmPassword)}
-            placeholder={placeholder(confirmPassword)}
-            prefix={<LockOutlined />}
+            ]}
           />
-        </Item>
-        <Button type="primary" htmlType="submit" block loading={isPending}>
-          {submitButton}
-        </Button>
+          <AddonInput
+            name="email"
+            rules={[
+              { required: isRequired, message: 'Please input your email!' },
+              { type: 'email', message: 'The input is not valid E-mail!' }
+            ]}
+            prefix={<MailOutlined />}
+            addon="Email"
+          />
+          <AddonInput
+            name="billing_phone"
+            rules={[
+              { required: isRequired, message: 'Please input your phone!' },
+              {
+                min: 10,
+                message: 'Please enter correct phone number'
+              }
+            ]}
+            prefix={<PhoneOutlined />}
+            addon="Phone"
+          />
+          <AddonInput
+            name="instagram"
+            rules={[
+              { required: isRequired, message: 'Please input your instagram!' }
+            ]}
+            prefix={<InstagramOutlined />}
+            addon="Instagram"
+          />
+          <AddonInput
+            prefix={<LockOutlined />}
+            addon="Password"
+            password={true}
+            name="password"
+            hasFeedback
+            rules={[
+              {
+                required: isRequired,
+                message: 'Please input your password!'
+              },
+              {
+                min: 6,
+                message: 'Minimum password length is 6 characters'
+              }
+            ]}
+          />
+          <AddonInput
+            prefix={<LockOutlined />}
+            addon="Confirm Password"
+            password={true}
+            name="confirm"
+            dependencies={['password']}
+            hasFeedback
+            rules={[
+              {
+                required: isRequired,
+                message: 'Please confirm your password!'
+              },
+              ({ getFieldValue }) => ({
+                validator(_, value) {
+                  if (!value || getFieldValue('password') === value) {
+                    return Promise.resolve();
+                  }
+                  return Promise.reject(
+                    new Error('The new password that you entered do not match!')
+                  );
+                }
+              })
+            ]}
+          />
+          <Button type="primary" htmlType="submit" block loading={isPending}>
+            {submitButton}
+          </Button>
+        </Space>
       </Form>
     </>
   );

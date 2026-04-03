@@ -21,7 +21,6 @@ export const Registration = () => {
         title="Welcome to Dance Mode 🫶"
         onSubmit={mutate}
         isPending={isPending}
-        isLabels={false}
         submitButton="Signup"
         initialValues={null}
         isRequired={true}
