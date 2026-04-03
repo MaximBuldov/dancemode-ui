@@ -132,7 +132,7 @@ export const PromoCode = observer(({ cartTotal = 0 }: PromoCodeProps) => {
               </Col>
             </Row>
           </Form>
-          {availableCoupons && (
+          {availableCoupons.length > 0 && (
             <Flex gap={8}>
               <div>Available coupons:</div>
               <Flex gap={8}>
