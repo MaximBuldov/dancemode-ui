@@ -3,6 +3,7 @@ export * from './cancel-order-modal';
 export * from './cart-item';
 export * from './checkout-form';
 export * from './class-templates';
+export * from './coupon-description';
 export * from './create-bundle-modal';
 export * from './create-coupon';
 export * from './day-card';

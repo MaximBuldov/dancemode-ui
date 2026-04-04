@@ -1,13 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
-import {
-  Descriptions,
-  DescriptionsProps,
-  Space,
-  Table,
-  Tag,
-  Typography
-} from 'antd';
+import { Table, Typography } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
+import { CouponDescription } from 'components';
 import dayjs from 'dayjs';
 import { ICoupon, IDiscountType, IKeys } from 'models';
 import { couponService } from 'services';
@@ -52,28 +46,7 @@ export const Coupons = () => {
       size="small"
       pagination={false}
       expandable={{
-        expandedRowRender: (el) => {
-          const items: DescriptionsProps['items'] = [
-            {
-              key: '1',
-              label: 'Allowed categories',
-              children: (
-                <Space>
-                  {el.allowed_cat?.map((el) => (
-                    <Tag color="blue">{el.name}</Tag>
-                  ))}
-                </Space>
-              )
-            },
-            {
-              key: '2',
-              label: 'Description',
-              children: el.description
-            }
-          ];
-          return <Descriptions size="small" items={items} />;
-        },
-        rowExpandable: (el) => !!el.description || el.allowed_cat.length > 0
+        expandedRowRender: (el) => <CouponDescription el={el} />
       }}
     />
   );

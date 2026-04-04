@@ -1,18 +1,8 @@
 import { DeleteTwoTone, EditTwoTone } from '@ant-design/icons';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import {
-  Button,
-  Descriptions,
-  DescriptionsProps,
-  Divider,
-  Drawer,
-  Space,
-  Table,
-  TableProps,
-  Tag
-} from 'antd';
+import { Button, Divider, Drawer, Space, Table, TableProps, Tag } from 'antd';
 import { AxiosResponse } from 'axios';
-import { CreateCoupon, UpdateCoupon } from 'components';
+import { CouponDescription, CreateCoupon, UpdateCoupon } from 'components';
 import dayjs from 'dayjs';
 import { ICoupon, IDiscountType, IKeys } from 'models';
 import { useMemo, useState } from 'react';
@@ -102,28 +92,7 @@ export const AllCoupons = () => {
           onChange: (number) => setPage(number)
         }}
         expandable={{
-          expandedRowRender: (el) => {
-            const items: DescriptionsProps['items'] = [
-              {
-                key: '1',
-                label: 'Allowed categories',
-                children: (
-                  <Space>
-                    {el.allowed_cat?.map((el) => (
-                      <Tag color="blue">{el.name}</Tag>
-                    ))}
-                  </Space>
-                )
-              },
-              {
-                key: '2',
-                label: 'Description',
-                children: el.description
-              }
-            ];
-            return <Descriptions size="small" items={items} />;
-          },
-          rowExpandable: (el) => !!el.description || el.allowed_cat.length > 0
+          expandedRowRender: (el) => <CouponDescription el={el} />
         }}
       />
       <Drawer
