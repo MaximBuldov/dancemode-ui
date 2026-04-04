@@ -1,11 +1,12 @@
 import { makeAutoObservable } from 'mobx';
 import { makePersistable } from 'mobx-persist-store';
-import { ICoupon, IProduct } from 'models';
+import { IBundle, ICoupon, IOrderProduct, IProduct } from 'models';
 
 class CartStore {
   data: IProduct[] = [];
   coupons: ICoupon[] = [];
   total: number = 0;
+  bundleProducts: IProduct[] = [];
 
   constructor() {
     makeAutoObservable(this);
@@ -58,6 +59,10 @@ class CartStore {
     this.total = total;
   }
 
+  setBundleProducts(arr: IBundle[]) {
+    this.bundleProducts = arr.map((el) => el.products).flat();
+  }
+
   get count() {
     return this.data.length;
   }
@@ -74,11 +79,11 @@ class CartStore {
     return this.calculateTotal(this.coupons, 'amount');
   }
 
-  get preparedData() {
-    return this.data.map((el) => ({
+  get preparedData(): IOrderProduct[] {
+    return this.bundleProducts.map((el) => ({
       product_id: el.id,
       subtotal: el.price,
-      total: el.total || el.price
+      total: el.sale_price || el.price
     }));
   }
 

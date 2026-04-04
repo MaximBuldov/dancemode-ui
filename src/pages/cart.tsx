@@ -9,7 +9,7 @@ import { CartItem, Price, PromoCode, SuccessPage } from 'components';
 import { useCreateOrder } from 'hooks';
 import { observer } from 'mobx-react-lite';
 import { IKeys, IPaymentMethod } from 'models';
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import * as routes from 'routes/consts';
 import { bundleService } from 'services';
@@ -21,6 +21,12 @@ export const Cart = observer(() => {
     queryKey: [IKeys.BUNDELS],
     queryFn: () => bundleService.getProductsWithPrice(cartStore.cartProductIds)
   });
+
+  useEffect(() => {
+    if (bundles.isSuccess && bundles.data.length > 0) {
+      cartStore.setBundleProducts(bundles.data);
+    }
+  }, [bundles.data, bundles.isSuccess]);
 
   const result = useMemo(
     () =>
@@ -95,7 +101,7 @@ export const Cart = observer(() => {
                 extra={<Price total={total} subtotal={subtotal} />}
               >
                 {bundle.products.map((el) => (
-                  <CartItem item={el} />
+                  <CartItem item={el} key={el.id} />
                 ))}
               </Card>
             );

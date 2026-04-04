@@ -36,7 +36,7 @@ export const OrderModalActions = ({
     <Modal
       title={`Update order #${id} status`}
       open={!!id}
-      destroyOnClose
+      destroyOnHidden
       onCancel={() => setOpen(0)}
       footer={() => (
         <>

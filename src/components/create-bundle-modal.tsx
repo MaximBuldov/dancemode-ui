@@ -46,10 +46,12 @@ export const CreateBundleModal = ({
         >
           <Select
             mode="multiple"
-            options={products?.map((el) => ({
-              value: el.id,
-              label: `${el.name} - ${dayjs(el.date_time).format(`M/D ${CLASS_TIME_FORMAT}`)}`
-            }))}
+            options={products
+              ?.sort((a, b) => a.name.localeCompare(b.name))
+              .map((el) => ({
+                value: el.id,
+                label: `${el.name} - ${dayjs(el.date_time).format(`M/D ${CLASS_TIME_FORMAT}`)}`
+              }))}
             allowClear
             showSearch
           />
