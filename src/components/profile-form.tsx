@@ -5,7 +5,7 @@ import {
   PhoneOutlined,
   UserOutlined
 } from '@ant-design/icons';
-import { Button, Form, Space, Typography } from 'antd';
+import { Button, Flex, Form, Typography } from 'antd';
 import dayjs from 'dayjs';
 import { ISignupForm, IUser } from 'models';
 import { AddonInput, BirthdayPicker } from './ui';
@@ -48,7 +48,7 @@ export const ProfileForm = ({
             : undefined
         }
       >
-        <Space orientation="vertical">
+        <Flex gap={16} orientation="vertical">
           <AddonInput
             prefix={<UserOutlined />}
             addon="First Name"
@@ -147,7 +147,7 @@ export const ProfileForm = ({
           <Button type="primary" htmlType="submit" block loading={isPending}>
             {submitButton}
           </Button>
-        </Space>
+        </Flex>
       </Form>
     </>
   );
