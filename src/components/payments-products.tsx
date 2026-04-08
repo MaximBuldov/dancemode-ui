@@ -46,11 +46,6 @@ export const PaymentsProducts = ({ order }: PaymentsProductsProps) => {
   const items = useMemo(() => {
     const arr: DescriptionsProps['items'] = [
       {
-        key: 'date',
-        label: 'Date',
-        children: dayjs(order.created_at).format('MMM D')
-      },
-      {
         key: 'payment',
         label: 'Payment',
         children: order.payment_method

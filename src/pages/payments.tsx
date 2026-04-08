@@ -21,7 +21,7 @@ export const Payments = () => {
     { title: 'ID', dataIndex: 'id', key: 'id' },
     {
       title: 'Date',
-      dataIndex: 'date_created',
+      dataIndex: 'created_at',
       key: 'date',
       render: (el) => dayjs(el).format('MMM D')
     },

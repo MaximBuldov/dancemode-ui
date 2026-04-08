@@ -1,7 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { Button, DatePicker, Form, Select, Space } from 'antd';
 import { IKeys } from 'models';
-import { useState } from 'react';
 import { IFilters, userService } from 'services';
 
 const { Item, useForm } = Form;
@@ -17,10 +16,9 @@ interface FilterOrdersFormProps {
 
 export const FilterOrdersForm = ({ setFilters }: FilterOrdersFormProps) => {
   const [form] = useForm();
-  const [dateName, setDateName] = useState<string | number>(FILTERNAME.ORDER);
 
   const users = useQuery({
-    queryFn: () => userService.getCustomers(),
+    queryFn: () => userService.getCustomers({ all: true }),
     queryKey: [IKeys.CUSTOMERS],
     select: ({ data }) =>
       data.map((el) => ({
@@ -46,6 +44,8 @@ export const FilterOrdersForm = ({ setFilters }: FilterOrdersFormProps) => {
           placeholder="Customers"
           loading={users.isPending}
           options={users.data}
+          allowClear
+          showSearch={{ optionFilterProp: 'label' }}
         />
       </Item>
       <Item name="month">
