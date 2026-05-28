@@ -58,12 +58,13 @@ export const TeacherClass = observer(({ product }: TeacherClassProps) => {
   );
 
   const customers = useMemo(() => {
-    const booked: IUserWithStatus[] = product?.orders?.map((el) => ({
-      id: el.id,
-      name: `${el.user.first_name} ${el.user.last_name}`,
-      paid: el.order.status === IOrderStatus.COMPLETED,
-      status: el.productStatus
-    })) || [];
+    const booked: IUserWithStatus[] =
+      product?.orders?.map((el) => ({
+        id: el.id,
+        name: `${el.user.first_name} ${el.user.last_name}`,
+        paid: el.order.status === IOrderStatus.COMPLETED,
+        status: el.productStatus
+      })) || [];
 
     const waitList: IUserWithStatus[] = product.wait_list.map((u) => ({
       id: -u.id,
