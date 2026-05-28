@@ -125,7 +125,7 @@ export const PaidClass = observer(
           </Col>
         )}
         <Modal
-          title={`Class ${isConfirmModal ? 'confirmation' : 'cancellation'}: ${classTime.format('MM/DD ha')} - ${product.name.toLocaleLowerCase()}`}
+          title={`Class ${isConfirmModal ? 'confirmation' : 'cancellation'}: ${classTime.format(CLASS_TIME_FORMAT)} - ${product.name.toLocaleLowerCase()}`}
           open={!!modalOpen}
           onOk={() => modalOpen && mutate(modalOpen)}
           confirmLoading={isPending}

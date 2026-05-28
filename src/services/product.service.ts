@@ -43,6 +43,15 @@ class ProductService {
     }
   }
 
+  async joinWaitList(id: number) {
+    try {
+      const res = await $api.patch(`/products/${id}/wait-list`);
+      return res.data as IProduct;
+    } catch (error) {
+      throw error;
+    }
+  }
+
   async delete(id: number) {
     try {
       const res = await $api.delete(`/products/${id}`);

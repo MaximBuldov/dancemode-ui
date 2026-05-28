@@ -57,16 +57,23 @@ export const TeacherClass = observer(({ product }: TeacherClassProps) => {
     [product.orders]
   );
 
-  const customers = useMemo(
-    () =>
-      (product?.orders?.map((el) => ({
-        id: el.id,
-        name: `${el.user.first_name} ${el.user.last_name}`,
-        paid: el.order.status === IOrderStatus.COMPLETED,
-        status: el.productStatus
-      })) as IUserWithStatus[]) || [],
-    [product.orders]
-  );
+  const customers = useMemo(() => {
+    const booked: IUserWithStatus[] = product?.orders?.map((el) => ({
+      id: el.id,
+      name: `${el.user.first_name} ${el.user.last_name}`,
+      paid: el.order.status === IOrderStatus.COMPLETED,
+      status: el.productStatus
+    })) || [];
+
+    const waitList: IUserWithStatus[] = product.wait_list.map((u) => ({
+      id: -u.id,
+      name: `${u.first_name} ${u.last_name}`,
+      paid: false,
+      status: IProductStatus.WAIT_LIST
+    }));
+
+    return [...booked, ...waitList];
+  }, [product.orders, product.wait_list]);
 
   const updateProduct = useMutation({
     mutationFn: (data: any) => productService.update(data, product.id),
@@ -205,7 +212,10 @@ export const TeacherClass = observer(({ product }: TeacherClassProps) => {
             rowSelection={{
               hideSelectAll: true,
               selectedRowKeys: selectedRows,
-              onChange: (arr) => setSelectedRows(arr)
+              onChange: (arr) => setSelectedRows(arr),
+              getCheckboxProps: (record) => ({
+                disabled: record.status === IProductStatus.WAIT_LIST
+              })
             }}
           />
           {!!selectedRows.length && (

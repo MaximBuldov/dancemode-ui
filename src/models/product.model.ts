@@ -10,7 +10,7 @@ export interface IProduct {
   is_canceled: boolean;
   categories: ICategory[];
   stock_quantity: number;
-  wait_list: number[];
+  wait_list: { id: number; first_name: string; last_name: string }[];
   orders?: IROrderProduct[];
   total?: number;
 }

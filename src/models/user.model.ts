@@ -1,4 +1,4 @@
-import { IStatus } from './order.model';
+import { IProductStatus } from './order.model';
 
 export interface IUserResponse {
   accessToken: string;
@@ -24,7 +24,7 @@ export interface IRUser extends IUser {
 export interface IUserWithStatus {
   id: number;
   name: string;
-  status?: IStatus;
+  status?: IProductStatus;
   paid: boolean;
 }
 

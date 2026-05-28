@@ -1,8 +1,9 @@
 import { Button, Checkbox, Col, Row, Space, Tag, Typography } from 'antd';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import dayjs from 'dayjs';
-import { useUpdateProduct } from 'hooks';
 import { observer } from 'mobx-react-lite';
-import { CLASS_TIME_FORMAT, IKeys, IProduct, IStatus } from 'models';
+import { CLASS_TIME_FORMAT, IKeys, IProduct } from 'models';
+import { productService } from 'services';
 import { cartStore, userStore } from 'stores';
 
 interface UnpaidClassProps {
@@ -14,15 +15,20 @@ export const UnpaidClass = observer(
   ({ product, isExpired }: UnpaidClassProps) => {
     const classTime = dayjs(product.date_time);
     const isOutOfStock = product.stock_quantity === 0;
-    const isInWaitList = false;
+    const isInWaitList = product.wait_list.some(
+      (u) => u.id === (userStore.data?.id ?? -1)
+    );
 
-    const { mutate, isPending } = useUpdateProduct({
-      data: {
-        field: IStatus.WAIT_LIST,
-        user_id: userStore.data?.id
-      },
-      product_id: product.id,
-      queryKey: [IKeys.PRODUCTS, { month: classTime.format('YYYY-MM') }]
+    const client = useQueryClient();
+    const { mutate, isPending } = useMutation({
+      mutationFn: () => productService.joinWaitList(product.id),
+      onSuccess: (data) => {
+        client.setQueryData(
+          [IKeys.PRODUCTS, { month: classTime.format('YYYY-MM') }],
+          (items: IProduct[] | undefined) =>
+            items?.map((el) => (el.id === data.id ? data : el))
+        );
+      }
     });
 
     return (
