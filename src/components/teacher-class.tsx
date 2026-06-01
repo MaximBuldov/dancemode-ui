@@ -66,7 +66,7 @@ export const TeacherClass = observer(({ product }: TeacherClassProps) => {
         status: el.productStatus
       })) || [];
 
-    const waitList: IUserWithStatus[] = product.wait_list.map((u) => ({
+    const waitList: IUserWithStatus[] = (product.wait_list || []).map((u) => ({
       id: -u.id,
       name: `${u.first_name} ${u.last_name}`,
       paid: false,
