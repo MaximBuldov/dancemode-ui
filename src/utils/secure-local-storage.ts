@@ -1,5 +1,5 @@
 import SecureLS from 'secure-ls';
 
 export const secureLs = new SecureLS({
-  encryptionSecret: process.env.REACT_APP_SECURE_LS
+  encryptionSecret: import.meta.env.VITE_SECURE_LS
 });

@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { App, Button, Space, Spin } from 'antd';
+import { App, Button, Empty, Space, Spin } from 'antd';
 import {
   AddClassModal,
   CreateBundleModal,
@@ -48,9 +48,13 @@ export const Calendar = () => {
 
         <MonthStepper month={month} setMonth={setMonth} />
         {customersApi.isSuccess &&
-          Object.keys(groupedProducts).map((el) => {
-            return <DayCard day={el} key={el} classes={groupedProducts[el]} />;
-          })}
+          (Object.keys(groupedProducts).length > 0 ? (
+            Object.keys(groupedProducts).map((el) => (
+              <DayCard day={el} key={el} classes={groupedProducts[el]} />
+            ))
+          ) : (
+            <Empty description="No classes scheduled for this month" />
+          ))}
       </Space>
       {modal && <AddClassModal isOpen={modal} closeModal={onSuccess} />}
       <CreateBundleModal

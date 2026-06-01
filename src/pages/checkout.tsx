@@ -10,7 +10,7 @@ import { cartStore, userStore } from 'stores';
 
 const stripePromise =
   !userStore.isAdmin &&
-  loadStripe(process.env.REACT_APP_STRIPE_PUBLIC_KEY || '');
+  loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY || '');
 
 export const Checkout = () => {
   const { data, isPending, isSuccess } = useQuery({

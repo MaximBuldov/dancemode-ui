@@ -19,7 +19,7 @@ export const Classes = () => {
             return <DayCard day={el} key={el} classes={groupedProducts[el]} />;
           })
         ) : (
-          <Empty />
+          <Empty description="No classes scheduled for this month" />
         )}
       </Space>
     </Spin>

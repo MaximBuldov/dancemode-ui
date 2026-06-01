@@ -24,9 +24,9 @@ jobs:
 
       - name: Set environment variables
         run: |
-          echo "REACT_APP_API_URL=${{ vars.REACT_APP_API_URL }}" > .env.production.local
-          echo "REACT_APP_SECURE_LS=${{ secrets.REACT_APP_SECURE_LS }}" >> .env.production.local
-          echo "REACT_APP_STRIPE_PUBLIC_KEY=${{ vars.REACT_APP_STRIPE_PUBLIC_KEY }}" >> .env.production.local
+          echo "VITE_API_URL=${{ vars.VITE_API_URL }}" > .env.production.local
+          echo "VITE_SECURE_LS=${{ secrets.VITE_SECURE_LS }}" >> .env.production.local
+          echo "VITE_STRIPE_PUBLIC_KEY=${{ vars.VITE_STRIPE_PUBLIC_KEY }}" >> .env.production.local
 
       - name: Build
         run: yarn build
@@ -41,5 +41,5 @@ jobs:
       - name: Deploy via rsync
         run: |
           rsync -az --delete \
-            build/ \
+            dist/ \
             ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}:/var/www/dncmd.com/app/
