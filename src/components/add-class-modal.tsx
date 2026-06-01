@@ -22,7 +22,7 @@ export const AddClassModal = ({ isOpen, closeModal }: AddClassModalProps) => {
     mutationFn: productService.createMany,
     onSuccess: (data) => {
       const monthsToUpdate = new Set(
-        data?.map((product) => dayjs(product.date_time).format('YYYY-MM'))
+        data?.map((product) => String(product.date_time).slice(0, 7))
       );
 
       monthsToUpdate.forEach((month) => {
@@ -32,7 +32,7 @@ export const AddClassModal = ({ isOpen, closeModal }: AddClassModalProps) => {
             products && [
               ...products,
               ...data.filter(
-                (el) => dayjs(el.date_time).format('YYYY-MM') === month
+                (el) => String(el.date_time).slice(0, 7) === month
               )
             ]
         );

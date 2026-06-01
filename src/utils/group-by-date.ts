@@ -16,7 +16,7 @@ export function groupByDate(data?: IProduct[]) {
         return dateA.isBefore(dateB) ? -1 : dateA.isAfter(dateB) ? 1 : 0;
       })
       .forEach((item) => {
-        const dateOnly = dayjs(item.date_time).format('YYYY-MM-DD');
+        const dateOnly = String(item.date_time).slice(0, 10);
         if (!groupedData[dateOnly]) {
           groupedData[dateOnly] = [];
         }
