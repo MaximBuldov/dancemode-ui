@@ -109,11 +109,11 @@ export const TeacherClass = observer(({ product }: TeacherClassProps) => {
 
   const deleteProduct = useMutation({
     mutationFn: () => productService.delete(product.id),
-    onSuccess: (data) => {
+    onSuccess: () => {
       client.setQueryData(
         [IKeys.PRODUCTS, { month: classTime.format('YYYY-MM') }],
         (products: IProduct[] | undefined) =>
-          products ? products.filter((el) => el.id !== data.id) : products
+          products ? products.filter((el) => el.id !== product.id) : products
       );
       setModal(false);
     }
