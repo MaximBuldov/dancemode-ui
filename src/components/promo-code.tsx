@@ -40,14 +40,15 @@ export const PromoCode = observer(({ cartTotal = 0 }: PromoCodeProps) => {
       couponService.validate(code, cartStore.cartProductIds),
     onSuccess: (data) => {
       if (data.valid) {
-        if (data.coupon.discount_type !== IDiscountType.CREDIT) {
-          if (cartTotal - data.coupon.amount > 0) {
-            cartStore.addCoupon(data.coupon);
-          } else {
-            message.error(
-              'The coupon discount exceeds the total cart amount and cannot be applied.'
-            );
-          }
+        if (
+          cartTotal - data.coupon.amount > 0 ||
+          data.coupon.discount_type === IDiscountType.CREDIT
+        ) {
+          cartStore.addCoupon(data.coupon);
+        } else {
+          message.error(
+            'The coupon discount exceeds the total cart amount and cannot be applied.'
+          );
         }
       } else {
         message.error(data.message);
