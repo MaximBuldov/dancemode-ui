@@ -15,7 +15,7 @@ import {
 } from 'antd';
 import copy from 'copy-to-clipboard';
 import { observer } from 'mobx-react-lite';
-import { IKeys } from 'models';
+import { IDiscountType, IKeys } from 'models';
 import { useState } from 'react';
 import { couponService } from 'services';
 import { cartStore } from 'stores';
@@ -40,12 +40,14 @@ export const PromoCode = observer(({ cartTotal = 0 }: PromoCodeProps) => {
       couponService.validate(code, cartStore.cartProductIds),
     onSuccess: (data) => {
       if (data.valid) {
-        if (cartTotal - data.coupon.amount > 0) {
-          cartStore.addCoupon(data.coupon);
-        } else {
-          message.error(
-            'The coupon discount exceeds the total cart amount and cannot be applied.'
-          );
+        if (data.coupon.discount_type !== IDiscountType.CREDIT) {
+          if (cartTotal - data.coupon.amount > 0) {
+            cartStore.addCoupon(data.coupon);
+          } else {
+            message.error(
+              'The coupon discount exceeds the total cart amount and cannot be applied.'
+            );
+          }
         }
       } else {
         message.error(data.message);
