@@ -12,7 +12,7 @@ class CartStore {
     makeAutoObservable(this);
     makePersistable(this, {
       name: 'cart',
-      properties: ['data', 'coupons'],
+      properties: ['data', 'coupons', 'total'],
       storage: window.localStorage
     });
   }
@@ -24,6 +24,7 @@ class CartStore {
   clear() {
     this.data = [];
     this.coupons = [];
+    this.total = 0;
     localStorage.removeItem('cart');
   }
 
