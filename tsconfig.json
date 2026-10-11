@@ -10,14 +10,14 @@
     "forceConsistentCasingInFileNames": true,
     "noFallthroughCasesInSwitch": true,
     "module": "esnext",
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
     "types": ["vite/client"],
     "jsx": "react-jsx",
-    "baseUrl": "src",
+    "paths": { "*": ["./src/*"] },
     "plugins": [{ "name": "typescript-plugin-css-modules" }]
   },
-  "include": ["src", "eslint.config.mjs"]
+  "include": ["src", "eslint.config.mjs", "vite.config.ts"]
 }

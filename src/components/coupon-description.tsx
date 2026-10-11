@@ -29,7 +29,9 @@ export const CouponDescription = ({ el }: CouponDescriptionProps) => {
               <Tag color="geekblue">{`${el.first_name} ${el.last_name}`}</Tag>
             ))
           ) : (
-            <Tag color="geekblue-inverse">Public</Tag>
+            <Tag color="geekblue" variant="solid">
+              Public
+            </Tag>
           )}
         </Space>
       )

@@ -1,7 +1,6 @@
 import js from '@eslint/js';
 import eslintConfigPrettier from 'eslint-config-prettier';
 import prettierPlugin from 'eslint-plugin-prettier';
-import eslintReact from 'eslint-plugin-react';
 import eslintReactHooks from 'eslint-plugin-react-hooks';
 import eslintReactRefresh from 'eslint-plugin-react-refresh';
 import globals from 'globals';
@@ -12,7 +11,6 @@ export default tseslint.config(
   {
     plugins: {
       '@typescript-eslint': tseslint.plugin,
-      react: eslintReact,
       'react-hooks': eslintReactHooks,
       'react-refresh': eslintReactRefresh,
       prettier: prettierPlugin

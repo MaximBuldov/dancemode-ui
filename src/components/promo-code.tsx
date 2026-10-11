@@ -141,9 +141,11 @@ export const PromoCode = observer(({ cartTotal = 0 }: PromoCodeProps) => {
               <Flex gap={8}>
                 {availableCoupons.map((coupon) => (
                   <Tag
-                    onClick={() => {
-                      copy(coupon.code);
-                      message.info('Copied!');
+                    key={coupon.id}
+                    onClick={async () => {
+                      const copied = await copy(coupon.code);
+                      if (copied) message.info('Copied!');
+                      else message.error('Could not copy coupon code');
                     }}
                     color="cyan"
                   >
