@@ -19,7 +19,9 @@ export const Template = observer(() => {
     <Layout>
       <Header className={styles.header}>
         <div className={styles.logo}>
-          <Link to="/">DanceMode</Link>
+          <Link to="/">
+            Dance <span>Mode</span>
+          </Link>
         </div>
         <div>
           {userStore.data && (
