@@ -1,16 +1,7 @@
 .logo a {
-  font-family: var(--dm-font-heading);
   color: var(--dm-primary);
-  font-size: 26px;
-  font-weight: 500;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-
-  span {
-    font-size: 14px;
-    letter-spacing: 0.3em;
-    color: var(--dm-text-secondary);
-  }
+  font-weight: bold;
+  font-size: 20px;
 }
 
 .header {

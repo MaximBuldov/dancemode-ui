@@ -42,9 +42,6 @@ export const statusColors = {
   warning: pastel.orange.text
 };
 
-export const fontFamilyHeading =
-  "'Cormorant Garamond', 'Cormorant', Georgia, 'Times New Roman', serif";
-
 export const theme: ThemeConfig = {
   token: {
     colorPrimary: colors.primary,
@@ -70,6 +67,12 @@ export const theme: ThemeConfig = {
     colorInfoBorder: '#e8cfcf'
   },
   components: {
+    Button: {
+      // antd's default 2px drop shadow reads as a stray bottom border on burgundy
+      primaryShadow: 'none',
+      defaultShadow: 'none',
+      dangerShadow: 'none'
+    },
     Layout: {
       headerBg: colors.background,
       headerColor: colors.primary,
