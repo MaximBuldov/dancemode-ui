@@ -112,7 +112,9 @@ export const Cart = observer(() => {
               <Col>
                 <Typography.Text strong>
                   Total count:{' '}
-                  <span style={{ color: '#1677ff' }}>{cartStore.count}</span>
+                  <span style={{ color: 'var(--dm-primary)' }}>
+                    {cartStore.count}
+                  </span>
                 </Typography.Text>
               </Col>
               <Col span={8} style={{ textAlign: 'right' }}>

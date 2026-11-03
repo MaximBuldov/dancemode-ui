@@ -48,7 +48,7 @@ export const UnpaidClass = observer(
               {product.name}: {classTime.format(CLASS_TIME_FORMAT)} -{' '}
               <b>${product.price}</b>
             </Typography>
-            {isOutOfStock && <Tag color="#f50">Sold out</Tag>}
+            {isOutOfStock && <Tag color="volcano">Sold out</Tag>}
             {isOutOfStock && isInWaitList && (
               <Tag color="cyan">In wait list</Tag>
             )}

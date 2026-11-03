@@ -9,6 +9,7 @@ import { Navigate } from 'react-router-dom';
 import * as routes from 'routes/consts';
 import { orderService } from 'services';
 import { cartStore, userStore } from 'stores';
+import { colors } from 'theme';
 
 const stripePromise =
   !userStore.isAdmin &&
@@ -32,7 +33,13 @@ export const Checkout = () => {
     () => ({
       clientSecret: data?.clientSecret,
       appearance: {
-        theme: 'stripe'
+        theme: 'stripe',
+        variables: {
+          colorPrimary: colors.primary,
+          colorText: colors.text,
+          colorBackground: colors.surface,
+          borderRadius: '8px'
+        }
       }
     }),
     [data?.clientSecret]

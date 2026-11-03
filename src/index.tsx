@@ -2,6 +2,7 @@ import { App as AntApp, ConfigProvider } from 'antd';
 import ReactDOM from 'react-dom/client';
 
 import App from './App';
+import { theme } from './theme';
 
 import './index.css';
 
@@ -10,7 +11,7 @@ const root = ReactDOM.createRoot(
 );
 
 root.render(
-  <ConfigProvider>
+  <ConfigProvider theme={theme}>
     <AntApp>
       <App />
     </AntApp>

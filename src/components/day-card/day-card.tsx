@@ -6,6 +6,7 @@ import dayjs from 'dayjs';
 import { observer } from 'mobx-react-lite';
 import { IProduct } from 'models';
 import { userStore } from 'stores';
+import { statusColors } from 'theme';
 
 import styles from './day-card.module.scss';
 
@@ -39,7 +40,7 @@ export const DayCard = observer(({ day, classes }: DayCardProps) => {
               />
               {el.is_canceled && !userStore.isAdmin && (
                 <div className={styles['canceled-text']}>
-                  <FrownTwoTone twoToneColor="#ff5500" /> Canceled
+                  <FrownTwoTone twoToneColor={statusColors.error} /> Canceled
                 </div>
               )}
             </div>

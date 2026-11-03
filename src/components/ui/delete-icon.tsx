@@ -1,6 +1,7 @@
 import { DeleteTwoTone } from '@ant-design/icons';
 import { UseMutationResult } from '@tanstack/react-query';
 import { Spin } from 'antd';
+import { statusColors } from 'theme';
 
 interface DeleteIconProps<T> {
   remove: UseMutationResult<T, Error, number>;
@@ -13,7 +14,7 @@ export const DeleteIcon = <T,>({ remove, id, name }: DeleteIconProps<T>) => {
     <Spin spinning />
   ) : (
     <DeleteTwoTone
-      twoToneColor="#cf1322"
+      twoToneColor={statusColors.error}
       onClick={() => {
         const isConfirm = window.confirm(
           `Are you sure you want to delete ${name}?`

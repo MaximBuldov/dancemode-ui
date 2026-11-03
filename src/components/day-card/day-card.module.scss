@@ -3,11 +3,12 @@
 }
 
 .canceled {
-  border: 2px solid #ff5500;
+  border: 2px solid #f1cdd2;
+  border-radius: 8px;
   position: relative;
 
   &-text {
-    color: #ff5500;
+    color: #9a3f4a;
     position: absolute;
     font-weight: bold;
     top: 0;
