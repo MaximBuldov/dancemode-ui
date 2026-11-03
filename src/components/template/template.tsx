@@ -7,7 +7,6 @@ import * as routes from 'routes/consts';
 import { cartStore, userStore } from 'stores';
 
 import { useState } from 'react';
-import { colors } from 'theme';
 import styles from './template.module.scss';
 
 const { Header, Content } = Layout;
@@ -19,14 +18,12 @@ export const Template = observer(() => {
     <Layout>
       <Header className={styles.header}>
         <div className={styles.logo}>
-          <Link to="/">
-            Dance <span>Mode</span>
-          </Link>
+          <Link to="/">DanceMode</Link>
         </div>
         <div>
           {userStore.data && (
             <Link to={routes.PROFILE}>
-              <Avatar style={{ backgroundColor: colors.primary }}>
+              <Avatar style={{ backgroundColor: '#1677ff' }}>
                 {userStore.initials}
               </Avatar>
             </Link>

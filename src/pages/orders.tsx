@@ -54,7 +54,7 @@ export const Orders = () => {
           case IOrderStatus.CANCELLED:
             return '🚫';
           case IOrderStatus.PROCESSING:
-            return <SyncOutlined spin style={{ color: 'var(--dm-primary)' }} />;
+            return <SyncOutlined spin style={{ color: '#0958d9' }} />;
           default:
             return '';
         }

@@ -7,7 +7,6 @@ import dayjs from 'dayjs';
 import { ICoupon, IDiscountType, IKeys } from 'models';
 import { useMemo, useState } from 'react';
 import { couponService } from 'services';
-import { statusColors } from 'theme';
 
 export const AllCoupons = () => {
   const [drawer, setDrawer] = useState<boolean | ICoupon>(false);
@@ -66,7 +65,7 @@ export const AllCoupons = () => {
         <Space size="large">
           <EditTwoTone onClick={() => setDrawer(record)} />
           <DeleteTwoTone
-            twoToneColor={statusColors.error}
+            twoToneColor="#cf1322"
             onClick={() => remove.mutate(record.id)}
           />
         </Space>

@@ -48,7 +48,7 @@ export const Payments = () => {
           case IOrderStatus.CANCELLED:
             return '🚫';
           case IOrderStatus.PENDING:
-            return <SyncOutlined spin style={{ color: 'var(--dm-primary)' }} />;
+            return <SyncOutlined spin style={{ color: '#0958d9' }} />;
           default:
             return '';
         }
